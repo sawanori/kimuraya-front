@@ -1,0 +1,23 @@
+/* 下部ナビゲーションボタンの背景を削除 */
+.bottom-nav-item {
+    background: transparent !important;
+}
+
+.bottom-nav-item::before {
+    display: none !important;
+}
+
+.bottom-nav-item:active {
+    background: transparent !important;
+}
+
+/* ボタンタグ特有の背景も削除 */
+button.bottom-nav-item {
+    background: none !important;
+    border: none !important;
+}
+
+/* ホバー時も背景なし */
+.bottom-nav-item:hover {
+    background: transparent !important;
+}

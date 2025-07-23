@@ -1,0 +1,52 @@
+/* ギャラリーのモバイル表示修正 */
+@media (max-width: 767px) {
+  /* デフォルトで隠す */
+  .hidden-mobile {
+    display: none !important;
+  }
+  
+  /* showクラスが追加されたら表示 */
+  .hidden-mobile.show {
+    display: block !important;
+    animation: fadeInUp 0.6s ease forwards;
+  }
+  
+  /* もっと見るボタンのスタイル */
+  .gallery-more-btn-wrapper.mobile-only {
+    display: block;
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  /* デスクトップ専用要素を非表示 */
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* デスクトップでは常に表示 */
+@media (min-width: 768px) {
+  .hidden-mobile {
+    display: block !important;
+  }
+  
+  .gallery-more-btn-wrapper.mobile-only {
+    display: none !important;
+  }
+  
+  .desktop-only {
+    display: block !important;
+  }
+}
+
+/* フェードインアニメーション */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

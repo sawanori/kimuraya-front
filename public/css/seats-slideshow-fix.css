@@ -1,0 +1,49 @@
+/* 座席スライドショーの修正 */
+.seats-thumbnails .thumbnail {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.seats-thumbnails .thumbnail:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.seats-thumbnails .thumbnail.active {
+  opacity: 1;
+  border: 2px solid var(--accent-gold);
+}
+
+/* スライドの切り替えアニメーション */
+.seat-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+
+.seat-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+/* サムネイルのレスポンシブ調整 */
+@media (max-width: 768px) {
+  .seats-thumbnails {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .seats-thumbnails .thumbnail {
+    flex: 0 0 auto;
+    width: 80px;
+  }
+}

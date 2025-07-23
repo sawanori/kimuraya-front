@@ -1,0 +1,325 @@
+# 木村屋 メニューデータ
+# 更新日: 2025-07-17
+
+menu:
+  - category_name: "鍋物"
+    subcategories:
+      - subcategory_name: "博多もつ鍋"
+        description: |
+          創業以来こだわり続けた厳選した新鮮な国産牛もつ。丁寧に下ごしらえした特選もつと、たっぷりの野菜。手間ひまかけて作った特製スープ。キャベツはあっさりとしていながらスープが染み込むように、あえてざく切りごろっと。本場九州博多仕込みのもつ鍋です。
+        notes: "※鍋のご注文は2人前から承ります。"
+        options_title: "選べるスープ"
+        items:
+          - name: "濃厚味噌"
+            description: "まろやかで深みのある濃厚な味わいが、もつの旨みを引き立てます。具材の旨みが溶け出し、〆まで美味しく頂けます。"
+            price: 1480
+            price_tax_in: 1628
+            unit: "1人前"
+          - name: "醤油"
+            description: "定番中の定番。もつ鍋といえばやはり醤油。飽きのこない、何度でも食べたくなる定番の味。"
+            price: 1480
+            price_tax_in: 1628
+            unit: "1人前"
+          - name: "塩"
+            description: "素材の味が最も引き立つ当店自慢のこだわりの塩味。厳選素材の旨さを引き出す、さっぱりとした和風スープ。"
+            price: 1480
+            price_tax_in: 1628
+            unit: "1人前"
+
+      - subcategory_name: "ホルモン ちりとり焼肉"
+        description: "旨辛ダレに漬け込んだ国産の小腸やシマチョウを卓上で焼き上げます。ふっくらぷりぷりの国産牛腸は絶品です！お野菜と一緒にお召し上がり下さい！"
+        price: 1380
+        price_tax_in: 1518
+        unit: "1人前"
+        notes: |
+          （牛小腸・牛シマチョウ・もやし・にら・玉ねぎ・キャベツ・長ねぎ）
+          ※ご注文は2人前より承ります。
+        options_title: "追加と〆"
+        options:
+          - name: "追加ホルモンセット（牛小腸・シマチョウ）"
+            price: 780
+            price_tax_in: 858
+            unit: "1人前"
+          - name: "追加野菜セット（もやし・にら・玉ねぎ・キャベツ・長ねぎ）"
+            price: 500
+            price_tax_in: 550
+            unit: "1人前"
+          - name: "追加豚バラ"
+            price: 500
+            price_tax_in: 550
+          - name: "追加練り唐辛子"
+            price: 150
+            price_tax_in: 165
+          - name: "〆のちゃんぽん麺"
+            price: 480
+            price_tax_in: 528
+
+      - subcategory_name: "鍋の追加と〆"
+        groups:
+          - group_name: "定番の追加"
+            items:
+              - name: "もつ鍋〆セット"
+                price: 780
+                price_tax_in: 858
+              - name: "野菜"
+                price: 580
+                price_tax_in: 638
+              - name: "キャベツ"
+                price: 380
+                price_tax_in: 418
+              - name: "ニラ"
+                price: 180
+                price_tax_in: 198
+              - name: "ごぼう"
+                price: 180
+                price_tax_in: 198
+          - group_name: "トッピング"
+            items:
+              - name: "チーズ"
+                price: 200
+                price_tax_in: 220
+              - name: "辛ニラ"
+                price: 100
+                price_tax_in: 110
+              - name: "辣椒（辛味噌）"
+                price: 100
+                price_tax_in: 110
+          - group_name: "色々具材"
+            items:
+              - name: "トマトリゾット"
+                price: 500
+                price_tax_in: 550
+              - name: "水餃子"
+                price: 380
+                price_tax_in: 418
+              - name: "もやし"
+                price: 180
+                price_tax_in: 198
+              - name: "トッポギ"
+                price: 180
+                price_tax_in: 198
+              - name: "豚バラ"
+                price: 380
+                price_tax_in: 418
+              - name: "鶏もも肉"
+                price: 380
+                price_tax_in: 418
+              - name: "ウインナー（5本）"
+                price: 380
+                price_tax_in: 418
+              - name: "明太子"
+                price: 480
+                price_tax_in: 528
+          - group_name: "お鍋の〆"
+            items:
+              - name: "雑炊セット"
+                price: 420
+                price_tax_in: 462
+              - name: "特製ちゃんぽん麺"
+                price: 420
+                price_tax_in: 462
+              - name: "極太ラーメン"
+                price: 420
+                price_tax_in: 462
+
+  - category_name: "逸品料理"
+    subcategories:
+      - subcategory_name: "サラダ・速菜"
+        items:
+          - name: "チョレギサラダ"
+            price: 780
+            price_tax_in: 858
+          - name: "鮪の鉄製ポテトサラダ"
+            price: 680
+            price_tax_in: 748
+          - name: "たたききゅうり"
+            price: 420
+            price_tax_in: 462
+          - name: "冷やしトマト あご出汁漬け"
+            price: 520
+            price_tax_in: 572
+          - name: "定番！枝豆"
+            price: 380
+            price_tax_in: 418
+          - name: "明太ポテトサラダ"
+            price: 680
+            price_tax_in: 748
+          - name: "店仕込み 酢もつ"
+            price: 480
+            price_tax_in: 528
+          - name: "クリームチーズの九州醤油漬け"
+            price: 420
+            price_tax_in: 462
+      - subcategory_name: "鮮魚・本鮪・鰻"
+        groups:
+          - group_name: "鮮魚 (Fresh Fish)"
+            items:
+              - name: "鮮魚盛り合わせ 5種盛り／3種盛り"
+                price_text: "【予約／価格応相談】"
+          - group_name: "本鮪 (HONMAGURO!! Blue fin Tuna)"
+            items:
+              - name: "本鮪のお刺身"
+                price: 880
+                price_tax_in: 968
+              - name: "本鮪のネギ塩ユッケ"
+                price: 880
+                price_tax_in: 968
+              - name: "本鮪の塩たたき"
+                price: 880
+                price_tax_in: 968
+              - name: "トロたく"
+                price: 680
+                price_tax_in: 748
+          - group_name: "鰻 (UNAGI!! Eel)"
+            items:
+              - name: "鰻の串焼き（2本）"
+                price: 720
+                price_tax_in: 792
+              - name: "鰻の串揚げ（2本）"
+                price: 380
+                price_tax_in: 418
+              - name: "う巻き"
+                price: 780
+                price_tax_in: 858
+              - name: "鰻チャンプルー"
+                price: 820
+                price_tax_in: 902
+              - name: "鰻の燻製ポテトサラダ"
+                price: 680
+                price_tax_in: 748
+      - subcategory_name: "揚げ物"
+        items:
+          - name: "大分 鶏唐揚げ"
+            price: 480
+            price_tax_in: 528
+          - name: "宮崎 チキン南蛮"
+            price: 620
+            price_tax_in: 682
+          - name: "よか手羽（5本）"
+            price: 380
+            price_tax_in: 418
+          - name: "もつ唐揚げ"
+            price: 880
+            price_tax_in: 968
+          - name: "からし蓮根の天ぷら"
+            price: 580
+            price_tax_in: 638
+          - name: "フライドポテト ケチャップ＆マヨネーズ"
+            price: 460
+            price_tax_in: 506
+          - name: "さつまいもスティック ハニーマヨ添え"
+            price: 520
+            price_tax_in: 572
+      - subcategory_name: "おなじみ"
+        groups:
+          - group_name: "超おなじみ"
+            items:
+              - name: "店仕込み 酢もつ"
+                price: 480
+                price_tax_in: 528
+              - name: "博多 とんぺい焼き"
+                price: 580
+                price_tax_in: 638
+              - name: "羽付き餃子（6個）"
+                price: 380
+                price_tax_in: 418
+              - name: "明太子入り 出汁巻き玉子"
+                price: 680
+                price_tax_in: 748
+              - name: "かねふくの明太子「生・炙り・天ぷら」"
+                price: 880
+                price_tax_in: 968
+              - name: "佐賀イカ焼き"
+                price: 680
+                price_tax_in: 748
+          - group_name: "チョイおなじみ"
+            items:
+              - name: "赤身 馬刺し"
+                price: 1280
+                price_tax_in: 1408
+              - name: "ホルモン鉄板焼【味噌】"
+                price: 900
+                price_tax_in: 990
+              - name: "馬刺しユッケ"
+                price: 1280
+                price_tax_in: 1408
+              - name: "もつ唐揚げ"
+                price: 880
+                price_tax_in: 968
+              - name: "サーモンのレアユッケ"
+                price: 820
+                price_tax_in: 902
+      - subcategory_name: "季節のおすすめ 韓国"
+        items:
+          - name: "山芋ハチミツキムチ"
+            price: 450
+            price_tax_in: 495
+          - name: "ハニーチキン"
+            price: 680
+            price_tax_in: 748
+          - name: "ヤンニョムチキン"
+            price: 680
+            price_tax_in: 748
+          - name: "ロゼチーズトッポギ"
+            price: 780
+            price_tax_in: 858
+          - name: "チュクミ"
+            price: 880
+            price_tax_in: 968
+          - name: "とびっこチャーハン"
+            price: 880
+            price_tax_in: 968
+          - name: "サムギョプサルセット"
+            price: 1280
+            price_tax_in: 1408
+
+  - category_name: "お食事"
+    description: |
+      お酒の最後には〆が麺。〆ましょう、炭水化物は明日に回しお酒を楽しみません。九州の粉物をご用意しました。すすって食って腹も心も満たして、明日も1日頑張って下さい！
+    subcategories:
+      - subcategory_name: "麺と飯"
+        items:
+          - name: "親富孝通り 屋台名物 鉄板焼きラーメン"
+            price: 780
+            price_tax_in: 858
+          - name: "宮崎辛麺"
+            price: 780
+            price_tax_in: 858
+          - name: "本鮪漬け丼"
+            price: 980
+            price_tax_in: 1078
+          - name: "石焼きペッパーガーリックライス"
+            price: 900
+            price_tax_in: 990
+          - name: "おにぎり 肉巻き"
+            price: 480
+            price_tax_in: 528
+
+  - category_name: "デザート"
+    subcategories:
+      - subcategory_name: "Sweets"
+        items:
+          - name: "ひと口のティラミスタルト"
+            description: "サクサクのタルトにティラミスを入れたひとくちデザートです。抹茶のフレーバーもお好みで2種の味をお楽しみください。"
+            price: 580
+            price_tax_in: 638
+          - name: "ひとくちカッサータ 〜2つの味で〜"
+            description: "イタリアのシチリア島発祥のアイスケーキ”カッサータ”。リコッタチーズがベースの、さっぱりした味わいです。"
+            price: 580
+            price_tax_in: 638
+          - name: "とろける 炙りレアチーズケーキ"
+            description: "目の前で炙り仕上げたトロトロのレアチーズケーキです。甘く炙り、香ばしい風味と共にお楽しみ下さい。"
+            price: 680
+            price_tax_in: 748
+          - name: "あったか濃厚ショコラテリーヌ 〜バニラアイス添え〜"
+            description: "しっとり濃厚チョコレートとバニラアイスとご一緒にどうぞ！ベリーソースがよく合います。"
+            price: 780
+            price_tax_in: 858
+          - name: "季節のシャーベット"
+            description: "シャーベットの種類はスタッフまでお尋ねください。"
+            price: 380
+            price_tax_in: 418
+          - name: "黒蜜きな粉アイス"
+            description: "バニラアイスに黒蜜ときな粉をプラス。濃厚なコクと、上品な味わいがお楽しみ頂けます。和の味わいをご堪能下さい。"
+            price: 380
+            price_tax_in: 418

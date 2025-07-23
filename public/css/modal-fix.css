@@ -1,0 +1,379 @@
+/* モーダルの修正 */
+.courses-modal,
+.drinks-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.courses-modal.active,
+.drinks-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  width: 90%;
+  max-width: 900px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  z-index: 2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: white;
+  transform: rotate(90deg);
+}
+
+/* コースモーダルのスライダー */
+.courses-slider {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.course-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  padding: 60px 40px 40px;
+}
+
+.course-slide.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.course-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.course-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.course-subtitle {
+  font-size: 14px;
+  color: #666;
+}
+
+.course-body {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.course-price {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.price-amount {
+  font-size: 48px;
+  font-weight: 600;
+  color: #d4a574;
+}
+
+.price-unit {
+  font-size: 24px;
+  color: #333;
+  margin-left: 5px;
+}
+
+.price-note {
+  font-size: 14px;
+  color: #666;
+  margin-left: 10px;
+}
+
+.course-info {
+  background: #f8f5f0;
+  padding: 30px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.course-items {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.course-items span {
+  font-size: 24px;
+  color: #d4a574;
+  margin: 0 5px;
+}
+
+.course-description {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.course-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.feature-item svg {
+  width: 20px;
+  height: 20px;
+  stroke: #d4a574;
+  flex-shrink: 0;
+}
+
+.course-cta {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  background: #d4a574;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.course-cta:hover {
+  background: #c19660;
+  transform: translateY(-2px);
+}
+
+/* スライダーコントロール */
+.slider-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+
+.slider-control:hover {
+  background: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.slider-control.prev {
+  left: 20px;
+}
+
+.slider-control.next {
+  right: 20px;
+}
+
+.slider-control svg {
+  width: 24px;
+  height: 24px;
+  stroke: #333;
+}
+
+/* ドットインジケーター */
+.slider-dots {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.slider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.slider-dot.active {
+  background: #d4a574;
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* ドリンクモーダル */
+.drinks-content {
+  padding: 60px 40px 40px;
+}
+
+.drinks-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.drinks-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 32px;
+  font-weight: 500;
+  color: #333;
+}
+
+.drinks-categories {
+  display: grid;
+  gap: 30px;
+}
+
+.drink-category {
+  background: #f8f5f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.category-header {
+  background: #333;
+  color: white;
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: 'Noto Serif JP', serif;
+}
+
+.category-items {
+  padding: 20px;
+}
+
+.drink-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px dotted #ddd;
+}
+
+.drink-item:last-child {
+  border-bottom: none;
+}
+
+.drink-name {
+  font-size: 15px;
+  color: #333;
+}
+
+.drink-price {
+  font-size: 15px;
+  color: #d4a574;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .course-slide,
+  .drinks-content {
+    padding: 50px 20px 20px;
+  }
+  
+  .course-title,
+  .drinks-title {
+    font-size: 24px;
+  }
+  
+  .price-amount {
+    font-size: 36px;
+  }
+  
+  .slider-control {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .slider-control.prev {
+    left: 10px;
+  }
+  
+  .slider-control.next {
+    right: 10px;
+  }
+  
+  .course-info {
+    padding: 20px;
+  }
+  
+  .drink-item {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+}

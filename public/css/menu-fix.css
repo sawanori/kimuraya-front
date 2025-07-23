@@ -1,0 +1,42 @@
+/* メニューセクションの表示修正 */
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  position: relative;
+}
+
+/* 初期表示でメニューカードを表示 */
+.menu-card {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+/* アニメーション開始前の状態 */
+.menu-card.fade-scale:not(.visible) {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* 価格の表示を確実に */
+.menu-item-name,
+.menu-item-price {
+  display: block;
+  z-index: 2;
+  position: relative;
+  background: white;
+}
+
+.menu-item-name {
+  padding-right: 10px;
+}
+
+.menu-item-price {
+  padding-left: 10px;
+}

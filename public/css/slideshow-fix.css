@@ -1,0 +1,60 @@
+/* スライドショーのアニメーション修正 */
+.hero-slide,
+.hero-slide-desktop,
+.hero-slide-mobile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 1;
+}
+
+.hero-slide.active,
+.hero-slide-desktop.active,
+.hero-slide-mobile.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.hero-slide img,
+.hero-slide-desktop img,
+.hero-slide-mobile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 10s linear;
+}
+
+.hero-slide.active img,
+.hero-slide-desktop.active img,
+.hero-slide-mobile.active img {
+  animation: smoothZoomOut 10s linear forwards;
+}
+
+@keyframes smoothZoomOut {
+  0% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 画像切り替え時のちらつき防止 */
+.hero-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+/* 初期状態で最初のスライドを表示 */
+.hero-slide-desktop:first-child,
+.hero-slide-mobile:first-child {
+  opacity: 1;
+}

@@ -1,0 +1,275 @@
+# Design Techniques from kushiyakihouichi.com/scene.html
+# Analyzed on: 2025-07-17
+# Updated: 2025-07-18 - Added shinmachi-adachi.com parallax techniques
+
+layout:
+  structure:
+    - type: "modular-sections"
+      description: "ページ全体がモジュール式のセクションで構成"
+      characteristics:
+        - "各セクションが独立したコンテンツブロック"
+        - "明確な視覚的区切り"
+        - "一貫したパディングとマージン"
+    
+    - type: "alternating-layout"
+      description: "画像とテキストの交互配置"
+      implementation:
+        - "左画像・右テキスト"
+        - "右画像・左テキスト"
+        - "視覚的リズムの創出"
+    
+    - type: "grid-system"
+      description: "グリッドベースのレイアウト"
+      details:
+        - "画像グリッドギャラリー"
+        - "ナビゲーションボタンの整列"
+        - "コンテンツの整理された配置"
+
+color_scheme:
+  primary_colors:
+    background: "#FFFFFF"
+    text_main: "#333333"
+    text_sub: "#666666"
+    accent: "#D4AF37" # 推定：ゴールド系アクセント
+  
+  design_philosophy:
+    - "ミニマリストアプローチ"
+    - "高いコントラスト比で可読性確保"
+    - "ブランドカラーの控えめな使用"
+
+typography:
+  font_families:
+    primary: "游ゴシック, YuGothic, sans-serif"
+    secondary: "serif系フォント（見出し用）"
+  
+  hierarchy:
+    h1:
+      size: "clamp(28px, 4vw, 48px)"
+      weight: "300"
+      letter_spacing: "0.1em"
+    
+    h2:
+      size: "clamp(24px, 3vw, 36px)"
+      weight: "400"
+      letter_spacing: "0.08em"
+    
+    body:
+      size: "16px"
+      line_height: "1.8"
+      letter_spacing: "0.05em"
+
+animations:
+  scroll_triggered:
+    - type: "fade-in"
+      trigger: "要素が画面に入った時"
+      duration: "0.8s"
+      easing: "ease-out"
+    
+    - type: "slide-up"
+      trigger: "スクロール位置に基づく"
+      distance: "30px"
+      opacity: "0 to 1"
+    
+    - type: "parallax"
+      description: "背景画像の視差効果"
+      speed: "0.5"
+    
+    - type: "advanced-parallax-scroll"
+      reference: "shinmachi-adachi.com"
+      description: "高度なパララックススクロール効果（季節の美味セクション）"
+      implementation:
+        javascript:
+          - "jQuery使用: $(window).on('scroll resize', updateOnScroll)"
+          - "要素の可視性比率を計算"
+          - "スクロール位置に基づく動的な変換"
+          - "モバイル/デスクトップで異なる挙動"
+        css_properties:
+          - "transform: scale(0.6〜1.0)"
+          - "transform: translateY(±10%)"
+          - "mask-position / -webkit-mask-position"
+          - "mask-size: 100% 100%"
+        trigger_points:
+          - "要素の高さの80%でトリガー"
+          - "画面内に入ってから出るまで連続的に変化"
+        performance:
+          - "requestAnimationFrameライクな処理"
+          - "最小限のDOM操作"
+          - "動的な変換計算"
+        unique_features:
+          - "交互に逆方向のパララックス効果"
+          - "マスク位置のアニメーション（-100%から0%）"
+          - "スケールとtranslateYの組み合わせ"
+
+image_treatment:
+  hero_images:
+    - "フルワイド表示"
+    - "高さ: 60-80vh"
+    - "オーバーレイテキスト配置"
+  
+  gallery_images:
+    - "アスペクト比固定"
+    - "ホバー時の拡大効果"
+    - "レイジーローディング実装"
+  
+  overlays:
+    - "半透明グラデーション"
+    - "テキスト可読性の確保"
+    - "ブランドロゴの配置"
+
+component_design:
+  navigation:
+    - type: "fixed-header"
+      behavior: "スクロール時に背景色変化"
+      height: "80px → 60px (スクロール時)"
+    
+    - type: "hamburger-menu"
+      mobile: "3本線アイコン"
+      animation: "スライドイン"
+  
+  buttons:
+    primary:
+      background: "transparent"
+      border: "1px solid #333"
+      hover: "背景色反転"
+      transition: "0.3s ease"
+    
+    secondary:
+      background: "accent-color"
+      text: "white"
+      hover: "brightness(110%)"
+
+section_design:
+  spacing:
+    between_sections: "80px - 120px"
+    mobile: "60px - 80px"
+  
+  transitions:
+    - "明確な区切り線なし"
+    - "余白による視覚的分離"
+    - "背景色の変化"
+
+responsive_design:
+  breakpoints:
+    mobile: "max-width: 768px"
+    tablet: "max-width: 1024px"
+    desktop: "min-width: 1025px"
+  
+  strategies:
+    - "フレキシブルグリッド"
+    - "相対単位の使用（rem, em, %）"
+    - "画像の最適化とレスポンシブ対応"
+
+special_effects:
+  blur_effects:
+    - "backdrop-filter使用"
+    - "ガラスモーフィズム風デザイン"
+  
+  shadows:
+    - "控えめなbox-shadow"
+    - "深度感の演出"
+  
+  gradients:
+    - "微細なグラデーション背景"
+    - "オーバーレイ効果"
+
+user_experience:
+  navigation_flow:
+    - "直感的なスクロール誘導"
+    - "明確なCTAボタン配置"
+    - "ページ内リンクのスムーズスクロール"
+  
+  accessibility:
+    - "高コントラスト比"
+    - "適切なフォントサイズ"
+    - "タッチターゲットの最適化"
+
+performance_optimization:
+  images:
+    - "適切な画像フォーマット（WebP推奨）"
+    - "レイジーローディング"
+    - "複数解像度の提供"
+  
+  code:
+    - "CSSの最小化"
+    - "JavaScriptの非同期読み込み"
+    - "クリティカルCSSのインライン化"
+
+design_principles:
+  1. "シンプルさと洗練さの追求"
+  2. "コンテンツファースト"
+  3. "視覚的階層の明確化"
+  4. "一貫性のあるデザイン言語"
+  5. "ユーザビリティの重視"
+
+implementation_tips:
+  - "CSS Grid と Flexbox の効果的な組み合わせ"
+  - "CSS カスタムプロパティによるテーマ管理"
+  - "モバイルファーストアプローチ"
+  - "プログレッシブエンハンスメント"
+  - "パフォーマンスとデザインのバランス"
+
+# Additional Design Patterns from shinmachi-adachi.com
+# Analyzed on: 2025-07-18
+
+shinmachi_adachi_patterns:
+  overall_design:
+    concept:
+      - "極限までミニマルな日本の美意識"
+      - "7席限定による希少性の演出"
+      - "季節の移ろいと文化体験の融合"
+    
+    color_palette:
+      - "ニュートラルトーン中心"
+      - "背景: #FAFAFA / #FFFFFF"
+      - "テキスト: #333333 / #666666"
+      - "アクセント: 控えめな暖色系"
+    
+    typography:
+      - "日本語: 游明朝体/ヒラギノ明朝"
+      - "極細〜細字のウェイト使用"
+      - "十分な行間と余白"
+      - "縦書きの効果的な使用"
+  
+  layout_characteristics:
+    - "シングルページ縦スクロール"
+    - "フルスクリーン画像セクション"
+    - "テキストと画像の絶妙なバランス"
+    - "グリッドベースの写真配置"
+    - "大胆な余白の使用"
+  
+  unique_interactions:
+    seasonal_section:
+      - "「季節の美味で風習に触れるひとときを」"
+      - "スクロールに応じた画像の拡大縮小"
+      - "マスクエフェクトによる画像の切り抜き"
+      - "複数画像の異なる速度での動き"
+    
+    navigation:
+      - "固定ヘッダーなし（完全没入型）"
+      - "最小限のナビゲーション要素"
+      - "予約ボタンのみ常時表示"
+    
+    photo_galleries:
+      - "料理写真の芸術的な配置"
+      - "インタラクティブなギャラリー"
+      - "季節ごとのメニュー表現"
+  
+  mobile_optimization:
+    breakpoint: "767px"
+    adjustments:
+      - "パララックス効果の簡略化"
+      - "画像サイズの最適化"
+      - "タッチ操作への対応"
+      - "スクロール性能の確保"
+  
+  performance_techniques:
+    - "画像の遅延読み込み"
+    - "スクロールイベントの最適化"
+    - "CSS transformによるGPU活用"
+    - "最小限のJavaScript使用"
+  
+  cultural_elements:
+    - "日本の四季の表現"
+    - "伝統と現代の融合"
+    - "間（ま）の概念の活用"
+    - "素材へのこだわりの視覚化"

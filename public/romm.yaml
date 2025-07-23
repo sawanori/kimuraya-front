@@ -1,0 +1,76 @@
+
+store:
+  name: "木村屋本店 横浜鶴屋町"
+  location:
+    address: "神奈川県横浜市神奈川区鶴屋町2-15 エフテム白十字ビル 2F・3F"
+    nearest_station: "横浜駅きた西口 徒歩1分"
+  seats:
+    - type: "テーブル"
+      capacity: 4
+      count: 1
+      description: "落ち着くテーブル席。お席もしっかりスペースをとっております。"
+    - type: "テーブル（半個室風ボックス）"
+      capacity: 4
+      count: 3
+      description: "窓際・開放的な快適空間。女子会におすすめ。"
+    - type: "テーブル"
+      capacity: 6
+      count: 3
+      description: "あたたかな照明で柔らかな雰囲気。気の置けないご友人とのご利用に。"
+    - type: "テーブル"
+      capacity: 4
+      count: 4
+      description: "4名席。レイアウト変更可で16名宴会にも対応可。"
+    - type: "テーブル"
+      capacity: 6
+      count: 2
+      description: "仕事終わりの部署飲みにおすすめ。"
+    - type: "テーブル"
+      capacity: 4
+      count: 6
+      description: "広々としたテーブル席。お料理を置いてもゆとりあり。"
+    - type: "テーブル"
+      capacity: 4
+      count: 7
+      description: "席間隔しっかり。少人数〜大人数宴会まで対応可。"
+    - type: "テーブル"
+      capacity: 4
+      count: 1
+      description: "接待・会食向け。ゆったりお座りいただけます。"
+    - type: "テーブル"
+      capacity: 8
+      count: 1
+      description: "8名宴会席。皆で顔を見て話せる一体感のある配置。"
+    - type: "テーブル"
+      capacity: 6
+      count: 1
+      description: "壁際席。気の置けないご友人との飲み会や女子会に最適。"
+    - type: "テーブル"
+      capacity: 4
+      count: 3
+      description: "外の景色を眺める開放的席。デートに人気。"
+    - type: "貸切"
+      capacity: 110
+      count: 1
+      description: "着席最大110名。広々とした快適空間で貸切宴会可。"
+  ambience:
+    - "大人数OK"
+    - "半個室風のボックス席"
+    - "開放的な窓際席"
+    - "落ち着いた照明"
+    - "オシャレで広々とした空間"
+    - "ソファ席あり"
+    - "無料Wi‑Fiあり"
+  reservation:
+    max_full_booking: 110
+    private_room: false
+    smoking: true
+    booking_possible: true
+    restrictions:
+      - "20歳未満入店不可"
+      - "全席喫煙可"
+      - "2時間制"
+  parking: "近隣にパーキング多数有"
+  notes:
+    - "2020年4月1日より健康増進法により店内全席喫煙可。最新情報は店舗にてご確認ください。"  
+    - "ケーキ等のサプライズ演出も対応可能"

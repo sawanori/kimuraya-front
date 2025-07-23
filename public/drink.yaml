@@ -1,0 +1,154 @@
+
+drinks:
+  ビール:
+    - name: "プレミアムモルツ中ジョッキ"
+      price: 605
+    - name: "プレミアムモルツ中瓶"
+      price: 748
+      variants:
+        - "中ジョッキ"
+        - "グラス"
+        - "中瓶"
+    - name: "アサヒスーパードライ中瓶"
+      price: 748
+
+  ホッピー:
+    - name: "ホッピーセット【白or黒】"
+      price: 528
+      options:
+        - name: "中お替わり（焼酎）"
+          price: 220
+        - name: "外お替わり（ホッピー）"
+          price: 220
+
+  ハイボール:
+    - name: "ジムビームハイボール"
+      price: 319
+      variants:
+        - name: "メガサイズ"
+          price: 594
+    - name: "角ハイボール"
+      price: 572
+      variants:
+        - name: "メガサイズ"
+          price: 704
+
+  プレミアムウイスキー:
+    - name: "知多"
+      price: 1078
+      description: "軽やかな味わいとほのかに甘い香りのシングルグレーン"
+    - name: "余市"
+      price: 1078
+      description: "力強いピートの味わいと香ばしさ"
+    - name: "白州"
+      price: 1078
+      description: "華やかでフルーティな香り"
+    - name: "碧Ao"
+      price: 748
+
+  サワー:
+    - name: "ごろごろレモンサワー"
+      price: 550
+    - name: "タコハイ"
+      price: 429
+    - name: "こだわり酒場のレモンサワー"
+      price: 429
+      variants:
+        - name: "メガサイズ"
+          price: 594
+    - name: "すっぱいレモンサワー"
+      price: 429
+      variants:
+        - name: "メガサイズ"
+          price: 594
+    - name: "コーラレモンサワー"
+      price: 429
+      variants:
+        - name: "メガサイズ"
+          price: 594
+    - name: "ジンジャーレモンサワー"
+      price: 429
+      variants:
+        - name: "メガサイズ"
+          price: 594
+    - name: "みかんレモンサワー"
+      price: 429
+      variants:
+        - name: "メガサイズ"
+          price: 594
+    - name: "パインレモンサワー"
+      price: 429
+      variants:
+        - name: "メガサイズ"
+          price: 594
+    - name: "ゆずレモンサワー"
+      price: 429
+      variants:
+        - name: "メガサイズ"
+          price: 594
+    - name: "赤玉パンチサワー"
+      price: 429
+    - name: "すっきりトマトサワー"
+      price: 429
+    - name: "しょっぱい梅サワー"
+      price: 429
+    - name: "グレープフルーツサワー"
+      price: 429
+    - name: "シークワーサーサワー"
+      price: 429
+    - name: "パインサワー"
+      price: 429
+    - name: "みかんサワー"
+      price: 429
+    - name: "梅干しサワー"
+      price: 495
+    - name: "奏ゆずサワー"
+      price: 495
+    - name: "奏ももサワー"
+      price: 495
+
+  ビアボール:
+    - name: "ビアボール"
+      price: 495
+    - name: "レモネードビアボール"
+      price: 550
+
+  お茶割り:
+    - name: "玄米緑茶ハイ"
+      price: 440
+    - name: "JJジャスミンハイ"
+      price: 462
+    - name: "ウーロンハイ"
+      price: 418
+    - name: "コーン茶ハイ"
+      price: 418
+    - name: "緑茶ハイ"
+      price: 462
+    - name: "黒ウーロンハイ"
+      price: 462
+
+  焼酎:
+    - name: "大隅（芋）"
+      price: 418
+      variants:
+        - name: "ボトル"
+          price: 2728
+    - name: "大隅（麦）"
+      price: 418
+      variants:
+        - name: "ボトル"
+          price: 2728
+    - name: "茉莉花ボトル"
+      price: 3058
+    - name: "キンミヤボトル"
+      price: 3058
+
+  日本酒:
+    - name: "吟望天晴 特別純米（神奈川）"
+      price: 660
+    - name: "千峰天晴 純米吟醸（神奈川）"
+      price: 660
+    - name: "三井の寿 純米吟醸 山田錦（福岡）"
+      price: 660
+    - name: "日高見 超辛口 純米（宮城）"
+      price: 660

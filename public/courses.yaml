@@ -1,0 +1,82 @@
+
+# 木村屋本店 ‑ おすすめコース（4）
+courses:
+  - id: 1
+    title: "～夏の宴会～【3時間飲み放題付き！夏の食材＆佐賀牛を堪能】"
+    subtitle: "※金曜・土曜は2時間でのご案内になります"
+    items_count: 8
+    includes:
+      - "飲み放題（平日3時間／金・土2時間）"
+    description: >
+      佐賀牛のステーキや本マグロも入ったお刺身、夏の食材にも
+      こだわった全8品。暑気払いや納涼会などに最適。
+    participants:
+      min: 3
+      max: 50
+    price:
+      amount: 5000
+      currency: "円"
+      tax_included: true
+    link_label: "コース詳細"
+
+  - id: 2
+    title: "【もつ鍋食べ飲み放題♪２時間　4,280円】"
+    subtitle: "※金曜日・土曜日のご利用は＋300円になります"
+    items_count: 16
+    includes:
+      - "飲み放題（2時間）"
+      - "食べ放題（メイン・サイドメニュー）"
+    description: >
+      木村屋自慢のもつ鍋が完全予約制で食べ飲み放題。
+      サイドメニューも充実で大満足間違いなし。
+    time: "16:00～23:30"
+    price:
+      amount: 4280
+      weekend_extra: 300   # 金・土追加料金
+      currency: "円"
+      tax_included: true
+    link_label: "コース詳細"
+
+  - id: 3
+    title: "【2.5時間飲み放題】佐賀牛の朴葉焼き＆本マグロを愉しむ全10品6,000円 雅コース"
+    items_count: 10
+    includes:
+      - "飲み放題（2.5時間／金曜・12/27‑30は2時間）"
+    menu_list:
+      - "馬刺しユッケ"
+      - "桜鯛のなめろう"
+      - "本マグロのトロたく"
+      - "本マグロ入りお刺身5種盛り合わせ"
+      - "佐賀牛の朴葉焼き"
+      - "とり天＆キス天の天ぷら盛り合わせ"
+      - "特製博多もつ鍋"
+      - "牛タンつくね串"
+      - "〆のちゃんぽん麺"
+      - "本日のデザート"
+    participants:
+      min: 3
+      max: 99
+    price:
+      amount: 6000
+      currency: "円"
+      tax_included: true
+    link_label: "コース詳細"
+
+  - id: 4
+    title: "【最大2.5時間飲み放題】旬の海鮮＆米沢豚を愉しむ全10品5,000円 匠コース"
+    subtitle: "金曜・土曜は2時間でのご案内になります"
+    items_count: 10
+    includes:
+      - "飲み放題（最大2.5時間／金・土2時間）"
+    description: >
+      旬の鮮魚・海鮮料理と特製博多もつ鍋、米沢豚を本格的に
+      楽しめるコース。
+    participants:
+      min: 3
+      max: 99
+    time: "16:00～23:30"
+    price:
+      amount: 5000
+      currency: "円"
+      tax_included: true
+    link_label: "コース詳細"
