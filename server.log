@@ -1,0 +1,490 @@
+
+> front@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.4.3
+   - Local:        http://localhost:3001
+   - Network:      http://10.35.59.122:3001
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 4s
+ ○ Compiling / ...
+ ✓ Compiled / in 6.1s (552 modules)
+ ○ Compiling /api/content ...
+ ✓ Compiled /api/content in 1877ms (573 modules)
+ GET /api/content 200 in 2092ms
+ ⨯ ReferenceError: React is not defined
+    at eval (src/app/HomePage.tsx:473:15)
+    at Array.map (<anonymous>)
+    at HomePage (src/app/HomePage.tsx:472:87)
+  471 |             <span className="desktop-text">{content.hero.textFields.subTitle}</span>
+  472 |             <span className="mobile-text">{content.hero.textFields.subTitle.split('で').map((part, i) => (
+> 473 |               <React.Fragment key={i}>{i === 0 ? `${part}で` : <><br />{part}</>}</React.Fragment>
+      |               ^
+  474 |             ))}</span>
+  475 |           </p>
+  476 |         </div> {
+  digest: '3048096963'
+}
+ GET / 500 in 8811ms
+ ✓ Compiled in 962ms (573 modules)
+ GET /api/content 200 in 22ms
+ GET / 200 in 312ms
+ ○ Compiling /api/[...slug] ...
+ ✓ Compiled /api/[...slug] in 9.8s (2392 modules)
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js',
+  page: '/api/content'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 3.2s (2721 modules)
+ GET /api/content 500 in 13620ms
+ ○ Compiling /_not-found ...
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development/2.pack.gz_' -> '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development/2.pack.gz'
+ ✓ Compiled /_not-found in 3.2s (2960 modules)
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js',
+  page: '/api/content'
+}
+ GET /api/content 404 in 4446ms
+ GET /api/content 500 in 2903ms
+ GET /api/content 404 in 57ms
+ ✓ Compiled in 188ms (374 modules)
+ GET /api/content 200 in 15ms
+ ✓ Compiled / in 246ms (440 modules)
+ GET /api/content 200 in 7ms
+ GET / 200 in 422ms
+ ✓ Compiled in 110ms (374 modules)
+ GET / 200 in 41ms
+ ✓ Compiled /_not-found in 147ms (805 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /_next/static/webpack/ec5d3c023fcbcf59.webpack.hot-update.json 404 in 245ms
+ GET /api/content 200 in 9ms
+ GET / 200 in 60ms
+ GET /api/content 200 in 5ms
+ GET / 200 in 59ms
+ ✓ Compiled in 145ms (374 modules)
+ GET / 200 in 26ms
+ ✓ Compiled /_not-found in 214ms (785 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /_next/static/webpack/d5899e51110fac6d.webpack.hot-update.json 404 in 362ms
+ ✓ Compiled /api/content in 452ms (441 modules)
+ GET /api/content 200 in 521ms
+ GET / 200 in 558ms
+ ✓ Compiled in 128ms (378 modules)
+ GET / 200 in 75ms
+ ✓ Compiled in 255ms (819 modules)
+ GET /api/content 404 in 133ms
+ GET / 200 in 128ms
+ GET /api/content 200 in 11ms
+ GET / 200 in 49ms
+ GET /api/content 200 in 7ms
+ GET / 200 in 41ms
+ GET /api/content 200 in 3ms
+ ✓ Compiled in 435ms (794 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled /api/content in 58ms (440 modules)
+ GET /api/content 200 in 123ms
+ GET / 200 in 344ms
+ ○ Compiling /api/[...slug] ...
+ ✓ Compiled /api/[...slug] in 1194ms (2516 modules)
+ GET /api/content 200 in 1260ms
+ GET /api/content 200 in 4ms
+ GET / 200 in 136ms
+ ✓ Compiled in 163ms (374 modules)
+ GET / 200 in 67ms
+ GET /api/content 200 in 18ms
+ ✓ Compiled in 90ms (374 modules)
+ GET / 200 in 34ms
+ ✓ Compiled in 85ms (374 modules)
+ GET / 200 in 20ms
+[⣷] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[22:12:31] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+ GET /api/content 404 in 1089ms
+ GET / 200 in 1188ms
+ ✓ Compiled /middleware in 276ms (108 modules)
+ ○ Compiling /home ...
+ ✓ Compiled /home in 981ms (1744 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /home 200 in 1290ms
+ ✓ Compiled /_not-found in 261ms (1749 modules)
+ ✓ Compiled /api/[...slug] in 190ms (2989 modules)
+ GET /api/users/me 200 in 402ms
+ ✓ Compiled /home/editor in 301ms (3844 modules)
+ GET /home/editor 200 in 411ms
+ GET /api/users/me 200 in 99ms
+ GET /api/content 200 in 100ms
+ GET /api/content 200 in 4ms
+ ✓ Compiled in 482ms (1757 modules)
+ GET /home/editor 200 in 87ms
+ ✓ Compiled /api/content in 75ms (923 modules)
+ GET /api/content 200 in 104ms
+ ✓ Compiled in 571ms (1757 modules)
+ GET /home/editor 200 in 100ms
+ ✓ Compiled in 319ms (1757 modules)
+ GET /home/editor 200 in 57ms
+ ✓ Compiled in 224ms (1757 modules)
+ GET /home/editor 200 in 41ms
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/3.pack.gz_' -> '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/3.pack.gz'
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development/10.pack.gz_' -> '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development/10.pack.gz'
+ ✓ Compiled /_not-found in 426ms (1748 modules)
+ GET /home/editor 404 in 546ms
+ GET /_next/static/css/app/layout.css?v=1753363349662 404 in 25ms
+ GET /_next/static/chunks/main-app.js?v=1753363349662 404 in 33ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 33ms
+ ○ Compiling /api/content ...
+ ✓ Compiled /api/content in 580ms (924 modules)
+ GET /api/content 200 in 836ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/home/editor/page.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/home/editor/page.js',
+  page: '/home/editor'
+}
+ ✓ Compiled /_error in 232ms (1855 modules)
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'
+}
+ GET /home/editor 500 in 1189ms
+ GET /api/content 200 in 9ms
+ GET / 200 in 211ms
+ GET /api/content 200 in 6ms
+ ✓ Compiled in 440ms (1844 modules)
+ ✓ Compiled in 93ms (855 modules)
+ ✓ Compiled in 94ms (855 modules)
+ ✓ Compiled /api/content in 88ms (1009 modules)
+ GET /api/content 200 in 385ms
+ ✓ Compiled in 142ms (855 modules)
+ GET /api/content 200 in 6ms
+ ✓ Compiled in 141ms (855 modules)
+ GET /api/content 200 in 3ms
+ GET /api/content 200 in 3ms
+ GET /api/content 200 in 7ms
+ ✓ Compiled in 424ms (1864 modules)
+ ✓ Compiled in 118ms (855 modules)
+ GET /api/content 200 in 18ms
+ ✓ Compiled in 103ms (855 modules)
+ GET /api/content 200 in 3ms
+ GET /api/content 200 in 6ms
+ ✓ Compiled in 201ms (855 modules)
+ GET /api/content 200 in 10ms
+ ✓ Compiled in 871ms (1844 modules)
+ ✓ Compiled /api/content in 89ms (1009 modules)
+ GET /api/content 200 in 168ms
+ ✓ Compiled in 196ms (1864 modules)
+ ○ Compiling /api/[...slug] ...
+ ✓ Compiled /api/[...slug] in 851ms (3085 modules)
+ GET /api/content 200 in 923ms
+ ✓ Compiled in 321ms (3940 modules)
+ ✓ Compiled in 95ms (855 modules)
+ ✓ Compiled in 840ms (3940 modules)
+ ✓ Compiled in 78ms (855 modules)
+ ✓ Compiled in 120ms (855 modules)
+ ✓ Compiled in 124ms (855 modules)
+ ✓ Compiled in 108ms (855 modules)
+ GET /api/content 200 in 26ms
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/3.pack.gz_' -> '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/3.pack.gz'
+ GET /api/content 200 in 7ms
+ ✓ Compiled in 164ms (855 modules)
+ GET /api/content 200 in 5ms
+ GET /api/content 200 in 6ms
+ GET /api/content 200 in 5ms
+ POST /api/content 200 in 5ms
+ ✓ Compiled in 97ms (855 modules)
+ GET /api/content 200 in 3ms
+ GET / 200 in 116ms
+ POST /api/content 200 in 3ms
+ ✓ Compiled in 90ms (855 modules)
+ GET /api/content 200 in 7ms
+ ✓ Compiled in 160ms (855 modules)
+ GET /api/content 200 in 5ms
+ GET /api/content 200 in 6ms
+ GET /api/content 200 in 3ms
+ GET / 200 in 45ms
+ GET /api/content 200 in 5ms
+ GET / 200 in 44ms
+ POST /api/content 200 in 8ms
+ ✓ Compiled in 123ms (855 modules)
+ GET /api/content 200 in 4ms
+ GET / 200 in 33ms
+ ✓ Compiled in 463ms (1864 modules)
+ POST /api/content 200 in 74ms
+ ✓ Compiled in 81ms (855 modules)
+ ✓ Compiled /api/[...slug] in 174ms (3085 modules)
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js',
+  page: '/api/content'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'
+}
+ GET /api/content 500 in 644ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js',
+  page: '/api/content'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'
+}
+ GET /api/content 500 in 260ms
+ GET /api/content 200 in 469ms
+ GET /api/content 200 in 469ms
+ ✓ Compiled in 157ms (855 modules)
+ GET /api/content 200 in 3ms
+ ✓ Compiled in 411ms (1864 modules)
+ ✓ Compiled in 206ms (1844 modules)
+ ✓ Compiled /api/content in 179ms (1009 modules)
+ GET /api/content 200 in 461ms
+ ✓ Compiled in 137ms (855 modules)
+ GET /api/content 200 in 5ms
+ GET /api/content 200 in 8ms
+ GET /api/content 200 in 5ms
+ GET /api/content 200 in 9ms
+ GET /api/content 200 in 5ms
+ GET /api/content 200 in 9ms
+ GET /api/content 200 in 6ms
+ GET /api/content 200 in 11ms
+ GET / 200 in 142ms
+ GET /api/content 200 in 7ms
+ GET / 200 in 68ms
+ GET /api/content 200 in 5ms
+ GET / 200 in 43ms
+ ✓ Compiled in 1003ms (1870 modules)
+ ✓ Compiled in 396ms (1870 modules)
+ ⨯ TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_exec__ (.next/server/app/api/content/route.js:162:39)
+    at <unknown> (.next/server/app/api/content/route.js:163:83)
+    at <unknown> (.next/server/app/api/content/route.js:163:47)
+    at Object.<anonymous> (.next/server/app/api/content/route.js:166:3) {
+  page: '/api/content'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'
+}
+ GET /api/content 500 in 32ms
+ GET / 200 in 199ms
+ ✓ Compiled in 269ms (1864 modules)
+ ○ Compiling /api/[...slug] ...
+ ✓ Compiled /api/[...slug] in 1263ms (3085 modules)
+ GET /api/content 200 in 1335ms
+ GET / 200 in 1491ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 502ms (3931 modules)
+ GET /api/content 404 in 1008ms
+ GET /api/content 404 in 16ms
+ ✓ Compiled in 139ms (859 modules)
+ GET /api/content 404 in 20ms
+ GET /api/content 404 in 26ms
+ GET /api/content 404 in 29ms
+ GET /api/content 404 in 18ms
+ GET /api/content 404 in 38ms
+ GET /api/content 404 in 35ms
+ GET / 404 in 213ms
+ ✓ Compiled in 1202ms (1849 modules)
+ ✓ Compiled /api/content in 106ms (1010 modules)
+ GET /api/content 200 in 163ms
+ GET /api/content 200 in 183ms
+ GET /api/content 200 in 153ms
+ GET /api/content 200 in 80ms
+ GET /api/content 200 in 80ms
+ GET /api/content 200 in 185ms
+ ✓ Compiled /api/[...slug] in 210ms (3086 modules)
+ GET /api/content 200 in 277ms
+ GET /api/content 200 in 2ms
+ GET / 200 in 128ms
+ GET /api/content 200 in 6ms
+ GET /api/content 200 in 6ms
+ GET /api/content 404 in 618ms
+ GET /api/content 404 in 615ms
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled in 697ms (1844 modules)
+ ✓ Compiled in 295ms (1844 modules)
+ ✓ Compiled /api/content in 69ms (1009 modules)
+ GET /api/content 200 in 101ms
+ GET /api/content 200 in 6ms
+ ✓ Compiled /api/[...slug] in 238ms (3085 modules)
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js',
+  page: '/api/content'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'
+}
+ GET /api/content 500 in 282ms
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled in 447ms (1844 modules)
+ ✓ Compiled /api/content in 108ms (1009 modules)
+ GET /api/content 200 in 132ms
+ ✓ Compiled in 293ms (1864 modules)
+ ✓ Compiled /api/[...slug] in 185ms (3085 modules)
+ GET /api/content 200 in 255ms
+ GET /api/content 200 in 6ms
+ GET /api/content 200 in 8ms
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/2.pack.gz_' -> '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/2.pack.gz'
+ GET /api/content 200 in 3ms
+ GET / 200 in 116ms
+ GET /api/content 200 in 5ms
+ GET / 200 in 30ms
+ GET /api/content 200 in 3ms
+ GET / 200 in 31ms
+ GET /api/content 200 in 6ms
+ ✓ Compiled in 138ms (855 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled /_not-found in 391ms (3931 modules)
+ GET /api/content 200 in 506ms
+ GET /api/content 404 in 619ms
+ ✓ Compiled in 152ms (859 modules)
+ GET /api/content 200 in 8ms
+ GET /api/content 200 in 8ms
+ GET /api/content 200 in 3ms
+ GET /api/content 200 in 6ms
+ GET /api/content 200 in 10ms
+ GET /api/content 200 in 5ms
+ GET / 200 in 52ms
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled in 663ms (1864 modules)
+ GET /api/content 200 in 195ms
+ GET /api/content 200 in 252ms
+ ✓ Compiled in 195ms (855 modules)
+ ✓ Compiled /api/[...slug] in 252ms (3085 modules)
+ GET /api/content 200 in 339ms
+ GET /api/content 200 in 9ms
+ ✓ Compiled /_not-found in 206ms (3931 modules)
+ GET /api/content 404 in 293ms
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled in 201ms (855 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled /_not-found in 279ms (3931 modules)
+ GET /api/content 404 in 351ms
+ ✓ Compiled in 148ms (859 modules)
+ GET /api/content 200 in 13ms
+ ✓ Compiled in 102ms (859 modules)
+ GET /api/content 404 in 16ms
+ ✓ Compiled in 385ms (3945 modules)
+ GET /api/content 200 in 18ms
+ GET /api/content 404 in 612ms
+ ✓ Compiled in 145ms (859 modules)
+ GET /api/content 404 in 7ms
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from /Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/server-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled in 643ms (3945 modules)
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js',
+  page: '/api/content'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'
+}
+ GET /api/content 500 in 309ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js',
+  page: '/api/content'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'
+}
+ GET /api/content 500 in 32ms
+ ✓ Compiled in 121ms (859 modules)
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js',
+  page: '/api/content'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/app/api/content/route.js',
+  page: '/api/content'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/server/pages/_document.js'
+}
+ GET /api/content 500 in 78ms
+ GET /api/content 500 in 81ms
+ GET /api/content 404 in 153ms
+ ✓ Compiled in 136ms (859 modules)
+ GET /api/content 404 in 44ms
+ GET /api/content 404 in 46ms
+ GET /api/content 404 in 20ms
+ ✓ Compiled in 189ms (859 modules)
+ GET /api/content 404 in 79ms
+ GET /api/content 404 in 80ms
+ GET /api/content 404 in 37ms
+[Error: ENOENT: no such file or directory, stat '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/2.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/2.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/2.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/2.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/2.pack.gz'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/2.pack.gz'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, stat '/Users/noritakasawada/AI_P/kimuraya-all/front/.next/cache/webpack/client-development/2.pack.gz'
+[?25h

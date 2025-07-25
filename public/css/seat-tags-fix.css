@@ -1,0 +1,42 @@
+/* 席紹介セクションのタグスタイル修正 */
+
+/* 席紹介のタグを左揃えに */
+#seats .seat-features,
+.seats-section .seat-features {
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+}
+
+/* タグのテキスト色を白に変更 */
+#seats .feature-item,
+.seats-section .feature-item,
+#seats .seat-features .feature-item {
+    color: #ffffff !important;
+    justify-content: flex-start !important;
+}
+
+/* タグ内のテキストも白に */
+#seats .feature-item span,
+.seats-section .feature-item span,
+#seats .seat-features .feature-item span:not(.feature-icon) {
+    color: #ffffff !important;
+}
+
+/* チェックマークアイコンのスタイル */
+#seats .feature-icon,
+.seats-section .feature-icon,
+#seats .seat-features .feature-icon,
+#seats span.feature-icon {
+    color: var(--accent-gold) !important;  /* チェックマーク自体は金色のまま */
+    background-color: #ffffff !important;  /* 外周の丸を白に */
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    flex-shrink: 0 !important;
+}

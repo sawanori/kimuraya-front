@@ -1,0 +1,305 @@
+/* もつ鍋セクション */
+.motsunabe-section {
+  padding: 100px 0;
+  background: #faf8f5;
+  position: relative;
+  overflow: hidden;
+}
+
+.motsunabe-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.motsunabe-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.motsunabe-title {
+  font-size: 48px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.motsunabe-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: #d4a574;
+}
+
+.motsunabe-subtitle {
+  font-size: 18px;
+  color: #666;
+  margin-top: 20px;
+}
+
+/* メインコンテンツ */
+.motsunabe-content {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.motsunabe-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.motsunabe-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.motsunabe-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.motsunabe-image-wrapper:hover .motsunabe-image {
+  transform: scale(1.05);
+}
+
+.motsunabe-badge {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: rgba(212, 165, 116, 0.95);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 5px;
+  font-weight: 500;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.motsunabe-badge span {
+  display: block;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.motsunabe-badge span:first-child {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* 情報部分 */
+.motsunabe-info {
+  padding: 20px 0;
+}
+
+.motsunabe-catch {
+  font-size: 28px;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  font-family: 'Noto Serif JP', serif;
+}
+
+.motsunabe-description {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+/* 特徴 */
+.motsunabe-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.motsunabe-feature {
+  text-align: center;
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 15px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon svg {
+  stroke: #d4a574;
+}
+
+.motsunabe-feature h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.motsunabe-feature p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 価格 */
+.motsunabe-price {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+}
+
+.price-label {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.price-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+}
+
+.price-number {
+  font-size: 48px;
+  font-weight: 700;
+  color: #d4a574;
+}
+
+.price-unit {
+  font-size: 24px;
+  color: #333;
+}
+
+.price-tax {
+  font-size: 14px;
+  color: #999;
+  margin-left: 10px;
+}
+
+/* オプション */
+.motsunabe-options {
+  background: white;
+  padding: 60px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.options-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 50px;
+  font-family: 'Noto Serif JP', serif;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+
+.option-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+  background: #faf8f5;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.option-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.option-card img {
+  width: 100%;
+  max-width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.option-card h4 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.option-card p {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+  .motsunabe-section {
+    padding: 60px 0;
+  }
+  
+  .motsunabe-header {
+    margin-bottom: 50px;
+  }
+  
+  .motsunabe-title {
+    font-size: 36px;
+  }
+  
+  .motsunabe-main {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .motsunabe-features {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .motsunabe-catch {
+    font-size: 22px;
+  }
+  
+  .options-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .motsunabe-options {
+    padding: 40px 20px;
+  }
+  
+  .price-number {
+    font-size: 36px;
+  }
+}

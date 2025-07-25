@@ -28,6 +28,8 @@ export default function RootLayout({
         <link rel="stylesheet" href="/css/modal-fix.css" />
         <link rel="stylesheet" href="/css/mobile-menu-transparent.css" />
         <link rel="stylesheet" href="/css/bottom-nav-fix.css" />
+        <link rel="stylesheet" href="/css/motsunabe-section.css" />
+        <link rel="stylesheet" href="/css/seat-tags-fix.css" />
       </head>
       <body>
         {children}

@@ -1,0 +1,433 @@
+/* ChatGPTスタイルのエディタCSS */
+
+/* ダークテーマ変数 */
+:root {
+  --editor-bg: #212121;
+  --editor-sidebar-bg: #171717;
+  --editor-card-bg: #2a2a2a;
+  --editor-border: #424242;
+  --editor-text-primary: #ececec;
+  --editor-text-secondary: #a8a8a8;
+  --editor-accent: #10a37f;
+  --editor-accent-hover: #0d8f6f;
+  --editor-input-bg: #2f2f2f;
+  --editor-input-border: #424242;
+  --editor-input-focus: #10a37f;
+  --editor-hover-bg: #333333;
+  --editor-active-bg: rgba(16, 163, 127, 0.15);
+  --editor-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* 全体のスタイル */
+.editor-container {
+  min-height: 100vh;
+  background-color: var(--editor-bg);
+  color: var(--editor-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ヘッダー */
+.editor-header {
+  background-color: var(--editor-sidebar-bg);
+  border-bottom: 1px solid var(--editor-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--editor-shadow);
+}
+
+.editor-header-content {
+  padding: 1rem 1.5rem;
+}
+
+.editor-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editor-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.editor-back-button {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  background: transparent;
+  border: none;
+  color: var(--editor-text-primary);
+  cursor: pointer;
+}
+
+.editor-back-button:hover {
+  background-color: var(--editor-hover-bg);
+  color: var(--editor-accent);
+}
+
+.editor-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+}
+
+.editor-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.editor-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.editor-button-secondary {
+  background-color: var(--editor-card-bg);
+  color: var(--editor-text-primary);
+  border-color: var(--editor-border);
+}
+
+.editor-button-secondary:hover {
+  background-color: var(--editor-hover-bg);
+  border-color: var(--editor-accent);
+}
+
+.editor-button-primary {
+  background-color: var(--editor-accent);
+  color: white;
+  border-color: var(--editor-accent);
+}
+
+.editor-button-primary:hover {
+  background-color: var(--editor-accent-hover);
+  border-color: var(--editor-accent-hover);
+}
+
+.editor-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* メインレイアウト */
+.editor-main {
+  display: flex;
+  height: calc(100vh - 73px);
+}
+
+/* サイドバー */
+.editor-sidebar {
+  width: 16rem;
+  background-color: var(--editor-sidebar-bg);
+  border-right: 1px solid var(--editor-border);
+  overflow-y: auto;
+}
+
+.editor-sidebar-content {
+  padding: 1.5rem 1rem;
+}
+
+.editor-sidebar-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--editor-text-secondary);
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+}
+
+.editor-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.editor-nav-button {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  background: transparent;
+  border: none;
+  color: var(--editor-text-primary);
+  cursor: pointer;
+  position: relative;
+}
+
+.editor-nav-button:hover {
+  background-color: var(--editor-hover-bg);
+}
+
+.editor-nav-button.active {
+  background-color: var(--editor-active-bg);
+  color: var(--editor-accent);
+  font-weight: 500;
+}
+
+.editor-nav-button.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--editor-accent);
+  border-radius: 0 3px 3px 0;
+}
+
+/* コンテンツエリア */
+.editor-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: var(--editor-bg);
+}
+
+.editor-content-inner {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* セクションヘッダー */
+.editor-section-header {
+  margin-bottom: 2rem;
+}
+
+.editor-section-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.editor-section-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--editor-text-secondary);
+}
+
+.editor-section-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+/* カード */
+.editor-card {
+  background-color: var(--editor-card-bg);
+  border-radius: 0.75rem;
+  border: 1px solid var(--editor-border);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.editor-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* フォーム要素 */
+.editor-field {
+  margin-bottom: 1.5rem;
+}
+
+.editor-field:last-child {
+  margin-bottom: 0;
+}
+
+.editor-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--editor-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.editor-input,
+.editor-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--editor-input-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 0.5rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.editor-input:focus,
+.editor-textarea:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+  box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+}
+
+.editor-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* 画像アップロード */
+.editor-image-field {
+  background-color: var(--editor-card-bg);
+  border-radius: 0.75rem;
+  border: 1px solid var(--editor-border);
+  padding: 1.5rem;
+}
+
+.editor-image-preview {
+  aspect-ratio: 16 / 9;
+  background-color: var(--editor-input-bg);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.editor-image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editor-image-loading {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-upload-button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  background-color: var(--editor-input-bg);
+  color: var(--editor-text-primary);
+  border: 1px solid var(--editor-input-border);
+}
+
+.editor-upload-button:hover {
+  background-color: var(--editor-hover-bg);
+  border-color: var(--editor-accent);
+}
+
+.editor-upload-button:disabled,
+.editor-upload-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--editor-input-bg);
+  color: var(--editor-text-secondary);
+}
+
+.editor-upload-button.disabled:hover {
+  background-color: var(--editor-input-bg);
+  border-color: var(--editor-input-border);
+}
+
+/* グリッドレイアウト */
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* 席情報編集 */
+.editor-seat-card {
+  background-color: var(--editor-card-bg);
+  border-radius: 0.75rem;
+  border: 1px solid var(--editor-border);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.editor-seat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* アニメーション */
+.editor-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 成功メッセージ */
+.editor-success-message {
+  position: fixed;
+  top: 5rem;
+  right: 1rem;
+  background-color: var(--editor-accent);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--editor-shadow);
+  z-index: 100;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* スクロールバー */
+.editor-sidebar::-webkit-scrollbar,
+.editor-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.editor-sidebar::-webkit-scrollbar-track,
+.editor-content::-webkit-scrollbar-track {
+  background: var(--editor-sidebar-bg);
+}
+
+.editor-sidebar::-webkit-scrollbar-thumb,
+.editor-content::-webkit-scrollbar-thumb {
+  background: var(--editor-border);
+  border-radius: 4px;
+}
+
+.editor-sidebar::-webkit-scrollbar-thumb:hover,
+.editor-content::-webkit-scrollbar-thumb:hover {
+  background: var(--editor-text-secondary);
+}

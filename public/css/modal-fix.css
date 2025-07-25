@@ -31,39 +31,45 @@
   z-index: 1;
 }
 
-.modal-content {
-  position: relative;
-  background: white;
-  width: 90%;
-  max-width: 900px;
-  max-height: 85vh;
+/* Override original.css .modal-content positioning */
+.courses-modal .modal-content,
+.drinks-modal .modal-content {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  background: linear-gradient(135deg, #fdfcfa 0%, #f8f5f0 100%);
+  width: 95%;
+  max-width: 1000px;
+  max-height: 90vh;
   overflow-y: auto;
-  border-radius: 8px;
+  border-radius: 20px;
   z-index: 2;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(212, 165, 116, 0.1);
+  border: 2px solid rgba(212, 165, 116, 0.2);
 }
 
 .modal-close {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background: none;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.05);
   border: none;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
+  border-radius: 15px;
   z-index: 10;
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .modal-close:hover {
-  background: white;
-  transform: rotate(90deg);
+  background: rgba(212, 165, 116, 0.1);
+  transform: scale(1.05);
 }
 
 /* コースモーダルのスライダー */
@@ -82,7 +88,8 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.5s ease, visibility 0.5s ease;
-  padding: 60px 40px 40px;
+  padding: 40px;
+  background: transparent;
 }
 
 .course-slide.active {
@@ -92,21 +99,81 @@
 
 .course-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.course-image {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 25px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  transform: perspective(1000px) rotateX(2deg);
+  transition: all 0.3s ease;
+}
+
+.course-image:hover {
+  transform: perspective(1000px) rotateX(0deg) scale(1.02);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.course-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, transparent 50%, rgba(212, 165, 116, 0.05) 100%);
+  z-index: 1;
+}
+
+.course-image img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.1) contrast(1.05);
 }
 
 .course-title {
   font-family: 'Noto Serif JP', serif;
-  font-size: 28px;
-  font-weight: 500;
-  line-height: 1.6;
-  color: #333;
-  margin-bottom: 10px;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #2c2c2c;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #d4a574 0%, #c19660 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.title-price {
+  display: block;
+  font-size: 42px;
+  font-weight: 700;
+  margin-top: 10px;
+  background: linear-gradient(135deg, #d4a574 0%, #b8905a 50%, #d4a574 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 8px rgba(212, 165, 116, 0.3);
 }
 
 .course-subtitle {
-  font-size: 14px;
-  color: #666;
+  font-size: 15px;
+  color: #888;
+  font-weight: 500;
+  padding: 8px 16px;
+  background: rgba(212, 165, 116, 0.1);
+  border-radius: 20px;
+  display: inline-block;
+  border: 1px solid rgba(212, 165, 116, 0.2);
 }
 
 .course-body {
@@ -116,32 +183,65 @@
 
 .course-price {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
+  padding: 25px;
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.08) 0%, rgba(212, 165, 116, 0.03) 100%);
+  border-radius: 20px;
+  border: 2px solid rgba(212, 165, 116, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.course-price::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .price-amount {
-  font-size: 48px;
-  font-weight: 600;
-  color: #d4a574;
+  font-size: 56px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #d4a574 0%, #b8905a 50%, #d4a574 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 8px rgba(212, 165, 116, 0.3);
+  position: relative;
+  z-index: 1;
 }
 
 .price-unit {
-  font-size: 24px;
-  color: #333;
-  margin-left: 5px;
+  font-size: 28px;
+  color: #2c2c2c;
+  margin-left: 8px;
+  font-weight: 600;
 }
 
 .price-note {
-  font-size: 14px;
-  color: #666;
-  margin-left: 10px;
+  font-size: 16px;
+  color: #777;
+  margin-left: 12px;
+  font-weight: 500;
 }
 
 .course-info {
-  background: #f8f5f0;
-  padding: 30px;
-  border-radius: 8px;
-  margin-bottom: 30px;
+  background: linear-gradient(135deg, rgba(248, 245, 240, 0.8) 0%, rgba(253, 252, 250, 0.6) 100%);
+  padding: 35px;
+  border-radius: 25px;
+  margin-bottom: 35px;
+  border: 1px solid rgba(212, 165, 116, 0.15);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
 }
 
 .course-items {
@@ -163,6 +263,74 @@
   line-height: 1.8;
   color: #666;
   margin-bottom: 20px;
+}
+
+.course-menu {
+  margin-bottom: 30px;
+  padding: 30px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 245, 240, 0.7) 100%);
+  border-radius: 20px;
+  border: 2px solid rgba(212, 165, 116, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.menu-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c2c2c;
+  margin: 0 0 25px 0;
+  text-align: center;
+  font-family: 'Noto Serif JP', serif;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.menu-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #d4a574, #c19660);
+  border-radius: 2px;
+}
+
+.menu-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-items li {
+  padding: 12px 18px;
+  background: linear-gradient(135deg, rgba(248, 245, 240, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%);
+  border-radius: 12px;
+  font-size: 15px;
+  color: #444;
+  border-left: 4px solid #d4a574;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.menu-items li::before {
+  content: '🍽';
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+.menu-items li:hover {
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, rgba(255, 255, 255, 0.8) 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(212, 165, 116, 0.2);
+  border-left-color: #b8905a;
 }
 
 .course-features {
@@ -189,20 +357,46 @@
 .course-cta {
   display: block;
   width: 100%;
-  padding: 18px;
-  background: #d4a574;
+  padding: 20px 30px;
+  background: linear-gradient(135deg, #d4a574 0%, #c19660 50%, #d4a574 100%);
   color: white;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 700;
   border: none;
-  border-radius: 4px;
+  border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(212, 165, 116, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Noto Serif JP', serif;
+}
+
+.course-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.course-cta:hover::before {
+  left: 100%;
 }
 
 .course-cta:hover {
-  background: #c19660;
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #c19660 0%, #b8905a 50%, #c19660 100%);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(212, 165, 116, 0.5);
+}
+
+.course-cta:active {
+  transform: translateY(-1px) scale(1.01);
 }
 
 /* スライダーコントロール */
@@ -370,6 +564,42 @@
   
   .course-info {
     padding: 20px;
+  }
+  
+  .course-image {
+    max-width: 400px;
+    transform: none;
+  }
+  
+  .course-image:hover {
+    transform: scale(1.02);
+  }
+  
+  .course-image img {
+    height: 250px;
+  }
+  
+  .course-title {
+    font-size: 26px;
+  }
+  
+  .title-price {
+    font-size: 32px;
+  }
+  
+  .menu-items {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .menu-items li {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+  
+  .course-cta {
+    font-size: 16px;
+    padding: 18px 25px;
   }
   
   .drink-item {

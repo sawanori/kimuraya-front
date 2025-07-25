@@ -2557,11 +2557,11 @@
         }
 
         .dining-party-bg {
-            background-image: url('/images/DSC00452.jpg');
+            /* Background image is now set dynamically via inline styles */
         }
 
         .dining-sake-bg {
-            background-image: url('/images/DSC00493.jpg');
+            /* Background image is now set dynamically via inline styles */
         }
 
         .dining-column:hover .dining-bg-image {
@@ -3896,7 +3896,7 @@
             width: 100%;
             height: 100vh;
             z-index: -1;
-            background-image: url('/images/no1-0243.jpg');
+            /* Background image is now set dynamically via inline styles */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -3964,7 +3964,7 @@
 
         /* パララックス背景2 */
         .parallax-bg-wrapper.parallax-bg-2 {
-            background-image: url('/images/no1-0243.jpg');
+            /* Background image is now set dynamically via inline styles */
             opacity: 0;
             transition: opacity 1s ease-in-out;
         }
@@ -3972,7 +3972,7 @@
         /* スマートフォン用背景画像2 */
         @media (max-width: 768px) {
             .parallax-bg-wrapper.parallax-bg-2 {
-                background-image: url('/images/no1-0243.jpg');
+                /* Background image is now set dynamically via inline styles */
             }
         }
 
@@ -4031,7 +4031,7 @@
 
             /* モバイル用背景 */
             .parallax-bg-wrapper {
-                background-image: url('/images/no1-0185.jpg');
+                /* Background image is now set dynamically via inline styles */
                 background-attachment: scroll; /* iOSでfixedが効かないため */
             }
         }
