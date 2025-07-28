@@ -5,6 +5,14 @@
 .seats-section .seat-features {
     justify-content: flex-start !important;
     align-items: flex-start !important;
+    text-align: left !important;
+}
+
+/* グリッドアイテムも左揃えに */
+#seats .seat-features > *,
+.seats-section .seat-features > * {
+    justify-self: start !important;
+    align-self: start !important;
 }
 
 /* タグのテキスト色を白に変更 */
@@ -13,6 +21,8 @@
 #seats .seat-features .feature-item {
     color: #ffffff !important;
     justify-content: flex-start !important;
+    text-align: left !important;
+    width: auto !important;
 }
 
 /* タグ内のテキストも白に */

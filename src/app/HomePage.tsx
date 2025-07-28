@@ -10,6 +10,7 @@ interface ContentData {
       openTime: string;
       closeTime: string;
       closedDay: string;
+      backgroundType?: string;
     };
     imageFields: {
       logo: string;
@@ -20,6 +21,9 @@ interface ContentData {
       bgMobile1: string;
       bgMobile2: string;
       bgMobile3: string;
+    };
+    videoFields?: {
+      bgVideo: string;
     };
   };
   introParallax: {
@@ -196,6 +200,13 @@ export default function HomePage({ content }: { content: ContentData }) {
 
   useEffect(() => {
     // ヒーロースライダー
+    const backgroundType = content?.hero?.textFields?.backgroundType || 'slideshow';
+    
+    // 動画背景の場合は早期リターン
+    if (backgroundType === 'video') {
+      return;
+    }
+    
     const isMobile = window.innerWidth <= 768;
     const heroSlidesDesktop = document.querySelectorAll('.hero-slide-desktop');
     const heroSlidesMobile = document.querySelectorAll('.hero-slide-mobile');
@@ -266,7 +277,7 @@ export default function HomePage({ content }: { content: ContentData }) {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, []);
+  }, [content]);
 
   // フェードインアニメーション
   useEffect(() => {
@@ -432,32 +443,47 @@ export default function HomePage({ content }: { content: ContentData }) {
       {/* Hero Section */}
       <section className="hero" id="home">
         <div className="hero-bg">
-          <div className="hero-slider">
-            {/* PC・タブレット用 */}
-            <div className="hero-slide hero-slide-desktop active">
-              <img src={content.hero.imageFields.bgPC1} alt="木村屋本店 メインビジュアル1" />
+          {content.hero.textFields.backgroundType === 'video' && content.hero.videoFields?.bgVideo ? (
+            <div className="hero-video-wrapper">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="hero-video"
+              >
+                <source src={content.hero.videoFields.bgVideo} type="video/mp4" />
+              </video>
+              <div className="hero-video-overlay"></div>
             </div>
-            <div className="hero-slide hero-slide-desktop">
-              <img src={content.hero.imageFields.bgPC2} alt="木村屋本店 メインビジュアル2" />
+          ) : (
+            <div className="hero-slider">
+              {/* PC・タブレット用 */}
+              <div className="hero-slide hero-slide-desktop active">
+                <img src={content.hero.imageFields.bgPC1} alt="木村屋本店 メインビジュアル1" />
+              </div>
+              <div className="hero-slide hero-slide-desktop">
+                <img src={content.hero.imageFields.bgPC2} alt="木村屋本店 メインビジュアル2" />
+              </div>
+              <div className="hero-slide hero-slide-desktop">
+                <img src={content.hero.imageFields.bgPC3} alt="木村屋本店 メインビジュアル3" />
+              </div>
+              <div className="hero-slide hero-slide-desktop">
+                <img src={content.hero.imageFields.bgPC4} alt="木村屋本店 メインビジュアル4" />
+              </div>
+              
+              {/* スマホ用 */}
+              <div className="hero-slide hero-slide-mobile">
+                <img src={content.hero.imageFields.bgMobile1} alt="木村屋本店 スマホ用1" />
+              </div>
+              <div className="hero-slide hero-slide-mobile">
+                <img src={content.hero.imageFields.bgMobile2} alt="木村屋本店 スマホ用2" />
+              </div>
+              <div className="hero-slide hero-slide-mobile">
+                <img src={content.hero.imageFields.bgMobile3} alt="木村屋本店 スマホ用3" />
+              </div>
             </div>
-            <div className="hero-slide hero-slide-desktop">
-              <img src={content.hero.imageFields.bgPC3} alt="木村屋本店 メインビジュアル3" />
-            </div>
-            <div className="hero-slide hero-slide-desktop">
-              <img src={content.hero.imageFields.bgPC4} alt="木村屋本店 メインビジュアル4" />
-            </div>
-            
-            {/* スマホ用 */}
-            <div className="hero-slide hero-slide-mobile">
-              <img src={content.hero.imageFields.bgMobile1} alt="木村屋本店 スマホ用1" />
-            </div>
-            <div className="hero-slide hero-slide-mobile">
-              <img src={content.hero.imageFields.bgMobile2} alt="木村屋本店 スマホ用2" />
-            </div>
-            <div className="hero-slide hero-slide-mobile">
-              <img src={content.hero.imageFields.bgMobile3} alt="木村屋本店 スマホ用3" />
-            </div>
-          </div>
+          )}
         </div>
         <div className="hero-content">
           <img src={content.hero.imageFields.logo} alt="木村屋本店" className="hero-logo fade-up" />
@@ -1428,7 +1454,7 @@ export default function HomePage({ content }: { content: ContentData }) {
         
         <div className="footer-bottom">
           <p className="copyright">&copy; 2024 {content.info.textFields.shopName.split(' ')[0]}. All rights reserved.</p>
-          <button className="page-top-btn" onClick={() => { /* scrollToTop() */ }}>
+          <button className="page-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>

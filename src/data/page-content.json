@@ -2,20 +2,24 @@
   "hero": {
     "textFields": {
       "mainTitle": "博多もつ鍋専門店",
-      "subTitle": "九州料理と美酒で楽しい宴会",
+      "subTitle": "九州料理と美酒で楽しい飲み会",
       "openTime": "OPEN 10:00",
       "closeTime": "CLOSE 22:00",
-      "closedDay": "定休日 水曜日"
+      "closedDay": "定休日 水曜日",
+      "backgroundType": "slideshow"
     },
     "imageFields": {
       "logo": "/images/log.png",
-      "bgPC1": "/images/DSC00442.jpg",
+      "bgPC1": "/uploads/5a916110-03e9-40f5-a52e-8679e179dba0.jpg",
       "bgPC2": "/images/DSC00456.jpg",
       "bgPC3": "/images/DSC00398.jpg",
-      "bgPC4": "/images/DSC00406.jpg",
+      "bgPC4": "/uploads/4437ae76-77a5-4da8-b48c-2ae57b7afa17.jpg",
       "bgMobile1": "/images/DSC00400.jpg",
       "bgMobile2": "/images/DSC00480.jpg",
       "bgMobile3": "/images/DSC00653.jpg"
+    },
+    "videoFields": {
+      "bgVideo": "/uploads/4c623154-fe31-4823-9496-10e979cafa96.mp4"
     }
   },
   "introParallax": {
@@ -29,7 +33,7 @@
   "craft": {
     "textFields": {
       "leftText": "少し九州じゃない料理",
-      "rightText": "九州料理と美味い酒！"
+      "rightText": "楽しい宴会！"
     },
     "imageFields": {
       "image1": "/uploads/eb7f5f41-ac7a-431d-9e4a-42d6aa1ccbff.jpg",
@@ -39,7 +43,7 @@
   },
   "features": {
     "textFields": {
-      "mainTitle": "４つのこだわり",
+      "mainTitle": "秘伝４つのこだわり",
       "feature1Title": "当店名物！\nこだわりの博多もつ鍋",
       "feature1Description": "厳選した国産牛もつと秘伝の特製スープで作る本場博多の味。",
       "feature2Title": "季節の食材と調理で\n味わう逸品料理",

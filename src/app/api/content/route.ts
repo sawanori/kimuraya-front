@@ -12,7 +12,8 @@ const defaultContent = {
       subTitle: '九州料理と美酒で楽しい宴会を',
       openTime: 'OPEN 10:00',
       closeTime: 'CLOSE 22:00',
-      closedDay: '定休日 水曜日'
+      closedDay: '定休日 水曜日',
+      backgroundType: 'slideshow'
     },
     imageFields: {
       logo: '/images/log.png',
@@ -23,6 +24,9 @@ const defaultContent = {
       bgMobile1: '/images/DSC00400.jpg',
       bgMobile2: '/images/DSC00480.jpg',
       bgMobile3: '/images/DSC00653.jpg'
+    },
+    videoFields: {
+      bgVideo: ''
     }
   },
   introParallax: {

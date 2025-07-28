@@ -13,9 +13,20 @@ export async function POST(request: NextRequest) {
     }
     
     // ファイルタイプの検証
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime']
+    const validTypes = [...validImageTypes, ...validVideoTypes]
+    
     if (!validTypes.includes(file.type)) {
       return NextResponse.json({ error: 'Invalid file type' }, { status: 400 })
+    }
+    
+    // ファイルサイズの検証（動画は100MB、画像は10MBまで）
+    const maxSize = validVideoTypes.includes(file.type) ? 100 * 1024 * 1024 : 10 * 1024 * 1024
+    if (file.size > maxSize) {
+      return NextResponse.json({ 
+        error: `File size exceeds limit (${validVideoTypes.includes(file.type) ? '100MB' : '10MB'})` 
+      }, { status: 400 })
     }
     
     // ファイル名の生成

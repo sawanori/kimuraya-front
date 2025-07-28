@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Save, Eye, Edit3, Image, Type, Palette } from 'lucide-react'
+import { ArrowLeft, Save, Eye, Edit3, Image, Type, Palette, Video } from 'lucide-react'
 import './editor.css'
 
 interface User {
@@ -18,8 +18,10 @@ interface SectionEdit {
   hasBackground: boolean
   hasText: boolean
   hasImage: boolean
+  hasVideo?: boolean
   textFields?: { label: string; value: string; multiline?: boolean }[]
   imageFields?: { label: string; value: string }[]
+  videoFields?: { label: string; value: string }[]
   backgroundField?: { label: string; value: string }
   hasSeats?: boolean
 }
@@ -95,12 +97,14 @@ export default function EditorPage() {
       hasBackground: true,
       hasText: true,
       hasImage: true,
+      hasVideo: true,
       textFields: [
         { label: 'メインタイトル', value: '博多もつ鍋専門店' },
         { label: 'サブタイトル', value: '九州料理と美酒で楽しい宴会を' },
         { label: '営業時間（開店）', value: 'OPEN 10:00' },
         { label: '営業時間（閉店）', value: 'CLOSE 22:00' },
-        { label: '定休日', value: '定休日 水曜日' }
+        { label: '定休日', value: '定休日 水曜日' },
+        { label: '背景タイプ', value: 'slideshow' }
       ],
       imageFields: [
         { label: 'ロゴ画像', value: '/images/log.png' },
@@ -111,6 +115,9 @@ export default function EditorPage() {
         { label: '背景画像1（スマホ）', value: '/images/DSC00400.jpg' },
         { label: '背景画像2（スマホ）', value: '/images/DSC00480.jpg' },
         { label: '背景画像3（スマホ）', value: '/images/DSC00653.jpg' }
+      ],
+      videoFields: [
+        { label: '背景動画', value: '' }
       ]
     },
     {
@@ -392,6 +399,39 @@ export default function EditorPage() {
     }
   }
 
+  const handleVideoUpload = async (sectionId: string, fieldKey: string, file: File) => {
+    const uploadKey = `${sectionId}-${fieldKey}`
+    
+    try {
+      // アップロード中の状態を設定
+      setUploadingImages(prev => new Set(prev).add(uploadKey))
+      
+      const formData = new FormData()
+      formData.append('file', file)
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+      
+      if (response.ok) {
+        const { url } = await response.json()
+        handleFieldChange(sectionId, 'videoFields', fieldKey, url)
+      } else {
+        alert('動画のアップロードに失敗しました')
+      }
+    } catch (error) {
+      alert('動画のアップロード中にエラーが発生しました')
+    } finally {
+      // アップロード完了後、状態をクリア
+      setUploadingImages(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(uploadKey)
+        return newSet
+      })
+    }
+  }
+
   const handleSeatFieldChange = (seatIndex: number, field: string, value: any) => {
     setEditedContent(prev => {
       const seats = prev.seats || { seatData: savedContent.seats?.seatData || defaultSeats }
@@ -569,6 +609,7 @@ export default function EditorPage() {
                                        field.label === '営業時間（開店）' ? 'openTime' :
                                        field.label === '営業時間（閉店）' ? 'closeTime' :
                                        field.label === '定休日' ? 'closedDay' :
+                                       field.label === '背景タイプ' ? 'backgroundType' :
                                        field.label === 'メッセージ' ? 'message' :
                                        field.label === '左側縦書きテキスト' ? 'leftText' :
                                        field.label === '右側縦書きテキスト' ? 'rightText' :
@@ -604,7 +645,32 @@ export default function EditorPage() {
                             <label className="editor-label">
                               {field.label}
                             </label>
-                            {field.multiline ? (
+                            {field.label === '背景タイプ' && currentSection.id === 'hero' ? (
+                              <div className="flex gap-4">
+                                <label className="flex items-center cursor-pointer">
+                                  <input
+                                    type="radio"
+                                    name="backgroundType"
+                                    value="slideshow"
+                                    checked={currentValue === 'slideshow'}
+                                    onChange={(e) => handleFieldChange(currentSection.id, 'textFields', 'backgroundType', e.target.value)}
+                                    className="mr-2"
+                                  />
+                                  <span>スライドショー</span>
+                                </label>
+                                <label className="flex items-center cursor-pointer">
+                                  <input
+                                    type="radio"
+                                    name="backgroundType"
+                                    value="video"
+                                    checked={currentValue === 'video'}
+                                    onChange={(e) => handleFieldChange(currentSection.id, 'textFields', 'backgroundType', e.target.value)}
+                                    className="mr-2"
+                                  />
+                                  <span>動画</span>
+                                </label>
+                              </div>
+                            ) : field.multiline ? (
                               <textarea
                                 className="editor-textarea"
                                 rows={4}
@@ -615,6 +681,7 @@ export default function EditorPage() {
                                                field.label === '営業時間（開店）' ? 'openTime' :
                                                field.label === '営業時間（閉店）' ? 'closeTime' :
                                                field.label === '定休日' ? 'closedDay' :
+                                               field.label === '背景タイプ' ? 'backgroundType' :
                                                field.label === 'メッセージ' ? 'message' :
                                                field.label === '左側縦書きテキスト' ? 'leftText' :
                                                field.label === '右側縦書きテキスト' ? 'rightText' :
@@ -654,6 +721,7 @@ export default function EditorPage() {
                                                field.label === '営業時間（開店）' ? 'openTime' :
                                                field.label === '営業時間（閉店）' ? 'closeTime' :
                                                field.label === '定休日' ? 'closedDay' :
+                                               field.label === '背景タイプ' ? 'backgroundType' :
                                                field.label === 'メッセージ' ? 'message' :
                                                field.label === '左側縦書きテキスト' ? 'leftText' :
                                                field.label === '右側縦書きテキスト' ? 'rightText' :
@@ -734,11 +802,32 @@ export default function EditorPage() {
                             </label>
                             <div>
                               <div className="editor-image-preview">
-                                <img
-                                  id={`img-${currentSection.id}-${fieldKey}`}
-                                  src={currentValue}
-                                  alt={field.label}
-                                />
+                                {field.label === '背景動画' && currentValue ? (
+                                  <video
+                                    id={`img-${currentSection.id}-${fieldKey}`}
+                                    src={currentValue}
+                                    controls
+                                    style={{ width: '100%', height: 'auto' }}
+                                  />
+                                ) : field.label === '背景動画' ? (
+                                  <div style={{ 
+                                    width: '100%', 
+                                    height: '200px', 
+                                    backgroundColor: '#f3f4f6', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    justifyContent: 'center',
+                                    color: '#6b7280'
+                                  }}>
+                                    動画未設定
+                                  </div>
+                                ) : (
+                                  <img
+                                    id={`img-${currentSection.id}-${fieldKey}`}
+                                    src={currentValue}
+                                    alt={field.label}
+                                  />
+                                )}
                                 {isUploading && (
                                   <div className="editor-image-loading">
                                     <div className="editor-spinner rounded-full h-12 w-12 border-b-2 border-white"></div>
@@ -747,7 +836,7 @@ export default function EditorPage() {
                               </div>
                               <input
                                 type="file"
-                                accept="image/*"
+                                accept={field.label === '背景動画' ? "video/*" : "image/*"}
                                 onChange={(e) => {
                                   const file = e.target.files?.[0]
                                   if (file) {
@@ -762,7 +851,85 @@ export default function EditorPage() {
                                 htmlFor={`file-${currentSection.id}-${fieldKey}`}
                                 className={`editor-upload-button ${isUploading ? 'disabled' : ''}`}
                               >
-                                {isUploading ? 'アップロード中...' : '画像を変更'}
+                                {isUploading ? 'アップロード中...' : field.label === '背景動画' ? '動画を変更' : '画像を変更'}
+                              </label>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 動画編集 */}
+                {currentSection.hasVideo && currentSection.videoFields && (
+                  <div className="editor-card">
+                    <h3 className="editor-card-title">
+                      <Video className="w-5 h-5" />
+                      動画編集
+                    </h3>
+                    <div className="editor-grid">
+                      {currentSection.videoFields.map((field, index) => {
+                        const fieldKey = field.label === '背景動画' ? 'bgVideo' : field.label
+                        
+                        const currentValue = editedContent[currentSection.id]?.videoFields?.[fieldKey] || 
+                                             savedContent[currentSection.id]?.videoFields?.[fieldKey] || 
+                                             field.value
+                        
+                        const uploadKey = `${currentSection.id}-${fieldKey}`
+                        const isUploading = uploadingImages.has(uploadKey)
+                        
+                        return (
+                          <div key={index} className="editor-image-field">
+                            <label className="editor-label">
+                              {field.label}
+                            </label>
+                            <div>
+                              <div className="editor-image-preview">
+                                {currentValue ? (
+                                  <video
+                                    id={`video-${currentSection.id}-${fieldKey}`}
+                                    src={currentValue}
+                                    controls
+                                    style={{ width: '100%', height: 'auto' }}
+                                  />
+                                ) : (
+                                  <div style={{ 
+                                    width: '100%', 
+                                    height: '200px', 
+                                    backgroundColor: '#f3f4f6', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    justifyContent: 'center',
+                                    color: '#6b7280'
+                                  }}>
+                                    動画未設定
+                                  </div>
+                                )}
+                                {isUploading && (
+                                  <div className="editor-image-loading">
+                                    <div className="editor-spinner rounded-full h-12 w-12 border-b-2 border-white"></div>
+                                  </div>
+                                )}
+                              </div>
+                              <input
+                                type="file"
+                                accept="video/*"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0]
+                                  if (file) {
+                                    handleVideoUpload(currentSection.id, fieldKey, file)
+                                  }
+                                }}
+                                className="hidden"
+                                id={`file-${currentSection.id}-${fieldKey}`}
+                                disabled={isUploading}
+                              />
+                              <label
+                                htmlFor={`file-${currentSection.id}-${fieldKey}`}
+                                className={`editor-upload-button ${isUploading ? 'disabled' : ''}`}
+                              >
+                                {isUploading ? 'アップロード中...' : '動画を変更'}
                               </label>
                             </div>
                           </div>

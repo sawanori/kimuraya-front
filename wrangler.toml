@@ -1,0 +1,23 @@
+name = "kimuraya-upload-worker"
+main = "workers/upload.js"
+compatibility_date = "2024-12-01"
+
+# R2バケットのバインディング
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "kimuraya-uploads"
+
+# 環境変数
+[vars]
+PUBLIC_BUCKET_URL = "https://uploads.kimuraya.com"
+
+# ルーティング設定
+routes = [
+  { pattern = "kimuraya.com/api/upload", zone_name = "kimuraya.com" }
+]
+
+# D1データベースのバインディング（必要に応じて）
+[[d1_databases]]
+binding = "DB"
+database_name = "kimuraya-db"
+database_id = "your-database-id"

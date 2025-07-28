@@ -1,0 +1,15 @@
+/* 本場九州仕込みのもつ鍋を楽しむ - PCサイズ時のフォントサイズ調整 */
+
+/* PCサイズ時（768px以上）のフォントサイズを2段階小さく */
+@media (min-width: 768px) {
+    .intro-title-vertical {
+        font-size: clamp(36px, 4.5vw, 60px) !important; /* 元: clamp(48px, 6vw, 80px) */
+    }
+}
+
+/* デスクトップサイズ時（1024px以上）でさらに調整 */
+@media (min-width: 1024px) {
+    .intro-title-vertical {
+        font-size: clamp(32px, 4vw, 56px) !important;
+    }
+}

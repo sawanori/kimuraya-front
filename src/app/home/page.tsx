@@ -3,14 +3,13 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  AreaChart, Area, BarChart, Bar, LineChart, Line,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
+  AreaChart, Area,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts'
 import {
   TrendingUp, TrendingDown, Users, Eye, MousePointer,
   Clock, Globe, Monitor, Smartphone, Tablet,
-  LogOut, Calendar, ArrowRight, Sparkles,
+  LogOut, Calendar,
   Activity, Zap, Target, ChartBar, Edit3
 } from 'lucide-react'
 
@@ -51,28 +50,8 @@ export default function HomePage() {
     { date: '日', views: 8820, users: 6290, bounce: 21 },
   ]
 
-  const userBehavior = [
-    { metric: '直帰率', value: 25, fullMark: 100 },
-    { metric: 'ページ/セッション', value: 85, fullMark: 100 },
-    { metric: '平均滞在時間', value: 78, fullMark: 100 },
-    { metric: 'コンバージョン', value: 45, fullMark: 100 },
-    { metric: 'リピート率', value: 68, fullMark: 100 },
-  ]
 
-  const trafficFlow = [
-    { source: 'Google', target: 'ホーム', value: 3500 },
-    { source: 'SNS', target: 'メニュー', value: 2100 },
-    { source: '直接', target: 'アクセス', value: 1800 },
-    { source: 'メール', target: '予約', value: 950 },
-  ]
 
-  const heatmapData = [
-    { hour: '09', mon: 45, tue: 52, wed: 48, thu: 51, fri: 58, sat: 72, sun: 68 },
-    { hour: '12', mon: 85, tue: 89, wed: 92, thu: 88, fri: 95, sat: 98, sun: 94 },
-    { hour: '15', mon: 65, tue: 68, wed: 70, thu: 72, fri: 75, sat: 88, sun: 85 },
-    { hour: '18', mon: 92, tue: 95, wed: 88, thu: 91, fri: 98, sat: 95, sun: 89 },
-    { hour: '21', mon: 78, tue: 82, wed: 75, thu: 85, fri: 92, sat: 88, sun: 72 },
-  ]
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -127,7 +106,7 @@ export default function HomePage() {
               <div className="relative">
                 <h1 className="relative text-2xl font-bold text-[#ececec] flex items-center gap-2">
                   <Activity className="w-8 h-8" />
-                  Analytics Dashboard
+                  店舗データベース
                 </h1>
               </div>
               <div className="flex items-center gap-2 bg-[#10a37f]/20 px-3 py-1 rounded-full">
@@ -203,19 +182,6 @@ export default function HomePage() {
               </button>
             </div>
           </div>
-          <div className="mt-4 h-20">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={realtimeData}>
-                <defs>
-                  <linearGradient id="realtimeGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10a37f" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#10a37f" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="users" stroke="#10a37f" fillOpacity={1} fill="url(#realtimeGradient)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
         </div>
 
         {/* KPIカード */}
@@ -244,170 +210,76 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* メイングラフエリア */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-          {/* トラフィックトレンド */}
-          <div className="lg:col-span-2 bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242]">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-[#ececec] flex items-center gap-2">
-                <ChartBar className="w-6 h-6 text-blue-400" />
-                トラフィックトレンド
-              </h2>
-              <div className="flex gap-2">
-                <button className="px-3 py-1 bg-[#10a37f]/20 text-[#10a37f] rounded-lg text-sm">ビュー</button>
-                <button className="px-3 py-1 bg-[#2f2f2f] text-[#a8a8a8] rounded-lg text-sm">ユーザー</button>
-                <button className="px-3 py-1 bg-[#2f2f2f] text-[#a8a8a8] rounded-lg text-sm">直帰率</button>
-              </div>
-            </div>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={pageViewsData}>
-                  <defs>
-                    <linearGradient id="viewsGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10a37f" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#10a37f" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="usersGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0d8f6f" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#0d8f6f" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#424242" />
-                  <XAxis dataKey="date" stroke="#a8a8a8" />
-                  <YAxis stroke="#a8a8a8" />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#2a2a2a', border: '1px solid #424242', borderRadius: '8px' }}
-                    labelStyle={{ color: '#ececec' }}
-                  />
-                  <Area type="monotone" dataKey="views" stroke="#10a37f" fillOpacity={1} fill="url(#viewsGradient)" strokeWidth={2} />
-                  <Area type="monotone" dataKey="users" stroke="#0d8f6f" fillOpacity={1} fill="url(#usersGradient)" strokeWidth={2} />
-                </AreaChart>
-              </ResponsiveContainer>
+        {/* トラフィックトレンド */}
+        <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242] mb-10">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-[#ececec] flex items-center gap-2">
+              <ChartBar className="w-6 h-6 text-blue-400" />
+              トラフィックトレンド
+            </h2>
+            <div className="flex gap-2">
+              <button className="px-3 py-1 bg-[#10a37f]/20 text-[#10a37f] rounded-lg text-sm">ビュー</button>
+              <button className="px-3 py-1 bg-[#2f2f2f] text-[#a8a8a8] rounded-lg text-sm">ユーザー</button>
+              <button className="px-3 py-1 bg-[#2f2f2f] text-[#a8a8a8] rounded-lg text-sm">直帰率</button>
             </div>
           </div>
-
-          {/* ユーザー行動分析 */}
-          <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242]">
-            <h2 className="text-xl font-bold text-[#ececec] mb-6 flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-purple-400" />
-              ユーザー行動分析
-            </h2>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={userBehavior}>
-                  <PolarGrid stroke="#424242" />
-                  <PolarAngleAxis dataKey="metric" stroke="#a8a8a8" />
-                  <PolarRadiusAxis angle={90} domain={[0, 100]} stroke="#424242" />
-                  <Radar name="パフォーマンス" dataKey="value" stroke="#10a37f" fill="#10a37f" fillOpacity={0.6} />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={pageViewsData}>
+                <defs>
+                  <linearGradient id="viewsGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10a37f" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#10a37f" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="usersGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#0d8f6f" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#0d8f6f" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#424242" />
+                <XAxis dataKey="date" stroke="#a8a8a8" />
+                <YAxis stroke="#a8a8a8" />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#2a2a2a', border: '1px solid #424242', borderRadius: '8px' }}
+                  labelStyle={{ color: '#ececec' }}
+                />
+                <Area type="monotone" dataKey="views" stroke="#10a37f" fillOpacity={1} fill="url(#viewsGradient)" strokeWidth={2} />
+                <Area type="monotone" dataKey="users" stroke="#0d8f6f" fillOpacity={1} fill="url(#usersGradient)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
         {/* デバイス別アクセス */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-          <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242]">
-            <h2 className="text-xl font-bold text-[#ececec] mb-6">デバイス別アクセス</h2>
-            <div className="space-y-6">
-              {[
-                { device: 'モバイル', icon: Smartphone, percentage: 68, color: 'from-[#10a37f] to-[#0d8f6f]' },
-                { device: 'デスクトップ', icon: Monitor, percentage: 27, color: 'from-[#0d8f6f] to-[#0b7e60]' },
-                { device: 'タブレット', icon: Tablet, percentage: 5, color: 'from-[#0b7e60] to-[#10a37f]' },
-              ].map((item, index) => (
-                <div key={index} className="relative">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg bg-gradient-to-r ${item.color}`}>
-                        <item.icon className="w-5 h-5 text-white" />
-                      </div>
-                      <span className="text-[#a8a8a8] font-medium">{item.device}</span>
+        <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242] mb-10">
+          <h2 className="text-xl font-bold text-[#ececec] mb-6">デバイス別アクセス</h2>
+          <div className="space-y-6">
+            {[
+              { device: 'モバイル', icon: Smartphone, percentage: 68, color: 'from-[#10a37f] to-[#0d8f6f]' },
+              { device: 'デスクトップ', icon: Monitor, percentage: 27, color: 'from-[#0d8f6f] to-[#0b7e60]' },
+              { device: 'タブレット', icon: Tablet, percentage: 5, color: 'from-[#0b7e60] to-[#10a37f]' },
+            ].map((item, index) => (
+              <div key={index} className="relative">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg bg-gradient-to-r ${item.color}`}>
+                      <item.icon className="w-5 h-5 text-white" />
                     </div>
-                    <span className="text-2xl font-bold text-[#ececec]">{item.percentage}%</span>
+                    <span className="text-[#a8a8a8] font-medium">{item.device}</span>
                   </div>
-                  <div className="h-3 bg-[#171717] rounded-full overflow-hidden">
-                    <div
-                      className={`h-full bg-gradient-to-r ${item.color}`}
-                      style={{ width: `${item.percentage}%` }}
-                    ></div>
-                  </div>
+                  <span className="text-2xl font-bold text-[#ececec]">{item.percentage}%</span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* アクセスヒートマップ */}
-          <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242]">
-            <h2 className="text-xl font-bold text-[#ececec] mb-6">アクセスヒートマップ</h2>
-            <div className="grid grid-cols-8 gap-1">
-              <div></div>
-              {['月', '火', '水', '木', '金', '土', '日'].map((day) => (
-                <div key={day} className="text-xs text-[#a8a8a8] text-center">{day}</div>
-              ))}
-              {heatmapData.map((row) => (
-                <React.Fragment key={row.hour}>
-                  <div className="text-xs text-[#a8a8a8] text-right pr-1">{row.hour}時</div>
-                  {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map((day) => {
-                    const value = row[day as keyof typeof row] as number
-                    const intensity = value / 100
-                    return (
-                      <div
-                        key={day}
-                        className="aspect-square rounded"
-                        style={{
-                          backgroundColor: `rgba(16, 163, 127, ${intensity})`,
-                        }}
-                      />
-                    )
-                  })}
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* トラフィックフロー */}
-        <div className="bg-[#2a2a2a] rounded-2xl p-8 border border-[#424242]">
-          <h2 className="text-xl font-bold text-[#ececec] mb-10">トラフィックフロー</h2>
-          <div className="space-y-8">
-            {trafficFlow.map((flow, index) => (
-              <div key={index} className="relative group">
-                <div className="flex items-center gap-4">
-                  {/* ソース */}
-                  <div className="flex-1">
-                    <div className="bg-gradient-to-r from-[#10a37f]/20 to-[#0d8f6f]/20 rounded-xl p-6 border border-[#424242] group-hover:border-[#10a37f]/50 transition-all">
-                      <div className="text-[#a8a8a8] text-sm mb-1">流入元</div>
-                      <div className="text-[#ececec] font-bold text-lg">{flow.source}</div>
-                      <div className="text-[#10a37f] text-2xl font-bold mt-1">{flow.value.toLocaleString()}</div>
-                    </div>
-                  </div>
-                  
-                  {/* 矢印 */}
-                  <div className="flex items-center justify-center px-4">
-                    <ArrowRight className="w-6 h-6 text-[#10a37f]" />
-                  </div>
-                  
-                  {/* ターゲット */}
-                  <div className="flex-1">
-                    <div className="bg-gradient-to-r from-[#0d8f6f]/20 to-[#10a37f]/20 rounded-xl p-6 border border-[#424242] group-hover:border-[#10a37f]/50 transition-all">
-                      <div className="text-[#a8a8a8] text-sm mb-1">ランディングページ</div>
-                      <div className="text-[#ececec] font-bold text-lg">{flow.target}</div>
-                      <div className="flex items-center gap-2 mt-2">
-                        <div className="h-2 flex-1 bg-[#171717] rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-gradient-to-r from-[#10a37f] to-[#0d8f6f]"
-                            style={{ width: `${(flow.value / 3500) * 100}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-xs text-[#a8a8a8]">{Math.round((flow.value / 3500) * 100)}%</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="h-3 bg-[#171717] rounded-full overflow-hidden">
+                  <div
+                    className={`h-full bg-gradient-to-r ${item.color}`}
+                    style={{ width: `${item.percentage}%` }}
+                  ></div>
                 </div>
               </div>
             ))}
           </div>
         </div>
+
       </main>
     </div>
   )
