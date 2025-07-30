@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useMultilingual } from '@/hooks/useMultilingual';
 
 interface ContentData {
   hero: {
@@ -30,7 +33,10 @@ interface ContentData {
     textFields: {
       message: string;
     };
-    backgroundField: string;
+    backgroundField?: string;
+    imageFields?: {
+      parallaxBg?: string;
+    };
   };
   craft: {
     textFields: {
@@ -67,6 +73,16 @@ interface ContentData {
       sectionTitle: string;
       subTitle: string;
     };
+    menuCards?: Array<{
+      id: string;
+      subTitle: string;
+      title: string;
+      items: Array<{
+        name: string;
+        price: string;
+      }>;
+      note?: string;
+    }>;
   };
   seats: {
     textFields: {
@@ -80,6 +96,14 @@ interface ContentData {
       groupSeats: string;
       windowDateSeats: string;
     };
+    seatData?: Array<{
+      id: string;
+      name: string;
+      capacity: string;
+      description: string;
+      tags: string[];
+      image: string;
+    }>;
   };
   gallery: {
     textFields: {
@@ -108,17 +132,120 @@ interface ContentData {
       businessHours: string;
       closedDays: string;
       seats: string;
+      googleMapUrl?: string;
     };
+  };
+  motsunabe?: {
+    showOptions?: boolean;
+    options?: Array<{
+      id: string;
+      title: string;
+      description: string;
+      image: string;
+    }>;
+    [key: string]: any;
+  };
+  'intro-parallax'?: {
+    textFields?: {
+      message?: string;
+    };
+    imageFields?: {
+      parallaxBg?: string;
+    };
+  };
+  diningStyle?: {
+    textFields?: {
+      [key: string]: string;
+    };
+    imageFields?: {
+      partyBg?: string;
+      sakeBg?: string;
+    };
+  };
+  courses?: {
+    cards?: Array<{
+      id: string;
+      image: string;
+      title: string;
+      subtitle: string;
+      price: string;
+      note?: string;
+      itemCount: string;
+      description: string;
+      menuItems: string[];
+      features: Array<{
+        icon: string;
+        title: string;
+        description: string;
+      }>;
+      ctaText: string;
+    }>;
+  };
+  drinks?: {
+    title?: string;
+    subtitle?: string;
+    categories?: Array<{
+      id: string;
+      name: string;
+      items: Array<{
+        name: string;
+        price: string;
+      }>;
+    }>;
   };
 }
 
+// Googleマップの共有リンクからembed用URLに変換する関数
+function getGoogleMapEmbedUrl(shareUrl: string, infoFields?: any): string {
+  if (!shareUrl) return '';
+  
+  try {
+    // 座標を含むURLから緯度経度を抽出（完全なURLの場合）
+    const coordMatch = shareUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (coordMatch) {
+      const lat = coordMatch[1];
+      const lng = coordMatch[2];
+      // より正確な座標でのembed URL
+      return `https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=${lat},${lng}&zoom=17`;
+    }
+    
+    // place IDを含むURLから抽出（完全なURLの場合）
+    const placeMatch = shareUrl.match(/place\/([^\/\?@]+)/);
+    if (placeMatch) {
+      const placeName = decodeURIComponent(placeMatch[1]).replace(/\+/g, ' ');
+      return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(placeName)}&zoom=17`;
+    }
+    
+    // 短縮URLの場合は、住所または店名を使って検索する
+    if (shareUrl.includes('maps.app.goo.gl') || shareUrl.includes('goo.gl/maps')) {
+      const address = infoFields?.address || "神奈川県横浜市神奈川区鶴屋町2-15";
+      const shopName = infoFields?.shopName || "木村屋本店 横浜鶴屋町";
+      // 住所と店名を組み合わせてより正確な検索を行う
+      const query = `${shopName} ${address.split('\n')[0]}`;
+      return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(query)}&zoom=17`;
+    }
+    
+    // デフォルトは店名で検索
+    const shopName = infoFields?.shopName || "木村屋本店 横浜鶴屋町";
+    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(shopName)}&zoom=17`;
+    
+  } catch (error) {
+    console.error('Error parsing Google Maps URL:', error);
+    return '';
+  }
+}
+
 export default function HomePage({ content }: { content: ContentData }) {
+  const { language, setLanguage } = useLanguage();
+  const { t, getContent } = useMultilingual();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showAllGallery, setShowAllGallery] = useState(false);
   const [currentSeat, setCurrentSeat] = useState(0);
   const [showCoursesModal, setShowCoursesModal] = useState(false);
   const [showDrinksModal, setShowDrinksModal] = useState(false);
   const [currentCourseSlide, setCurrentCourseSlide] = useState(0);
+  const [currentMotsunabeSlide, setCurrentMotsunabeSlide] = useState(0);
+  const [currentGallerySlide, setCurrentGallerySlide] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
 
   useEffect(() => {
@@ -349,7 +476,7 @@ export default function HomePage({ content }: { content: ContentData }) {
     navLinks.forEach(link => {
       link.addEventListener('click', function(this: HTMLAnchorElement, e: Event) {
         const href = this.getAttribute('href');
-        if (href === '#' || href === '#reservation') return;
+        if (!href || href === '#' || href === '#reservation') return;
         
         e.preventDefault();
         const targetElement = document.querySelector(href);
@@ -402,6 +529,196 @@ export default function HomePage({ content }: { content: ContentData }) {
       });
     };
   }, [currentSeat]);
+
+  // もつ鍋オプションのスライド機能（モバイル用）
+  useEffect(() => {
+    const handleMotsunabeSwipe = () => {
+      const optionsGrid = document.querySelector('.options-grid');
+      if (!optionsGrid) return;
+
+      let startX = 0;
+      let currentX = 0;
+      let isDragging = false;
+
+      const handleTouchStart = (e: TouchEvent) => {
+        if (window.innerWidth > 768) return; // モバイルのみ
+        startX = e.touches[0].clientX;
+        isDragging = true;
+      };
+
+      const handleTouchMove = (e: TouchEvent) => {
+        if (!isDragging || window.innerWidth > 768) return;
+        currentX = e.touches[0].clientX;
+      };
+
+      const handleTouchEnd = () => {
+        if (!isDragging || window.innerWidth > 768) return;
+        isDragging = false;
+        
+        const diffX = startX - currentX;
+        const threshold = 50; // スワイプの閾値
+        
+        if (Math.abs(diffX) > threshold) {
+          const optionsCount = content?.motsunabe?.options?.length || 0;
+          if (diffX > 0) {
+            // 左スワイプ（次へ）- 無限ループ
+            setCurrentMotsunabeSlide(prev => (prev + 1) % optionsCount);
+          } else if (diffX < 0) {
+            // 右スワイプ（前へ）- 無限ループ
+            setCurrentMotsunabeSlide(prev => (prev - 1 + optionsCount) % optionsCount);
+          }
+        }
+      };
+
+      optionsGrid.addEventListener('touchstart', handleTouchStart as any);
+      optionsGrid.addEventListener('touchmove', handleTouchMove as any);
+      optionsGrid.addEventListener('touchend', handleTouchEnd);
+
+      return () => {
+        optionsGrid.removeEventListener('touchstart', handleTouchStart as any);
+        optionsGrid.removeEventListener('touchmove', handleTouchMove as any);
+        optionsGrid.removeEventListener('touchend', handleTouchEnd);
+      };
+    };
+
+    handleMotsunabeSwipe();
+  }, [currentMotsunabeSlide, content?.motsunabe?.options]);
+
+  // もつ鍋オプションの自動スライド（モバイル用）
+  useEffect(() => {
+    if (window.innerWidth > 768) return; // モバイルのみ
+    
+    const optionsCount = content?.motsunabe?.options?.length || 0;
+    if (optionsCount <= 1) return; // 1枚以下なら自動スライド不要
+    
+    const interval = setInterval(() => {
+      setCurrentMotsunabeSlide(prev => (prev + 1) % optionsCount);
+    }, 4000); // 4秒ごとに自動スライド
+    
+    return () => clearInterval(interval);
+  }, [content?.motsunabe?.options]);
+
+  // スライド位置の更新
+  useEffect(() => {
+    if (window.innerWidth > 768) return;
+    
+    const optionsGrid = document.querySelector('.options-grid') as HTMLElement;
+    const cards = document.querySelectorAll('.option-card');
+    
+    if (optionsGrid && cards.length > 0) {
+      const cardWidth = cards[0].clientWidth;
+      const scrollPosition = currentMotsunabeSlide * cardWidth;
+      optionsGrid.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentMotsunabeSlide]);
+
+  // ギャラリースライドのスクロール制御（モバイル用）
+  useEffect(() => {
+    if (window.innerWidth > 768) return;
+    
+    const gallerySlides = document.querySelector('.gallery-slides') as HTMLElement;
+    if (!gallerySlides) return;
+    
+    const slideWidth = window.innerWidth;
+    // オフセット1を追加（複製した最初の画像の分）
+    const scrollPosition = (currentGallerySlide + 1) * slideWidth;
+    
+    gallerySlides.scrollTo({
+      left: scrollPosition,
+      behavior: 'smooth'
+    });
+  }, [currentGallerySlide]);
+
+  // 無限スクロールの処理
+  useEffect(() => {
+    if (window.innerWidth > 768) return;
+    
+    const gallerySlides = document.querySelector('.gallery-slides') as HTMLElement;
+    if (!gallerySlides) return;
+    
+    const handleScroll = () => {
+      const slideWidth = window.innerWidth;
+      const scrollLeft = gallerySlides.scrollLeft;
+      const maxScroll = slideWidth * 10; // 9枚 + 前後の複製
+      
+      // 最初の複製画像にいる場合、最後の実画像に瞬間移動
+      if (scrollLeft <= 0) {
+        gallerySlides.scrollLeft = slideWidth * 9;
+        setCurrentGallerySlide(8);
+      }
+      // 最後の複製画像にいる場合、最初の実画像に瞬間移動
+      else if (scrollLeft >= maxScroll) {
+        gallerySlides.scrollLeft = slideWidth;
+        setCurrentGallerySlide(0);
+      }
+    };
+    
+    gallerySlides.addEventListener('scrollend', handleScroll);
+    
+    // 初期位置を設定
+    const slideWidth = window.innerWidth;
+    gallerySlides.scrollLeft = slideWidth;
+    
+    return () => {
+      gallerySlides.removeEventListener('scrollend', handleScroll);
+    };
+  }, []);
+
+  // ギャラリースライドショーのスワイプ機能（モバイル用）
+  useEffect(() => {
+    if (window.innerWidth > 768) return;
+    
+    const gallerySlides = document.querySelector('.gallery-slides');
+    if (!gallerySlides) return;
+    
+    // スワイプ機能
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging) return;
+      currentX = e.touches[0].clientX;
+      e.preventDefault(); // スクロールを防ぐ
+    };
+    
+    const handleTouchEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      
+      const diffX = startX - currentX;
+      const threshold = 50;
+      
+      if (Math.abs(diffX) > threshold) {
+        if (diffX > 0) {
+          // 左スワイプ（次へ）
+          setCurrentGallerySlide(prev => (prev + 1) % 9);
+        } else {
+          // 右スワイプ（前へ）
+          setCurrentGallerySlide(prev => (prev - 1 + 9) % 9);
+        }
+      }
+    };
+    
+    gallerySlides.addEventListener('touchstart', handleTouchStart as any);
+    gallerySlides.addEventListener('touchmove', handleTouchMove as any, { passive: false });
+    gallerySlides.addEventListener('touchend', handleTouchEnd);
+    
+    return () => {
+      gallerySlides.removeEventListener('touchstart', handleTouchStart as any);
+      gallerySlides.removeEventListener('touchmove', handleTouchMove as any);
+      gallerySlides.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, []);
+
   return (
     <>
       {/* スクロールコンテナ */}
@@ -412,14 +729,19 @@ export default function HomePage({ content }: { content: ContentData }) {
           <a href="index.html" className="logo jp-title">{content.info.textFields.shopName.split(' ')[0]}</a>
           
           <ul className="nav-menu">
-            <li><a href="#home">ホーム</a></li>
-            <li><a href="#about">私たちについて</a></li>
-            <li><a href="#menu">メニュー</a></li>
-            <li><a href="#gallery">ギャラリー</a></li>
-            <li><a href="#info">店舗情報</a></li>
+            <li><a href="#home">{t('nav.home')}</a></li>
+            <li><a href="#about">{t('nav.about')}</a></li>
+            <li><a href="#menu">{t('nav.menu')}</a></li>
+            <li><a href="#gallery">{t('nav.gallery')}</a></li>
+            <li><a href="#info">{t('nav.info')}</a></li>
           </ul>
           
-          <a href="#" className="nav-reservation-btn">WEB予約</a>
+          <div className="nav-actions">
+            <div className="desktop-language-switcher">
+              <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
+            </div>
+            <a href="#" className="nav-reservation-btn">{t('button.webReservation')}</a>
+          </div>
           
           <button className="menu-toggle" id="menuToggle">
             <span className="menu-line"></span>
@@ -430,14 +752,14 @@ export default function HomePage({ content }: { content: ContentData }) {
       </header>
       
       {/* ヒーロー用WEB予約ボタン */}
-      <a href="#reservation" className="hero-reservation-btn" id="heroReservationBtn">WEB予約はこちら</a>
+      <a href="#reservation" className="hero-reservation-btn" id="heroReservationBtn">{t('button.webReservationHere')}</a>
 
       {/* ヒーロー用縦書きナビゲーション */}
       <nav className="hero-nav-menu" id="heroNavMenu">
-        <a href="#home">ホーム</a>
-        <a href="#room">お品書き</a>
-        <a href="#gallery">ギャラリー</a>
-        <a href="#info">店舗情報</a>
+        <a href="#home">{t('nav.home')}</a>
+        <a href="#room">{t('section.menu')}</a>
+        <a href="#gallery">{t('nav.gallery')}</a>
+        <a href="#info">{t('nav.info')}</a>
       </nav>
 
       {/* Hero Section */}
@@ -460,50 +782,50 @@ export default function HomePage({ content }: { content: ContentData }) {
             <div className="hero-slider">
               {/* PC・タブレット用 */}
               <div className="hero-slide hero-slide-desktop active">
-                <img src={content.hero.imageFields.bgPC1} alt="木村屋本店 メインビジュアル1" />
+                <img src={content.hero.imageFields.bgPC1} alt={`${getContent('shopInfo.shopName', content)} ${t('alt.mainVisual')} 1`} />
               </div>
               <div className="hero-slide hero-slide-desktop">
-                <img src={content.hero.imageFields.bgPC2} alt="木村屋本店 メインビジュアル2" />
+                <img src={content.hero.imageFields.bgPC2} alt={`${getContent('shopInfo.shopName', content)} ${t('alt.mainVisual')} 2`} />
               </div>
               <div className="hero-slide hero-slide-desktop">
-                <img src={content.hero.imageFields.bgPC3} alt="木村屋本店 メインビジュアル3" />
+                <img src={content.hero.imageFields.bgPC3} alt={`${getContent('shopInfo.shopName', content)} ${t('alt.mainVisual')} 3`} />
               </div>
               <div className="hero-slide hero-slide-desktop">
-                <img src={content.hero.imageFields.bgPC4} alt="木村屋本店 メインビジュアル4" />
+                <img src={content.hero.imageFields.bgPC4} alt={`${getContent('shopInfo.shopName', content)} ${t('alt.mainVisual')} 4`} />
               </div>
               
               {/* スマホ用 */}
               <div className="hero-slide hero-slide-mobile">
-                <img src={content.hero.imageFields.bgMobile1} alt="木村屋本店 スマホ用1" />
+                <img src={content.hero.imageFields.bgMobile1} alt={`${getContent('shopInfo.shopName', content)} ${t('alt.mobileVisual')} 1`} />
               </div>
               <div className="hero-slide hero-slide-mobile">
-                <img src={content.hero.imageFields.bgMobile2} alt="木村屋本店 スマホ用2" />
+                <img src={content.hero.imageFields.bgMobile2} alt={`${getContent('shopInfo.shopName', content)} ${t('alt.mobileVisual')} 2`} />
               </div>
               <div className="hero-slide hero-slide-mobile">
-                <img src={content.hero.imageFields.bgMobile3} alt="木村屋本店 スマホ用3" />
+                <img src={content.hero.imageFields.bgMobile3} alt={`${getContent('shopInfo.shopName', content)} ${t('alt.mobileVisual')} 3`} />
               </div>
             </div>
           )}
         </div>
         <div className="hero-content">
-          <img src={content.hero.imageFields.logo} alt="木村屋本店" className="hero-logo fade-up" />
+          <img src={content.hero.imageFields.logo} alt={getContent('shopInfo.shopName', content)} className="hero-logo fade-up" />
           <h1 className="hero-title fade-up">
-            <span className="desktop-text">{content.hero.textFields.mainTitle}</span>
-            <span className="mobile-text">{content.hero.textFields.mainTitle.split('').map((char, i) => (
+            <span className="desktop-text">{getContent('hero.textFields.mainTitle', content)}</span>
+            <span className="mobile-text">{getContent('hero.textFields.mainTitle', content).split('').map((char: string, i: number) => (
               <span key={i}>{char === 'も' || char === '専' ? <><br />{char}</> : char}</span>
             ))}</span>
           </h1>
           <p className="hero-subtitle fade-up">
-            <span className="desktop-text">{content.hero.textFields.subTitle}</span>
-            <span className="mobile-text">{content.hero.textFields.subTitle.split('で').map((part, i) => (
+            <span className="desktop-text">{getContent('hero.textFields.subTitle', content)}</span>
+            <span className="mobile-text">{getContent('hero.textFields.subTitle', content).split('で').map((part: string, i: number) => (
               <React.Fragment key={i}>{i === 0 ? `${part}で` : <><br />{part}</>}</React.Fragment>
             ))}</span>
           </p>
         </div>
         <div className="hero-info fade-up">
-          <span>{content.hero.textFields.openTime}</span>
-          <span>{content.hero.textFields.closeTime}</span>
-          <span>{content.hero.textFields.closedDay}</span>
+          <span>{getContent('hero.textFields.openTime', content)}</span>
+          <span>{getContent('hero.textFields.closeTime', content)}</span>
+          <span>{getContent('hero.textFields.closedDay', content)}</span>
         </div>
       </section>
       
@@ -521,7 +843,7 @@ export default function HomePage({ content }: { content: ContentData }) {
       <section className="intro-parallax-section" id="intro-parallax">
         <div className="intro-content">
           <h2 className="intro-title-vertical jp-title fade-up" dangerouslySetInnerHTML={{ 
-            __html: content.introParallax.textFields.message.replace(/\n/g, '<br />')
+            __html: getContent('introParallax.textFields.message', content).replace(/\n/g, '<br />')
           }} />
         </div>
       </section>
@@ -530,25 +852,25 @@ export default function HomePage({ content }: { content: ContentData }) {
       <section className="craft-section" id="craft">
         <div className="craft-grid-container">
           <div className="craft-vertical-text">
-            <h2 className="craft-vertical-title jp-title fade-up">{content.craft.textFields.leftText}</h2>
+            <h2 className="craft-vertical-title jp-title fade-up">{getContent('craft.textFields.leftText', content)}</h2>
           </div>
           
           <div className="craft-vertical-text-right">
-            <h2 className="craft-vertical-title-right jp-title fade-up">{content.craft.textFields.rightText}</h2>
+            <h2 className="craft-vertical-title-right jp-title fade-up">{getContent('craft.textFields.rightText', content)}</h2>
           </div>
           
           <div className="craft-image-1">
-            <img src={content.craft.imageFields.image1} alt="こだわりの食材" className="craft-img fade-up" loading="lazy" />
+            <img src={content.craft.imageFields.image1} alt={t('alt.ingredients')} className="craft-img fade-up" loading="lazy" />
             <div className="craft-image-overlay"></div>
           </div>
           
           <div className="craft-image-2">
-            <img src={content.craft.imageFields.image2} alt="ちょっとは九州じゃない料理" className="craft-img fade-up" loading="lazy" />
+            <img src={content.craft.imageFields.image2} alt={t('alt.notJustKyushuFood')} className="craft-img fade-up" loading="lazy" />
             <div className="craft-image-overlay"></div>
           </div>
           
           <div className="craft-image-3">
-            <img src={content.craft.imageFields.image3} alt="こだわりの料理" className="craft-img fade-up" loading="lazy" />
+            <img src={content.craft.imageFields.image3} alt={t('alt.specialDishes')} className="craft-img fade-up" loading="lazy" />
             <div className="craft-image-overlay"></div>
           </div>
         </div>
@@ -559,13 +881,13 @@ export default function HomePage({ content }: { content: ContentData }) {
         <div className="features-grid">
           {/* カード1: 伝統の技 (モバイルでは2番目) */}
           <div className="feature-card masked-content order-mobile-2">
-            <img src={content.features.imageFields.feature1Image} alt="こだわりの食材" className="feature-image" loading="lazy" />
+            <img src={content.features.imageFields.feature1Image} alt={t('alt.ingredients')} className="feature-image" loading="lazy" />
             <div className="feature-content">
               <div className="feature-number">01</div>
               <h3 className="feature-title jp-title" dangerouslySetInnerHTML={{ 
-                __html: content.features.textFields.feature1Title.replace(/\n/g, '<br />')
+                __html: getContent('features.feature1Title', content).replace(/\n/g, '<br />')
               }} />
-              <p className="feature-description">{content.features.textFields.feature1Description}</p>
+              <p className="feature-description">{getContent('features.feature1Description', content)}</p>
               <div className="feature-accent"></div>
             </div>
           </div>
@@ -575,48 +897,70 @@ export default function HomePage({ content }: { content: ContentData }) {
             <div className="feature-content">
               <h3 className="feature-title jp-title fade-up">{content.features.textFields.mainTitle}</h3>
               <p className="feature-description">
-                もつ鍋専門店としての伝統の味と受け継がれた<br />
-                本場九州仕込み博多もつ鍋と当店のこだわりで<br />
-                皆様に満足できる食体験を提供いたします。
+                {language === 'ja' ? (
+                  <>
+                    もつ鍋専門店としての伝統の味と受け継がれた<br />
+                    本場九州仕込み博多もつ鍋と当店のこだわりで<br />
+                    皆様に満足できる食体験を提供いたします。
+                  </>
+                ) : language === 'en' ? (
+                  <>
+                    With our traditional flavors as a motsunabe specialty restaurant<br />
+                    and authentic Kyushu-style Hakata motsunabe,<br />
+                    we provide a satisfying dining experience for everyone.
+                  </>
+                ) : language === 'ko' ? (
+                  <>
+                    모츠나베 전문점으로서의 전통의 맛과 계승된<br />
+                    정통 규슈 스타일 하카타 모츠나베와 우리 가게의 고집으로<br />
+                    모든 분들께 만족할 수 있는 식사 경험을 제공합니다.
+                  </>
+                ) : (
+                  <>
+                    作为牛肠火锅专门店的传统风味和传承的<br />
+                    正宗九州风格博多牛肠火锅和本店的讲究<br />
+                    为大家提供满意的用餐体验。
+                  </>
+                )}
               </p>
             </div>
           </div>
 
           {/* カード3: 四季の美 (モバイルでは3番目) */}
           <div className="feature-card masked-content order-mobile-3">
-            <img src={content.features.imageFields.feature2Image} alt="多彩な味" className="feature-image" loading="lazy" />
+            <img src={content.features.imageFields.feature2Image} alt={t('alt.varietyOfTastes')} className="feature-image" loading="lazy" />
             <div className="feature-content">
               <div className="feature-number">02</div>
               <h3 className="feature-title jp-title" dangerouslySetInnerHTML={{ 
-                __html: content.features.textFields.feature2Title.replace(/\n/g, '<br />')
+                __html: getContent('features.feature2Title', content).replace(/\n/g, '<br />')
               }} />
-              <p className="feature-description">{content.features.textFields.feature2Description}</p>
+              <p className="feature-description">{getContent('features.feature2Description', content)}</p>
               <div className="feature-accent"></div>
             </div>
           </div>
 
           {/* カード4: 厳選素材 (モバイルでは4番目) */}
           <div className="feature-card masked-content order-mobile-4">
-            <img src={content.features.imageFields.feature3Image} alt="充実の逸品" className="feature-image" loading="lazy" />
+            <img src={content.features.imageFields.feature3Image} alt={t('alt.richLineup')} className="feature-image" loading="lazy" />
             <div className="feature-content">
               <div className="feature-number">03</div>
               <h3 className="feature-title jp-title" dangerouslySetInnerHTML={{ 
-                __html: content.features.textFields.feature3Title.replace(/\n/g, '<br />')
+                __html: getContent('features.feature3Title', content).replace(/\n/g, '<br />')
               }} />
-              <p className="feature-description">{content.features.textFields.feature3Description}</p>
+              <p className="feature-description">{getContent('features.feature3Description', content)}</p>
               <div className="feature-accent"></div>
             </div>
           </div>
 
           {/* カード5: おもてなし (モバイルでは5番目) */}
           <div className="feature-card masked-content order-mobile-5">
-            <img src={content.features.imageFields.feature4Image} alt="和の空間" className="feature-image" loading="lazy" />
+            <img src={content.features.imageFields.feature4Image} alt={t('alt.japaneseSpace')} className="feature-image" loading="lazy" />
             <div className="feature-content">
               <div className="feature-number">04</div>
               <h3 className="feature-title jp-title" dangerouslySetInnerHTML={{ 
-                __html: content.features.textFields.feature4Title.replace(/\n/g, '<br />')
+                __html: getContent('features.feature4Title', content).replace(/\n/g, '<br />')
               }} />
-              <p className="feature-description">{content.features.textFields.feature4Description}</p>
+              <p className="feature-description">{getContent('features.feature4Description', content)}</p>
               <div className="feature-accent"></div>
             </div>
           </div>
@@ -644,37 +988,37 @@ export default function HomePage({ content }: { content: ContentData }) {
           </div>
           
           <div className="space-hero-image">
-            <img src="/images/no1-0243.jpg" alt="もつ鍋メイン" className="space-hero-img" loading="lazy" />
+            <img src="/images/no1-0243.jpg" alt={t('alt.motsunabeMain')} className="space-hero-img" loading="lazy" />
           </div>
           
           <div className="space-detail-text-1">
             <div className="space-text-block">
-              <h3 className="space-text-title">本場九州仕込み</h3>
+              <h3 className="space-text-title">{getContent('space.title1', content) || t('section.kyushuStyle')}</h3>
               <p className="space-text-content">
-                厳選した新鮮な国産牛もつを使用し、
-                幾度も試作を重ねて完成させた
-                香り高き秘伝の特製スープ。
+                {t('space.cabbage.text1')}<br />
+                {t('space.cabbage.text2')}<br />
+                {t('space.cabbage.text3')}
               </p>
             </div>
           </div>
           
           <div className="space-image-1">
-            <img src="/images/no1-0220.jpg" alt="博多もつ鍋の調理風景" className="space-sub-image" loading="lazy" />
+            <img src="/images/no1-0220.jpg" alt={t('alt.cookingScene')} className="space-sub-image" loading="lazy" />
           </div>
           
           <div className="space-image-2">
             <picture>
               <source media="(max-width: 768px)" srcSet="./images/no1-0241.jpg" />
-              <img src="/images/no1-0235.jpg" alt="もつ鍋の具材アップ" className="space-sub-image" loading="lazy" />
+              <img src="/images/no1-0235.jpg" alt={t('alt.ingredientsCloseup')} className="space-sub-image" loading="lazy" />
             </picture>
           </div>
           
           <div className="space-detail-text-2">
             <div className="space-text-block">
               <p className="space-text-content">
-                キャベツはあえて手でちぎることで<br />
-                食感を残し、スープがよく染み込むよう工夫。<br />
-                もつ鍋専門店としての伝統の味と製法を守り続けています。
+                {t('space.cabbage.text4')}<br />
+                {t('space.cabbage.text5')}<br />
+                {t('space.cabbage.text6')}
               </p>
             </div>
           </div>
@@ -682,23 +1026,23 @@ export default function HomePage({ content }: { content: ContentData }) {
           <div className="space-circle-1">
             <picture>
               <source media="(max-width: 768px)" srcSet="./images/no1-0220.jpg" />
-              <img src="/images/DSC00631.jpg" alt="伝統の調理器具" className="space-circle-img" loading="lazy" />
+              <img src="/images/DSC00631.jpg" alt={t('alt.traditionalTools')} className="space-circle-img" loading="lazy" />
             </picture>
           </div>
           
           <div className="space-circle-2">
-            <img src="/images/DSC00654.jpg" alt="厳選された食材" className="space-circle-img" loading="lazy" />
+            <img src="/images/DSC00654.jpg" alt={t('alt.selectedIngredients')} className="space-circle-img" loading="lazy" />
           </div>
           
           <div className="space-circle-3">
-            <img src="/images/DSC00681.jpg" alt="職人の技" className="space-circle-img" loading="lazy" />
+            <img src="/images/DSC00681.jpg" alt={t('alt.craftsmanship')} className="space-circle-img" loading="lazy" />
           </div>
           
           <div className="space-quote-block">
             <blockquote className="space-quote">
-              「塩」、何度でも食べたくなる定番の味「醤油」、まろやかで深みのある濃厚な味わいの「味噌」よりスープをお選びください♪
+              {t('space.quote')}
             </blockquote>
-            <cite className="space-quote-author">店長より</cite>
+            <cite className="space-quote-author">{t('space.quoteAuthor')}</cite>
           </div>
         </div>
       </section>
@@ -707,30 +1051,28 @@ export default function HomePage({ content }: { content: ContentData }) {
       <section className="motsunabe-section" id="motsunabe">
         <div className="motsunabe-container">
           <div className="motsunabe-header fade-up">
-            <h2 className="motsunabe-title jp-title">名物もつ鍋</h2>
-            <p className="motsunabe-subtitle">本場博多の味を、横浜で</p>
+            <h2 className="motsunabe-title jp-title">{content?.motsunabe?.textFields?.sectionTitle || '名物もつ鍋'}</h2>
+            <p className="motsunabe-subtitle">{content?.motsunabe?.textFields?.sectionSubtitle || '本場博多の味を、横浜で'}</p>
           </div>
           
           <div className="motsunabe-content">
             <div className="motsunabe-main fade-up">
               <div className="motsunabe-image-wrapper">
-                <img src="/images/no1-0241.jpg" alt="博多もつ鍋" className="motsunabe-image" />
+                <img src={content?.motsunabe?.imageFields?.mainImage || '/images/no1-0241.jpg'} alt={t('alt.hakataMoitsunabe')} className="motsunabe-image" />
                 <div className="motsunabe-badge">
-                  <span>創業以来の</span>
-                  <span>秘伝の味</span>
+                  {(content?.motsunabe?.badges || [t('motsunabe.badge1'), t('motsunabe.badge2')]).map((badge: string, index: number) => (
+                    <span key={index}>{badge}</span>
+                  ))}
                 </div>
               </div>
               
               <div className="motsunabe-info">
                 <h3 className="motsunabe-catch">
-                  厳選された国産牛もつを使用した<br />
-                  こだわりの博多もつ鍋
+                  {content?.motsunabe?.textFields?.catchphrase || t('motsunabe.catch')}
                 </h3>
                 
                 <p className="motsunabe-description">
-                  新鮮な国産牛の「もつ」を丁寧に下処理し、
-                  創業以来受け継がれる秘伝のスープで炊き上げる本場博多の味。
-                  プリプリとした食感と、深いコクのあるスープが自慢です。
+                  {content?.motsunabe?.textFields?.description || t('motsunabe.description')}
                 </p>
                 
                 <div className="motsunabe-features">
@@ -740,8 +1082,8 @@ export default function HomePage({ content }: { content: ContentData }) {
                         <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                       </svg>
                     </div>
-                    <h4>厳選素材</h4>
-                    <p>国産牛もつを100%使用</p>
+                    <h4>{content?.motsunabe?.textFields?.feature1Title || t('motsunabe.feature1.title')}</h4>
+                    <p>{content?.motsunabe?.textFields?.feature1Desc || t('motsunabe.feature1.desc')}</p>
                   </div>
                   
                   <div className="motsunabe-feature">
@@ -750,8 +1092,8 @@ export default function HomePage({ content }: { content: ContentData }) {
                         <path d="M3 3h18v18H3zM12 8v8M8 12h8"/>
                       </svg>
                     </div>
-                    <h4>２つの味</h4>
-                    <p>醤油・味噌からお選びいただけます</p>
+                    <h4>{content?.motsunabe?.textFields?.feature2Title || t('motsunabe.feature2.title')}</h4>
+                    <p>{content?.motsunabe?.textFields?.feature2Desc || t('motsunabe.feature2.desc')}</p>
                   </div>
                   
                   <div className="motsunabe-feature">
@@ -761,37 +1103,47 @@ export default function HomePage({ content }: { content: ContentData }) {
                         <path d="M12 6v6l4 2"/>
                       </svg>
                     </div>
-                    <h4>〆まで美味しい</h4>
-                    <p>ちゃんぽん麺や雑炊で最後まで</p>
+                    <h4>{content?.motsunabe?.textFields?.feature3Title || t('motsunabe.feature3.title')}</h4>
+                    <p>{content?.motsunabe?.textFields?.feature3Desc || t('motsunabe.feature3.desc')}</p>
                   </div>
                 </div>
                 
                 <div className="motsunabe-price">
-                  <div className="price-label">お一人様</div>
+                  <div className="price-label">{content?.motsunabe?.textFields?.priceLabel || t('motsunabe.priceLabel')}</div>
                   <div className="price-amount">
-                    <span className="price-number">1,680</span>
-                    <span className="price-unit">円〜</span>
-                    <span className="price-tax">（税込）</span>
+                    <span className="price-number">{content?.motsunabe?.textFields?.priceAmount || '1,680'}</span>
+                    <span className="price-unit">{content?.motsunabe?.textFields?.priceUnit || t('motsunabe.priceUnit')}</span>
+                    <span className="price-tax">{content?.motsunabe?.textFields?.priceTax || t('motsunabe.priceTax')}</span>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="motsunabe-options fade-up">
-              <h3 className="options-title">お好みの味をお選びください</h3>
-              <div className="options-grid">
-                <div className="option-card">
-                  <img src="/images/DSC00440.jpg" alt="醤油もつ鍋" />
-                  <h4>醤油もつ鍋</h4>
-                  <p>あっさりとした醤油ベースに、にんにくと唐辛子がアクセント。定番の人気メニューです。</p>
+            {content?.motsunabe?.showOptions !== false && (
+              <div className="motsunabe-options fade-up">
+                <h3 className="options-title">{content?.motsunabe?.textFields?.optionsTitle || t('motsunabe.optionsTitle')}</h3>
+                <div className="options-grid">
+                  {(content?.motsunabe?.options || []).map((option: any) => (
+                    <div key={option.id} className="option-card">
+                      <img src={option.image} alt={option.title} />
+                      <h4>{option.title}</h4>
+                      <p>{option.description}</p>
+                    </div>
+                  ))}
                 </div>
-                <div className="option-card">
-                  <img src="/images/DSC00439.jpg" alt="味噌もつ鍋" />
-                  <h4>味噌もつ鍋</h4>
-                  <p>数種類の味噌をブレンドした濃厚スープ。コクと深みのある味わいが特徴です。</p>
+                {/* モバイル用スライドインジケーター */}
+                <div className="options-slide-indicators">
+                  {(content?.motsunabe?.options || []).map((_: any, index: number) => (
+                    <button
+                      key={index}
+                      className={`slide-indicator ${index === currentMotsunabeSlide ? 'active' : ''}`}
+                      onClick={() => setCurrentMotsunabeSlide(index)}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
@@ -799,130 +1151,30 @@ export default function HomePage({ content }: { content: ContentData }) {
       {/* お品書き */}
       <section className="room-section" id="room">
         <div className="room-container">
-          <h2 className="section-title jp-title fade-up">{content.menu.textFields.sectionTitle}</h2>
-          <p className="section-subtitle fade-up">{content.menu.textFields.subTitle}</p>
+          <h2 className="section-title jp-title fade-up">{t('section.menu')}</h2>
+          <p className="section-subtitle fade-up">{t('section.menuSubtitle')}</p>
           
           <div className="menu-grid">
-            {/* 博多もつ鍋 */}
-            <div className="menu-card fade-scale">
-              <div className="menu-category">HAKATA MOTSUNABE</div>
-              <h3 className="menu-title jp-title">博多もつ鍋</h3>
-              <div className="menu-items">
-                <div className="menu-item">
-                  <span className="menu-item-name">濃厚味噌</span>
-                  <span className="menu-item-price">¥1,628</span>
+            {/* 動的メニューカード */}
+            {content.menu?.menuCards?.map((card: any, index: number) => (
+              <div 
+                key={card.id} 
+                className={`menu-card fade-scale ${index >= 3 ? 'hidden-menu-mobile' : ''}`}
+                data-menu-extra={index >= 3 ? 'true' : undefined}
+              >
+                <div className="menu-category">{card.subTitle}</div>
+                <h3 className="menu-title jp-title">{card.title}</h3>
+                <div className="menu-items">
+                  {card.items.map((item: any, itemIndex: number) => (
+                    <div key={itemIndex} className="menu-item">
+                      <span className="menu-item-name">{item.name}</span>
+                      <span className="menu-item-price">{item.price}</span>
+                    </div>
+                  ))}
                 </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">醤油</span>
-                  <span className="menu-item-price">¥1,628</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">塩</span>
-                  <span className="menu-item-price">¥1,628</span>
-                </div>
+                {card.note && <p className="menu-note">{card.note}</p>}
               </div>
-              <p className="menu-note">※ 鍋のご注文は2人前から承ります。価格は1人前（税込）</p>
-            </div>
-
-            {/* 逸品料理 */}
-            <div className="menu-card fade-scale">
-              <div className="menu-category">SPECIAL DISHES</div>
-              <h3 className="menu-title jp-title">逸品料理</h3>
-              <div className="menu-items">
-                <div className="menu-item">
-                  <span className="menu-item-name">チョレギサラダ</span>
-                  <span className="menu-item-price">¥858</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">大分 鶏唐揚げ</span>
-                  <span className="menu-item-price">¥528</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">本鮪のお刺身</span>
-                  <span className="menu-item-price">¥968</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">明太子入り 出汁巻き玉子</span>
-                  <span className="menu-item-price">¥748</span>
-                </div>
-              </div>
-              <p className="menu-note">※ 価格は税込みです</p>
-            </div>
-
-            {/* ホルモン・ちりとり焼肉 */}
-            <div className="menu-card fade-scale">
-              <div className="menu-category">HORMONE & CHIRITRI</div>
-              <h3 className="menu-title jp-title">ホルモン ちりとり焼肉</h3>
-              <div className="menu-items">
-                <div className="menu-item">
-                  <span className="menu-item-name">ちりとり焼肉</span>
-                  <span className="menu-item-price">¥1,518</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">追加ホルモンセット</span>
-                  <span className="menu-item-price">¥858</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">追加野菜セット</span>
-                  <span className="menu-item-price">¥550</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">〆のちゃんぽん麺</span>
-                  <span className="menu-item-price">¥528</span>
-                </div>
-              </div>
-              <p className="menu-note">※ ご注文は2人前より承ります（価格は1人前・税込）</p>
-            </div>
-
-            {/* お食事（スマホでは非表示） */}
-            <div className="menu-card fade-scale hidden-menu-mobile" data-menu-extra="true">
-              <div className="menu-category">MEALS</div>
-              <h3 className="menu-title jp-title">お食事</h3>
-              <div className="menu-items">
-                <div className="menu-item">
-                  <span className="menu-item-name">親富孝通り 屋台名物 鉄板焼きラーメン</span>
-                  <span className="menu-item-price">¥858</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">宮崎辛麺</span>
-                  <span className="menu-item-price">¥858</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">本鮪漬け丼</span>
-                  <span className="menu-item-price">¥1,078</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">石焼きペッパーガーリックライス</span>
-                  <span className="menu-item-price">¥990</span>
-                </div>
-              </div>
-              <p className="menu-note">※ 価格は税込みです</p>
-            </div>
-
-            {/* 鍋の追加と〆（スマホでは非表示） */}
-            <div className="menu-card fade-scale hidden-menu-mobile" data-menu-extra="true">
-              <div className="menu-category">NABE TOPPINGS</div>
-              <h3 className="menu-title jp-title">鍋の追加と〆</h3>
-              <div className="menu-items">
-                <div className="menu-item">
-                  <span className="menu-item-name">もつ鍋〆セット</span>
-                  <span className="menu-item-price">¥858</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">野菜</span>
-                  <span className="menu-item-price">¥638</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">特製ちゃんぽん麺</span>
-                  <span className="menu-item-price">¥462</span>
-                </div>
-                <div className="menu-item">
-                  <span className="menu-item-name">雑炊セット</span>
-                  <span className="menu-item-price">¥462</span>
-                </div>
-              </div>
-              <p className="menu-note">※ 価格は税込みです</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -930,7 +1182,7 @@ export default function HomePage({ content }: { content: ContentData }) {
       {/* 宴会or一人飲みセクション */}
       <section className="dining-style-section" id="dining-style">
         <div className="dining-style-container">
-          <h2 className="dining-section-title fade-up">{content.diningStyle?.textFields?.sectionTitle || '選べる当店の楽しみ方！'}</h2>
+          <h2 className="dining-section-title fade-up">{getContent('diningStyle.sectionTitle', content)}</h2>
           <div className="dining-style-grid">
             {/* 左カラム：宴会 */}
             <div className="dining-column dining-party">
@@ -941,18 +1193,18 @@ export default function HomePage({ content }: { content: ContentData }) {
               <div className="dining-content">
                 <div className="dining-header">
                   <span className="dining-subtitle">PARTY</span>
-                  <h3 className="dining-title jp-title">{content.diningStyle?.textFields?.partyTitle || '宴会'}</h3>
+                  <h3 className="dining-title jp-title">{getContent('diningStyle.partyTitle', content)}</h3>
                 </div>
                 <div className="dining-description">
-                  <p>{content.diningStyle?.textFields?.partyDescription || '大人数でのご利用も歓迎！最大110名様まで対応可能な貸切スペースで、会社の宴会や歓送迎会に最適です。'}</p>
+                  <p>{getContent('diningStyle.partyDescription', content).replace(/\\n/g, ' ')}</p>
                   <ul className="dining-features">
-                    <li>{content.diningStyle?.textFields?.partyFeature1 || '豊富な宴会コース'}</li>
-                    <li>{content.diningStyle?.textFields?.partyFeature2 || '貸切対応可能'}</li>
-                    <li>{content.diningStyle?.textFields?.partyFeature3 || '飲み放題充実'}</li>
+                    <li>{t('dining.partyFeature1')}</li>
+                    <li>{t('dining.partyFeature2')}</li>
+                    <li>{t('dining.partyFeature3')}</li>
                   </ul>
                 </div>
                 <button className="dining-cta-btn" onClick={() => setShowCoursesModal(true)}>
-                  <span>{content.diningStyle?.textFields?.partyCTA || '宴会コースを見る'}</span>
+                  <span>{t('button.viewCourses')}</span>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                   </svg>
@@ -969,18 +1221,18 @@ export default function HomePage({ content }: { content: ContentData }) {
               <div className="dining-content">
                 <div className="dining-header">
                   <span className="dining-subtitle">SAKE</span>
-                  <h3 className="dining-title jp-title">{content.diningStyle?.textFields?.sakeTitle || '日本酒'}</h3>
+                  <h3 className="dining-title jp-title">{getContent('diningStyle.sakeTitle', content)}</h3>
                 </div>
                 <div className="dining-description">
-                  <p>{content.diningStyle?.textFields?.sakeDescription || '全国から厳選した日本酒を多数ご用意。季節限定の銘柄や希少な地酒も楽しめます。'}</p>
+                  <p>{getContent('diningStyle.sakeDescription', content).replace(/\\n/g, ' ')}</p>
                   <ul className="dining-features">
-                    <li>{content.diningStyle?.textFields?.sakeFeature1 || '厳選された銘柄'}</li>
-                    <li>{content.diningStyle?.textFields?.sakeFeature2 || '季節限定酒あり'}</li>
-                    <li>{content.diningStyle?.textFields?.sakeFeature3 || '利き酒セット'}</li>
+                    <li>{t('dining.sakeFeature1')}</li>
+                    <li>{t('dining.sakeFeature2')}</li>
+                    <li>{t('dining.sakeFeature3')}</li>
                   </ul>
                 </div>
                 <button className="dining-cta-btn" onClick={() => setShowDrinksModal(true)}>
-                  <span>{content.diningStyle?.textFields?.sakeCTA || '日本酒メニューを見る'}</span>
+                  <span>{t('button.viewSakeMenu')}</span>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                   </svg>
@@ -995,8 +1247,8 @@ export default function HomePage({ content }: { content: ContentData }) {
       <section className="seats-section" id="seats">
         <div className="seats-container">
           <div className="seats-header fade-up">
-            <h2 className="seats-title jp-title">{content.seats.textFields.title}</h2>
-            <p className="seats-subtitle">{content.seats.textFields.subTitle}</p>
+            <h2 className="seats-title jp-title">{t('section.seats')}</h2>
+            <p className="seats-subtitle">{t('section.seatsSubtitle')}</p>
           </div>
           
           {/* スライダーコンテナ */}
@@ -1006,61 +1258,95 @@ export default function HomePage({ content }: { content: ContentData }) {
               <div className="seats-slides">
                 {content.seats.seatData ? (
                   // 新しいseatData形式の場合
-                  content.seats.seatData.map((seat: any, index: number) => (
-                    <div key={seat.id} className={`seat-slide ${index === 0 ? 'active' : ''}`} data-seat={index}>
-                      <div className="seat-image">
-                        <img src={seat.image} alt={seat.name} loading="lazy" />
-                      </div>
-                      <div className="seat-details">
-                        <h3 className="seat-name">{seat.name}</h3>
-                        <div className="seat-capacity">
-                          <span className="capacity-icon">👥</span>
-                          <span className="capacity-text">{seat.capacity}</span>
+                  content.seats.seatData.map((seat: any, index: number) => {
+                    // 座席タイプを判定してキーを設定
+                    const seatKey = seat.id === 'private-space' ? 'privateSpace' :
+                                   seat.id === 'semi-private-box' ? 'semiPrivateBox' :
+                                   seat.id === 'table-seats' ? 'tableSeats' :
+                                   seat.id === 'group-seats' ? 'groupSeats' :
+                                   seat.id === 'window-date-seats' ? 'windowDateSeats' :
+                                   null;
+                    
+                    // プレースホルダーの場合は別のキーを使用
+                    const placeholderKey = seat.id === 'table-seats' ? 'seatPlaceholders.tableSeats' :
+                                          seat.id === 'group-seats' ? 'seatPlaceholders.groupSeats' :
+                                          seat.id === 'window-date-seats' ? 'seatPlaceholders.windowDateSeats' :
+                                          null;
+                    
+                    const nameKey = placeholderKey || (seatKey ? `seats.${seatKey}` : null);
+                    
+                    // タグの翻訳マッピング
+                    const tagTranslationMap: { [key: string]: string } = {
+                      '大人数OK': 'seat.tag.largeGroup',
+                      '貸切可能': 'seat.tag.privateBooking',
+                      'レイアウト変更可': 'seat.tag.flexibleLayout',
+                      '落ち着いた空間': 'seat.tag.quietSpace',
+                      '窓際席': 'seat.tag.windowSide',
+                      '女子会におすすめ': 'seat.tag.girlsNight',
+                      'ゆったり空間': 'seat.tag.spacious',
+                      '少人数向け': 'seat.tag.smallGroup',
+                      '大人数対応': 'seat.tag.largeGroupFriendly',
+                      '宴会向け': 'seat.tag.partyReady',
+                      '景色が良い': 'seat.tag.goodView',
+                      'デートに人気': 'seat.tag.datePopular',
+                      '開放的': 'seat.tag.open'
+                    };
+                    
+                    return (
+                      <div key={seat.id} className={`seat-slide ${index === 0 ? 'active' : ''}`} data-seat={index}>
+                        <div className="seat-image">
+                          <img src={seat.image} alt={nameKey ? getContent(`${nameKey}.name`, content) : seat.name} loading="lazy" />
                         </div>
-                        <p className="seat-description">
-                          {seat.description}
-                        </p>
-                        <div className="seat-features">
-                          {seat.tags.map((tag: string, tagIndex: number) => (
-                            <div key={tagIndex} className="feature-item">
-                              <span className="feature-icon">✓</span>
-                              <span>{tag}</span>
-                            </div>
-                          ))}
+                        <div className="seat-details">
+                          <h3 className="seat-name">{nameKey ? getContent(`${nameKey}.name`, content) : seat.name}</h3>
+                          <div className="seat-capacity">
+                            <span className="capacity-icon">👥</span>
+                            <span className="capacity-text">{nameKey ? getContent(`${nameKey}.capacity`, content) : seat.capacity}</span>
+                          </div>
+                          <p className="seat-description">
+                            {nameKey ? getContent(`${nameKey}.description`, content) : seat.description}
+                          </p>
+                          <div className="seat-features">
+                            {seat.tags.map((tag: string, tagIndex: number) => (
+                              <div key={tagIndex} className="feature-item">
+                                <span className="feature-icon">✓</span>
+                                <span>{tagTranslationMap[tag] ? t(tagTranslationMap[tag]) : tag}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 ) : (
                   // 旧imageFields形式の場合（互換性のため）
                   <>
                     {/* 貸切スペース */}
                     <div className="seat-slide active" data-seat="0">
                       <div className="seat-image">
-                        <img src={content.seats.imageFields.privateSpace} alt="貸切スペース" loading="lazy" />
+                        <img src={content.seats.imageFields.privateSpace} alt={getContent('seats.privateSpace.name', content)} loading="lazy" />
                   </div>
                   <div className="seat-details">
-                    <h3 className="seat-name">貸切スペース</h3>
+                    <h3 className="seat-name">{getContent('seats.privateSpace.name', content)}</h3>
                     <div className="seat-capacity">
                       <span className="capacity-icon">👥</span>
-                      <span className="capacity-text">最大110名様</span>
+                      <span className="capacity-text">{getContent('seats.privateSpace.capacity', content)}</span>
                     </div>
                     <p className="seat-description">
-                      着席最大110名。広々とした快適空間で貸切宴会が可能です。
-                      会社の歓送迎会、忘年会・新年会など大人数のご宴会に最適です。
+                      {getContent('seats.privateSpace.description', content)}
                     </p>
                     <div className="seat-features">
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>大人数OK</span>
+                        <span>{t('seat.tag.largeGroup')}</span>
                       </div>
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>貸切可能</span>
+                        <span>{t('seat.tag.privateBooking')}</span>
                       </div>
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>レイアウト変更可</span>
+                        <span>{t('seat.tag.flexibleLayout')}</span>
                       </div>
                     </div>
                   </div>
@@ -1069,30 +1355,29 @@ export default function HomePage({ content }: { content: ContentData }) {
                 {/* 半個室風ボックス席 */}
                 <div className="seat-slide" data-seat="1">
                   <div className="seat-image">
-                    <img src={content.seats.imageFields.semiPrivateBox} alt="半個室風ボックス席" loading="lazy" />
+                    <img src={content.seats.imageFields.semiPrivateBox} alt={getContent('seats.semiPrivateBox.name', content)} loading="lazy" />
                   </div>
                   <div className="seat-details">
-                    <h3 className="seat-name">半個室風ボックス席</h3>
+                    <h3 className="seat-name">{getContent('seats.semiPrivateBox.name', content)}</h3>
                     <div className="seat-capacity">
                       <span className="capacity-icon">👥</span>
-                      <span className="capacity-text">4〜6名様</span>
+                      <span className="capacity-text">{getContent('seats.semiPrivateBox.capacity', content)}</span>
                     </div>
                     <p className="seat-description">
-                      窓際の開放的な快適空間。プライベート感のあるボックス席で、
-                      女子会や気の置けない仲間との飲み会に最適です。
+                      {getContent('seats.semiPrivateBox.description', content)}
                     </p>
                     <div className="seat-features">
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>落ち着いた空間</span>
+                        <span>{t('seat.tag.quietSpace')}</span>
                       </div>
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>窓際席</span>
+                        <span>{t('seat.tag.windowSide')}</span>
                       </div>
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>女子会におすすめ</span>
+                        <span>{t('seat.tag.girlsNight')}</span>
                       </div>
                     </div>
                   </div>
@@ -1101,26 +1386,25 @@ export default function HomePage({ content }: { content: ContentData }) {
                 {/* テーブル席 */}
                 <div className="seat-slide" data-seat="2">
                   <div className="seat-image">
-                    <img src={content.seats.imageFields.tableSeats} alt="テーブル席" loading="lazy" />
+                    <img src={content.seats.imageFields.tableSeats} alt={getContent('seatPlaceholders.tableSeats.name', content)} loading="lazy" />
                   </div>
                   <div className="seat-details">
-                    <h3 className="seat-name">スタンダードテーブル席</h3>
+                    <h3 className="seat-name">{getContent('seatPlaceholders.tableSeats.name', content)}</h3>
                     <div className="seat-capacity">
                       <span className="capacity-icon">👥</span>
-                      <span className="capacity-text">4名様</span>
+                      <span className="capacity-text">{getContent('seatPlaceholders.tableSeats.capacity', content)}</span>
                     </div>
                     <p className="seat-description">
-                      落ち着いた雰囲気のテーブル席。お席もしっかりとスペースを
-                      確保しており、ゆったりとお食事をお楽しみいただけます。
+                      {getContent('seatPlaceholders.tableSeats.description', content)}
                     </p>
                     <div className="seat-features">
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>ゆったり空間</span>
+                        <span>{t('seat.tag.spacious')}</span>
                       </div>
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>少人数向け</span>
+                        <span>{t('seat.tag.smallGroup')}</span>
                       </div>
                     </div>
                   </div>
@@ -1129,30 +1413,29 @@ export default function HomePage({ content }: { content: ContentData }) {
                 {/* グループ席 */}
                 <div className="seat-slide" data-seat="3">
                   <div className="seat-image">
-                    <img src={content.seats.imageFields.groupSeats} alt="グループ席" loading="lazy" />
+                    <img src={content.seats.imageFields.groupSeats} alt={getContent('seatPlaceholders.groupSeats.name', content)} loading="lazy" />
                   </div>
                   <div className="seat-details">
-                    <h3 className="seat-name">グループ席</h3>
+                    <h3 className="seat-name">{getContent('seatPlaceholders.groupSeats.name', content)}</h3>
                     <div className="seat-capacity">
                       <span className="capacity-icon">👥</span>
-                      <span className="capacity-text">6〜8名様</span>
+                      <span className="capacity-text">{getContent('seatPlaceholders.groupSeats.capacity', content)}</span>
                     </div>
                     <p className="seat-description">
-                      仕事終わりの部署飲みに最適な広々とした席。
-                      皆で顔を見て話せる一体感のある配置で、楽しいひとときを。
+                      {getContent('seatPlaceholders.groupSeats.description', content)}
                     </p>
                     <div className="seat-features">
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>大人数対応</span>
+                        <span>{t('seat.tag.largeGroupFriendly')}</span>
                       </div>
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>宴会向け</span>
+                        <span>{t('seat.tag.partyReady')}</span>
                       </div>
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>レイアウト変更可</span>
+                        <span>{t('seat.tag.flexibleLayout')}</span>
                       </div>
                     </div>
                   </div>
@@ -1161,30 +1444,29 @@ export default function HomePage({ content }: { content: ContentData }) {
                 {/* 窓際デート席 */}
                 <div className="seat-slide" data-seat="4">
                   <div className="seat-image">
-                    <img src={content.seats.imageFields.windowDateSeats} alt="窓際デート席" loading="lazy" />
+                    <img src={content.seats.imageFields.windowDateSeats} alt={getContent('seatPlaceholders.windowDateSeats.name', content)} loading="lazy" />
                   </div>
                   <div className="seat-details">
-                    <h3 className="seat-name">窓際デート席</h3>
+                    <h3 className="seat-name">{getContent('seatPlaceholders.windowDateSeats.name', content)}</h3>
                     <div className="seat-capacity">
                       <span className="capacity-icon">👥</span>
-                      <span className="capacity-text">2〜4名様</span>
+                      <span className="capacity-text">{getContent('seatPlaceholders.windowDateSeats.capacity', content)}</span>
                     </div>
                     <p className="seat-description">
-                      外の景色を眺めながらお食事を楽しめる開放的な席。
-                      デートや記念日など、特別な日のお食事におすすめです。
+                      {getContent('seatPlaceholders.windowDateSeats.description', content)}
                     </p>
                     <div className="seat-features">
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>景色が良い</span>
+                        <span>{t('seat.tag.goodView')}</span>
                       </div>
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>デートに人気</span>
+                        <span>{t('seat.tag.datePopular')}</span>
                       </div>
                       <div className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span>開放的</span>
+                        <span>{t('seat.tag.open')}</span>
                       </div>
                     </div>
                   </div>
@@ -1198,34 +1480,53 @@ export default function HomePage({ content }: { content: ContentData }) {
             <div className="seats-thumbnails">
               {content.seats.seatData ? (
                 // 新しいseatData形式の場合
-                content.seats.seatData.map((seat: any, index: number) => (
-                  <div key={seat.id} className={`thumbnail ${index === 0 ? 'active' : ''}`} data-seat={index}>
-                    <img src={seat.image} alt={seat.name} />
-                    <span className="thumbnail-label">{seat.name.length > 6 ? seat.name.substring(0, 6) : seat.name}</span>
-                  </div>
-                ))
+                content.seats.seatData.map((seat: any, index: number) => {
+                  // 座席タイプを判定してキーを設定
+                  const seatKey = seat.id === 'private-space' ? 'privateSpace' :
+                                 seat.id === 'semi-private-box' ? 'semiPrivateBox' :
+                                 seat.id === 'table-seats' ? 'tableSeats' :
+                                 seat.id === 'group-seats' ? 'groupSeats' :
+                                 seat.id === 'window-date-seats' ? 'windowDateSeats' :
+                                 null;
+                  
+                  // プレースホルダーの場合は別のキーを使用
+                  const placeholderKey = seat.id === 'table-seats' ? 'seatPlaceholders.tableSeats' :
+                                        seat.id === 'group-seats' ? 'seatPlaceholders.groupSeats' :
+                                        seat.id === 'window-date-seats' ? 'seatPlaceholders.windowDateSeats' :
+                                        null;
+                  
+                  const nameKey = placeholderKey || (seatKey ? `seats.${seatKey}` : null);
+                  const translatedName = nameKey ? getContent(`${nameKey}.name`, content) : seat.name;
+                  
+                  return (
+                    <div key={seat.id} className={`thumbnail ${index === 0 ? 'active' : ''}`} data-seat={index}>
+                      <img src={seat.image} alt={translatedName} />
+                      <span className="thumbnail-label">{translatedName.length > 6 ? translatedName.substring(0, 6) : translatedName}</span>
+                    </div>
+                  );
+                })
               ) : (
                 // 旧imageFields形式の場合（互換性のため）
                 <>
                   <div className="thumbnail active" data-seat="0">
-                    <img src={content.seats.imageFields.privateSpace} alt="貸切スペース" />
-                    <span className="thumbnail-label">貸切スペース</span>
+                    <img src={content.seats.imageFields.privateSpace} alt={t('alt.seatThumbnail')} />
+                    <span className="thumbnail-label">{getContent('seats.privateSpace.name', content).substring(0, 6)}</span>
                   </div>
                   <div className="thumbnail" data-seat="1">
-                    <img src={content.seats.imageFields.semiPrivateBox} alt="半個室風ボックス席" />
-                    <span className="thumbnail-label">半個室風</span>
+                    <img src={content.seats.imageFields.semiPrivateBox} alt={t('alt.semiPrivateThumbnail')} />
+                    <span className="thumbnail-label">{getContent('seats.semiPrivateBox.name', content).substring(0, 5)}</span>
                   </div>
                   <div className="thumbnail" data-seat="2">
-                    <img src={content.seats.imageFields.tableSeats} alt="テーブル席" />
-                    <span className="thumbnail-label">テーブル席</span>
+                    <img src={content.seats.imageFields.tableSeats} alt={t('alt.tableThumbnail')} />
+                    <span className="thumbnail-label">{getContent('seatPlaceholders.tableSeats.name', content).substring(0, 6)}</span>
                   </div>
                   <div className="thumbnail" data-seat="3">
-                    <img src={content.seats.imageFields.groupSeats} alt="グループ席" />
-                    <span className="thumbnail-label">グループ席</span>
+                    <img src={content.seats.imageFields.groupSeats} alt={t('alt.groupThumbnail')} />
+                    <span className="thumbnail-label">{getContent('seatPlaceholders.groupSeats.name', content).substring(0, 6)}</span>
                   </div>
                   <div className="thumbnail" data-seat="4">
-                    <img src={content.seats.imageFields.windowDateSeats} alt="窓際デート席" />
-                    <span className="thumbnail-label">デート席</span>
+                    <img src={content.seats.imageFields.windowDateSeats} alt={t('alt.dateThumbnail')} />
+                    <span className="thumbnail-label">{getContent('seatPlaceholders.windowDateSeats.name', content).substring(0, 5)}</span>
                   </div>
                 </>
               )}
@@ -1238,134 +1539,136 @@ export default function HomePage({ content }: { content: ContentData }) {
       <section className="gallery-section" id="gallery">
         <div className="gallery-container">
           <div className="gallery-header fade-up">
-            <h2 className="gallery-title jp-title">{content.gallery.textFields.title}</h2>
-            <p className="gallery-subtitle">{content.gallery.textFields.subTitle}</p>
+            <h2 className="gallery-title jp-title">{t('section.gallery')}</h2>
+            <p className="gallery-subtitle">{t('section.gallerySubtitle')}</p>
           </div>
           
+          {/* モバイル用スライドショー */}
+          <div className="gallery-slideshow mobile-only">
+            {(() => {
+              const galleryItems = [
+                { img: content.gallery.imageFields.gallery1, caption: t('gallery.atmosphere') },
+                { img: content.gallery.imageFields.gallery2, caption: t('gallery.notJustKyushu') },
+                { img: content.gallery.imageFields.gallery3, caption: t('gallery.traditionalTaste') },
+                { img: content.gallery.imageFields.gallery4, caption: t('gallery.counterSeats') },
+                { img: content.gallery.imageFields.gallery5, caption: t('gallery.interior') },
+                { img: content.gallery.imageFields.gallery6, caption: t('gallery.nightEntrance') },
+                { img: content.gallery.imageFields.gallery7, caption: t('gallery.spaciousSeating') },
+                { img: content.gallery.imageFields.gallery8, caption: t('gallery.privateRoom') },
+                { img: content.gallery.imageFields.gallery9, caption: t('gallery.hospitality') }
+              ];
+              
+              // 無限スクロール用に前後に複製を追加
+              const extendedItems = [
+                galleryItems[galleryItems.length - 1], // 最後の画像を最初に
+                ...galleryItems,
+                galleryItems[0] // 最初の画像を最後に
+              ];
+              
+              return (
+                <>
+                  <div className="gallery-slides">
+                    {extendedItems.map((item, index) => (
+                      <div key={index} className="gallery-slide">
+                        <img src={item.img} alt={`${getContent('shopInfo.shopName', content)} ${index}`} className="gallery-slide-image" />
+                        <div className="gallery-slide-overlay">
+                          <span className="gallery-slide-caption">{item.caption}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* スライドインジケーター */}
+                  <div className="gallery-slide-indicators">
+                    {galleryItems.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`slide-indicator ${index === currentGallerySlide ? 'active' : ''}`}
+                        onClick={() => setCurrentGallerySlide(index)}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+          
+          {/* PC用グリッド表示 */}
           <div className="gallery-grid">
-            {/* メイン画像（PC/タブレットで全表示、スマホで３枚） */}
+            {/* メイン画像（PC/タブレットで全表示） */}
             <div className="gallery-item fade-up">
-              <img src={content.gallery.imageFields.gallery1} alt="木村屋本店サンプル店の風景1" className="gallery-image" />
+              <img src={content.gallery.imageFields.gallery1} alt={`${getContent('shopInfo.shopName', content)} 1`} className="gallery-image" />
               <div className="gallery-overlay">
-                <span className="gallery-caption">店内の雰囲気</span>
+                <span className="gallery-caption">{t('gallery.atmosphere')}</span>
               </div>
             </div>
             <div className="gallery-item fade-up">
-              <img src={content.gallery.imageFields.gallery2} alt="木村屋本店サンプル店の風景2" className="gallery-image" />
+              <img src={content.gallery.imageFields.gallery2} alt={`${getContent('shopInfo.shopName', content)} 2`} className="gallery-image" />
               <div className="gallery-overlay">
-                <span className="gallery-caption">ちょっとは九州じゃない料理</span>
+                <span className="gallery-caption">{t('gallery.notJustKyushu')}</span>
               </div>
             </div>
             <div className="gallery-item fade-up">
-              <img src={content.gallery.imageFields.gallery3} alt="木村屋本店サンプル店の風景3" className="gallery-image" />
+              <img src={content.gallery.imageFields.gallery3} alt={`${getContent('shopInfo.shopName', content)} 3`} className="gallery-image" />
               <div className="gallery-overlay">
-                <span className="gallery-caption">伝統の味</span>
+                <span className="gallery-caption">{t('gallery.traditionalTaste')}</span>
               </div>
             </div>
             
             {/* 追加画像（PC/タブレットのみ最初から表示） */}
             <div className="gallery-item fade-up desktop-only">
-              <img src={content.gallery.imageFields.gallery4} alt="木村屋本店サンプル店の風景4" className="gallery-image" />
+              <img src={content.gallery.imageFields.gallery4} alt={`${getContent('shopInfo.shopName', content)} 4`} className="gallery-image" />
               <div className="gallery-overlay">
-                <span className="gallery-caption">カウンター席</span>
+                <span className="gallery-caption">{t('gallery.counterSeats')}</span>
               </div>
             </div>
             <div className="gallery-item fade-up desktop-only">
-              <img src={content.gallery.imageFields.gallery5} alt="木村屋本店サンプル店の風景5" className="gallery-image" />
+              <img src={content.gallery.imageFields.gallery5} alt={`${getContent('shopInfo.shopName', content)} 5`} className="gallery-image" />
               <div className="gallery-overlay">
-                <span className="gallery-caption">こだわりの内装</span>
+                <span className="gallery-caption">{t('gallery.interior')}</span>
               </div>
             </div>
             <div className="gallery-item fade-up desktop-only">
-              <img src={content.gallery.imageFields.gallery6} alt="木村屋本店サンプル店の風景6" className="gallery-image" />
+              <img src={content.gallery.imageFields.gallery6} alt={`${getContent('shopInfo.shopName', content)} 6`} className="gallery-image" />
               <div className="gallery-overlay">
-                <span className="gallery-caption">夜のエントランス</span>
-              </div>
-            </div>
-            
-            {/* 追加画像（スマホで「もっと見る」で表示） */}
-            <div className={`gallery-item fade-up hidden-mobile ${showAllGallery ? 'show' : ''}`} data-extra="true">
-              <img src={content.gallery.imageFields.gallery4} alt="木村屋本店サンプル店の風景4" className="gallery-image" />
-              <div className="gallery-overlay">
-                <span className="gallery-caption">カウンター席</span>
-              </div>
-            </div>
-            <div className={`gallery-item fade-up hidden-mobile ${showAllGallery ? 'show' : ''}`} data-extra="true">
-              <img src={content.gallery.imageFields.gallery5} alt="木村屋本店サンプル店の風景5" className="gallery-image" />
-              <div className="gallery-overlay">
-                <span className="gallery-caption">こだわりの内装</span>
-              </div>
-            </div>
-            <div className={`gallery-item fade-up hidden-mobile ${showAllGallery ? 'show' : ''}`} data-extra="true">
-              <img src={content.gallery.imageFields.gallery6} alt="木村屋本店サンプル店の風景6" className="gallery-image" />
-              <div className="gallery-overlay">
-                <span className="gallery-caption">夜のエントランス</span>
-              </div>
-            </div>
-            <div className={`gallery-item fade-up hidden-mobile ${showAllGallery ? 'show' : ''}`} data-extra="true">
-              <img src={content.gallery.imageFields.gallery7} alt="木村屋本店サンプル店の風景7" className="gallery-image" />
-              <div className="gallery-overlay">
-                <span className="gallery-caption">広々とした客席</span>
-              </div>
-            </div>
-            <div className={`gallery-item fade-up hidden-mobile ${showAllGallery ? 'show' : ''}`} data-extra="true">
-              <img src={content.gallery.imageFields.gallery8} alt="木村屋本店サンプル店の風景8" className="gallery-image" />
-              <div className="gallery-overlay">
-                <span className="gallery-caption">特別個室</span>
-              </div>
-            </div>
-            <div className={`gallery-item fade-up hidden-mobile ${showAllGallery ? 'show' : ''}`} data-extra="true">
-              <img src={content.gallery.imageFields.gallery9} alt="木村屋本店サンプル店の風景9" className="gallery-image" />
-              <div className="gallery-overlay">
-                <span className="gallery-caption">おもてなしの心</span>
+                <span className="gallery-caption">{t('gallery.nightEntrance')}</span>
               </div>
             </div>
           </div>
-          
-          {/* スマホ用「すべての写真を見る」ボタン */}
-          {!showAllGallery && (
-          <div className="gallery-more-btn-wrapper mobile-only fade-up">
-            <button className="gallery-more-btn" onClick={() => setShowAllGallery(true)}>
-              <span>すべての写真を見る</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 18l6-6-6-6"/>
-              </svg>
-            </button>
-          </div>
-          )}
         </div>
       </section>
 
       {/* 新着情報 */}
       <section className="news-section" id="news">
         <div className="news-container">
-          <h2 className="section-title jp-title fade-up">新着情報</h2>
+          <h2 className="section-title jp-title fade-up">{t('section.news') || '新着情報'}</h2>
           
           <div className="news-grid">
             <article className="news-item fade-up">
               <time className="news-date">2024.01.15</time>
-              <h3 className="news-title">冬季限定メニューのご案内</h3>
+              <h3 className="news-title">{t('news.winterMenu')}</h3>
               <span className="news-category">MENU</span>
               <div className="news-arrow">→</div>
             </article>
             
             <article className="news-item fade-up">
               <time className="news-date">2024.01.08</time>
-              <h3 className="news-title">年始の営業時間について</h3>
+              <h3 className="news-title">{t('news.newYearHours')}</h3>
               <span className="news-category">INFO</span>
               <div className="news-arrow">→</div>
             </article>
             
             <article className="news-item fade-up">
               <time className="news-date">2023.12.20</time>
-              <h3 className="news-title">年末年始の営業日のお知らせ</h3>
+              <h3 className="news-title">{t('news.yearEndNotice')}</h3>
               <span className="news-category">INFO</span>
               <div className="news-arrow">→</div>
             </article>
           </div>
 
           <div className="news-more fade-up">
-            <a href="#" className="news-more-link">すべての新着情報を見る</a>
+            <a href="#" className="news-more-link">{t('news.viewAll')}</a>
           </div>
         </div>
       </section>
@@ -1373,29 +1676,29 @@ export default function HomePage({ content }: { content: ContentData }) {
       {/* 店舗情報 */}
       <section className="info-section" id="info">
         <div className="container">
-          <h2 className="section-title jp-title fade-up">{content.info.textFields.title}</h2>
+          <h2 className="section-title jp-title fade-up">{t('section.info')}</h2>
           
           <dl className="info-list">
-            <dt>店名</dt>
-            <dd>{content.info.textFields.shopName}</dd>
+            <dt>{t('info.shopName')}</dt>
+            <dd>{getContent('shopInfo.shopName', content)}</dd>
             
-            <dt>住所</dt>
-            <dd dangerouslySetInnerHTML={{ __html: content.info.textFields.address.replace(/\n/g, '<br />') }} />
+            <dt>{t('info.label.address')}</dt>
+            <dd dangerouslySetInnerHTML={{ __html: getContent('shopInfo.address', content).replace(/\n/g, '<br />') }} />
             
-            <dt>アクセス</dt>
-            <dd>{content.info.textFields.access}</dd>
+            <dt>{t('info.label.access')}</dt>
+            <dd>{getContent('shopInfo.access', content)}</dd>
             
-            <dt>電話番号</dt>
+            <dt>{t('info.label.phone')}</dt>
             <dd>{content.info.textFields.phone}</dd>
             
-            <dt>営業時間</dt>
-            <dd dangerouslySetInnerHTML={{ __html: content.info.textFields.businessHours.replace(/\n/g, '<br />') }} />
+            <dt>{t('info.label.hours')}</dt>
+            <dd dangerouslySetInnerHTML={{ __html: getContent('shopInfo.businessHours', content).replace(/\n/g, '<br />') }} />
             
-            <dt>定休日</dt>
-            <dd>{content.info.textFields.closedDays}</dd>
+            <dt>{t('info.label.closed')}</dt>
+            <dd>{getContent('shopInfo.closedDays', content)}</dd>
             
-            <dt>席数</dt>
-            <dd>{content.info.textFields.seats}</dd>
+            <dt>{t('info.label.seats')}</dt>
+            <dd>{getContent('shopInfo.seatsCount', content)}</dd>
             
             <dt>喫煙</dt>
             <dd>全席喫煙可（20歳未満入店不可）</dd>
@@ -1407,15 +1710,30 @@ export default function HomePage({ content }: { content: ContentData }) {
         
         {/* Google Map */}
         <div className="map-container fade-up">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.1974859659476!2d139.70330741525882!3d35.672099780197!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188b5a42881701%3A0x8e54b3de5e8e3d9f!2z5p2x5Lqs6YO95riL6LC35Yy656We5a6u5YmNNC0xMi0xMA!5e0!3m2!1sja!2sjp!4v1635835200000!5m2!1sja!2sjp" 
-            width="100%" 
-            height="500" 
-            style={{border: 0}} 
-            allowFullScreen 
-            loading="lazy" 
-            referrerPolicy="no-referrer-when-downgrade">
-          </iframe>
+          {content.info?.textFields?.googleMapUrl ? (
+            <iframe 
+              src={getGoogleMapEmbedUrl(content.info.textFields.googleMapUrl, content.info.textFields)}
+              width="100%" 
+              height="500" 
+              style={{border: 0}} 
+              allowFullScreen 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade">
+            </iframe>
+          ) : (
+            <div style={{
+              width: '100%',
+              height: '500px',
+              background: '#f0f0f0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#666',
+              fontSize: '16px'
+            }}>
+              地図を表示するには、管理画面でGoogleマップの共有リンクを設定してください
+            </div>
+          )}
         </div>
       </section>
 
@@ -1433,19 +1751,19 @@ export default function HomePage({ content }: { content: ContentData }) {
           <div className="footer-right">
             <div className="footer-info-group">
               <div className="footer-info-item">
-                <span className="footer-label">住所</span>
+                <span className="footer-label">{t('info.label.address')}</span>
                 <span className="footer-value" dangerouslySetInnerHTML={{ __html: content.info.textFields.address.replace(/\n/g, ' ') }} />
               </div>
               <div className="footer-info-item">
-                <span className="footer-label">アクセス</span>
+                <span className="footer-label">{t('info.label.access')}</span>
                 <span className="footer-value">{content.info.textFields.access}</span>
               </div>
               <div className="footer-info-item">
-                <span className="footer-label">営業時間</span>
+                <span className="footer-label">{t('info.label.hours')}</span>
                 <span className="footer-value" dangerouslySetInnerHTML={{ __html: content.info.textFields.businessHours.replace(/\n/g, '<br />') }} />
               </div>
               <div className="footer-info-item">
-                <span className="footer-label">定休日</span>
+                <span className="footer-label">{t('info.label.closed')}</span>
                 <span className="footer-value">{content.info.textFields.closedDays}</span>
               </div>
             </div>
@@ -1453,12 +1771,12 @@ export default function HomePage({ content }: { content: ContentData }) {
         </div>
         
         <div className="footer-bottom">
-          <p className="copyright">&copy; 2024 {content.info.textFields.shopName.split(' ')[0]}. All rights reserved.</p>
+          <p className="copyright">&copy; 2024 {getContent('shopInfo.shopName', content).split(' ')[0]}. {t('footer.rights')}</p>
           <button className="page-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>
-            <span>PAGE TOP</span>
+            <span>{t('pageTop')}</span>
           </button>
         </div>
       </footer>
@@ -1475,16 +1793,19 @@ export default function HomePage({ content }: { content: ContentData }) {
             </svg>
           </button>
           <ul className="mobile-nav">
-            <li><a href="#home" className="mobile-link">ホーム</a></li>
-            <li><a href="#features" className="mobile-link">特徴</a></li>
-            <li><a href="#space" className="mobile-link">本場九州仕込み</a></li>
-            <li><a href="#room" className="mobile-link">お品書き</a></li>
-            <li><a href="#dining-style" className="mobile-link">楽しみ方</a></li>
-            <li><a href="#seats" className="mobile-link">お席</a></li>
-            <li><a href="#gallery" className="mobile-link">ギャラリー</a></li>
-            <li><a href="#news" className="mobile-link">新着情報</a></li>
-            <li><a href="#info" className="mobile-link">店舗案内</a></li>
+            <li><a href="#home" className="mobile-link">{t('nav.home')}</a></li>
+            <li><a href="#features" className="mobile-link">{t('nav.features')}</a></li>
+            <li><a href="#space" className="mobile-link">{t('section.kyushuStyle')}</a></li>
+            <li><a href="#room" className="mobile-link">{t('nav.menu')}</a></li>
+            <li><a href="#dining-style" className="mobile-link">{t('section.enjoyWay')}</a></li>
+            <li><a href="#seats" className="mobile-link">{t('nav.seats')}</a></li>
+            <li><a href="#gallery" className="mobile-link">{t('nav.gallery')}</a></li>
+            <li><a href="#news" className="mobile-link">{t('section.news')}</a></li>
+            <li><a href="#info" className="mobile-link">{t('nav.info')}</a></li>
           </ul>
+          <div className="mobile-language-switcher">
+            <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
+          </div>
         </div>
       </div>
 
@@ -1527,136 +1848,111 @@ export default function HomePage({ content }: { content: ContentData }) {
             </button>
             
             <div className="courses-slider">
-              {/* スライド1 */}
-              <div className={`course-slide ${currentCourseSlide === 0 ? 'active' : ''}`}>
-                <div className="course-header">
-                  <div className="course-image">
-                    <img src="/images/DSC00406.jpg" alt="夏の宴会コース" />
-                  </div>
-                  <h2 className="course-title">～夏の宴会～<br />3時間飲み放題付き！夏の食材＆佐賀牛を堪能<br /><span className="title-price">5,000円（税込）</span></h2>
-                  <p className="course-subtitle">※金曜・土曜は2時間でのご案内になります</p>
-                </div>
-                <div className="course-body">
-                  <div className="course-info">
-                    <div className="course-items">全<span>8</span>品</div>
-                    <p className="course-description">佐賀牛のステーキや本マグロも入ったお刺身、夏の食材にもこだわった全8品。暑気払いや納涼会などに最適。</p>
-                    
-                    <div className="course-menu">
-                      <h4 className="menu-title">コース内容</h4>
-                      <ul className="menu-items">
-                        <li>季節の前菜</li>
-                        <li>本マグロお刺身</li>
-                        <li>佐賀牛ステーキ</li>
-                        <li>夏野菜の天ぷら</li>
-                        <li>冷製スープ</li>
-                        <li>季節の焼き物</li>
-                        <li>〆のもつ鍋</li>
-                        <li>デザート</li>
-                      </ul>
+              {/* コースカードを動的に表示 */}
+              {(content?.courses?.cards || []).map((course: any, index: number) => (
+                <div key={course.id} className={`course-slide ${currentCourseSlide === index ? 'active' : ''}`}>
+                  <div className="course-header">
+                    <div className="course-image">
+                      <img src={course.image} alt={course.title} />
                     </div>
-                    <div className="course-features">
-                      <div className="feature-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M9 11l3 3L22 4"/>
-                          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-                        </svg>
-                        飲み放題（平日3時間／金・土2時間）
-                      </div>
-                      <div className="feature-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                          <circle cx="9" cy="7" r="4"/>
-                          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                        3名様～50名様
-                      </div>
-                    </div>
+                    <h2 className="course-title">
+                      {course.title}
+                      {course.subtitle && <><br />{course.subtitle}</>}
+                      <br />
+                      <span className="title-price">{course.price}</span>
+                    </h2>
+                    {course.note && <p className="course-subtitle">{course.note}</p>}
                   </div>
-                  <button className="course-cta">このコースを予約する</button>
-                </div>
-              </div>
-              
-              {/* スライド2 */}
-              <div className={`course-slide ${currentCourseSlide === 1 ? 'active' : ''}`}>
-                <div className="course-header">
-                  <div className="course-image">
-                    <img src="/images/DSC00440.jpg" alt="もつ鍋食べ飲み放題コース" />
-                  </div>
-                  <h2 className="course-title">もつ鍋食べ飲み放題♪<br /><span className="title-price">２時間　4,280円（税込）</span></h2>
-                  <p className="course-subtitle">※金曜日・土曜日のご利用は＋300円になります</p>
-                </div>
-                <div className="course-body">
-                  <div className="course-info">
-                    <div className="course-items">全<span>16</span>品</div>
-                    <p className="course-description">木村屋自慢のもつ鍋が完全予約制で食べ飲み放題。サイドメニューも充実で大満足間違いなし。</p>
-                    
-                    <div className="course-menu">
-                      <h4 className="menu-title">コース内容</h4>
-                      <ul className="menu-items">
-                        <li>季節の小鉢3品</li>
-                        <li>お刺身3点盛り</li>
-                        <li>名物もつ鍋（醤油・味噌・塩から選択）</li>
-                        <li>野菜盛り合わせ</li>
-                        <li>唐揚げ</li>
-                        <li>焼き餃子</li>
-                        <li>馬刺し</li>
-                        <li>枝豆</li>
-                        <li>冷奴</li>
-                        <li>キムチ</li>
-                        <li>漬物</li>
-                        <li>焼き鳥（塩・タレ）</li>
-                        <li>フライドポテト</li>
-                        <li>サラダ</li>
-                        <li>〆のちゃんぽん麺</li>
-                        <li>アイスクリーム</li>
-                      </ul>
-                    </div>
-                    <div className="course-features">
-                      <div className="feature-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M9 11l3 3L22 4"/>
-                          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-                        </svg>
-                        飲み放題（2時間）
+                  <div className="course-body">
+                    <div className="course-info">
+                      <div className="course-items">全<span>{course.itemCount}</span>品</div>
+                      <p className="course-description">{course.description}</p>
+                      
+                      <div className="course-menu">
+                        <h4 className="menu-title">コース内容</h4>
+                        <ul className="menu-items">
+                          {course.menuItems.map((item: string, itemIndex: number) => (
+                            <li key={itemIndex}>{item}</li>
+                          ))}
+                        </ul>
                       </div>
-                      <div className="feature-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M9 11l3 3L22 4"/>
-                          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-                        </svg>
-                        食べ放題（メイン・サイドメニュー）
-                      </div>
-                      <div className="feature-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <circle cx="12" cy="12" r="10"/>
-                          <polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                        16:00～23:30
+                      <div className="course-features">
+                        {course.features.map((feature: any, featureIndex: number) => {
+                          // アイコンのSVGマップ
+                          const iconMap: { [key: string]: React.JSX.Element } = {
+                            users: (
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                              </svg>
+                            ),
+                            calendar: (
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="4" width="18" height="16" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                              </svg>
+                            ),
+                            clock: (
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                              </svg>
+                            ),
+                            beer: (
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M9 11l3 3L22 4"/>
+                                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                              </svg>
+                            )
+                          }
+                          
+                          return (
+                            <div key={featureIndex} className="feature-item">
+                              {iconMap[feature.icon] || iconMap.beer}
+                              <div>
+                                <div style={{ fontWeight: 600 }}>{feature.title}</div>
+                                {feature.description && <div style={{ fontSize: '0.875rem', opacity: 0.8 }}>{feature.description}</div>}
+                              </div>
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
+                    <button className="course-cta">{course.ctaText}</button>
                   </div>
-                  <button className="course-cta">このコースを予約する</button>
                 </div>
-              </div>
+              ))}
               
               {/* スライダーコントロール */}
-              <button className="slider-control prev" onClick={() => setCurrentCourseSlide((prev) => prev === 0 ? 1 : prev - 1)}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M15 18l-6-6 6-6"/>
-                </svg>
-              </button>
-              <button className="slider-control next" onClick={() => setCurrentCourseSlide((prev) => (prev + 1) % 2)}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 18l6-6-6-6"/>
-                </svg>
-              </button>
-              
-              {/* ドットインジケーター */}
-              <div className="slider-dots">
-                <button className={`slider-dot ${currentCourseSlide === 0 ? 'active' : ''}`} onClick={() => setCurrentCourseSlide(0)}></button>
-                <button className={`slider-dot ${currentCourseSlide === 1 ? 'active' : ''}`} onClick={() => setCurrentCourseSlide(1)}></button>
-              </div>
+              {(content?.courses?.cards || []).length > 1 && (
+                <>
+                  <button className="slider-control prev" onClick={() => setCurrentCourseSlide((prev) => prev === 0 ? (content?.courses?.cards || []).length - 1 : prev - 1)}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                  </button>
+                  <button className="slider-control next" onClick={() => setCurrentCourseSlide((prev) => (prev + 1) % (content?.courses?.cards || []).length)}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                  </button>
+                  
+                  {/* ドットインジケーター */}
+                  <div className="slider-dots">
+                    {(content?.courses?.cards || []).map((_: any, index: number) => (
+                      <button 
+                        key={index}
+                        className={`slider-dot ${currentCourseSlide === index ? 'active' : ''}`} 
+                        onClick={() => setCurrentCourseSlide(index)}
+                      ></button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -1675,208 +1971,37 @@ export default function HomePage({ content }: { content: ContentData }) {
             
             <div className="drinks-content">
               <div className="drinks-header">
-                <h2 className="drinks-title">お酒メニュー</h2>
-                <p className="drinks-subtitle">全国から厳選した日本酒と焼酎、季節限定の銘柄から定番まで</p>
+                <h2 className="drinks-title">{content?.drinks?.title || 'お酒メニュー'}</h2>
+                <p className="drinks-subtitle">{content?.drinks?.subtitle || '全国から厳選した日本酒と焼酎、季節限定の銘柄から定番まで'}</p>
               </div>
               
               <div className="drinks-categories">
-                {/* ビール */}
-                <div className="drink-category">
-                  <div className="category-header">ビール</div>
-                  <div className="category-items">
-                    <div className="drink-item">
-                      <span className="drink-name">プレミアムモルツ中ジョッキ</span>
-                      <span className="drink-price">¥605</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">プレミアムモルツ中瓶</span>
-                      <span className="drink-price">¥748</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">アサヒスーパードライ中瓶</span>
-                      <span className="drink-price">¥748</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* ハイボール */}
-                <div className="drink-category">
-                  <div className="category-header">ハイボール</div>
-                  <div className="category-items">
-                    <div className="drink-item">
-                      <span className="drink-name">ジムビームハイボール</span>
-                      <span className="drink-price">¥319</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">ジムビームハイボール メガサイズ</span>
-                      <span className="drink-price">¥594</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">角ハイボール</span>
-                      <span className="drink-price">¥572</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">角ハイボール メガサイズ</span>
-                      <span className="drink-price">¥704</span>
+                {/* カテゴリーを動的に表示 */}
+                {(content?.drinks?.categories || []).map((category: any) => (
+                  <div key={category.id} className="drink-category">
+                    <div className="category-header">{category.name}</div>
+                    <div className="category-items">
+                      {category.items.map((item: any, index: number) => (
+                        <div key={index} className="drink-item">
+                          {item.description ? (
+                            <>
+                              <div className="drink-main">
+                                <span className="drink-name">{item.name}</span>
+                                <span className="drink-price">{item.price}</span>
+                              </div>
+                              <p className="drink-description">{item.description}</p>
+                            </>
+                          ) : (
+                            <>
+                              <span className="drink-name">{item.name}</span>
+                              <span className="drink-price">{item.price}</span>
+                            </>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
-                
-                {/* プレミアムウイスキー */}
-                <div className="drink-category">
-                  <div className="category-header">プレミアムウイスキー</div>
-                  <div className="category-items">
-                    <div className="drink-item">
-                      <div className="drink-main">
-                        <span className="drink-name">知多</span>
-                        <span className="drink-price">¥1,078</span>
-                      </div>
-                      <p className="drink-description">軽やかな味わいとほのかに甘い香りのシングルグレーン</p>
-                    </div>
-                    <div className="drink-item">
-                      <div className="drink-main">
-                        <span className="drink-name">余市</span>
-                        <span className="drink-price">¥1,078</span>
-                      </div>
-                      <p className="drink-description">力強いピートの味わいと香ばしさ</p>
-                    </div>
-                    <div className="drink-item">
-                      <div className="drink-main">
-                        <span className="drink-name">白州</span>
-                        <span className="drink-price">¥1,078</span>
-                      </div>
-                      <p className="drink-description">華やかでフルーティな香り</p>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">碧Ao</span>
-                      <span className="drink-price">¥748</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* サワー */}
-                <div className="drink-category">
-                  <div className="category-header">サワー</div>
-                  <div className="category-items">
-                    <div className="drink-item">
-                      <span className="drink-name">ごろごろレモンサワー</span>
-                      <span className="drink-price">¥550</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">タコハイ</span>
-                      <span className="drink-price">¥429</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">こだわり酒場のレモンサワー</span>
-                      <span className="drink-price">¥429</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">すっぱいレモンサワー</span>
-                      <span className="drink-price">¥429</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">コーラレモンサワー</span>
-                      <span className="drink-price">¥429</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">梅干しサワー</span>
-                      <span className="drink-price">¥495</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">奏ゆずサワー</span>
-                      <span className="drink-price">¥495</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">奏ももサワー</span>
-                      <span className="drink-price">¥495</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* お茶割り */}
-                <div className="drink-category">
-                  <div className="category-header">お茶割り</div>
-                  <div className="category-items">
-                    <div className="drink-item">
-                      <span className="drink-name">玄米緑茶ハイ</span>
-                      <span className="drink-price">¥440</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">JJジャスミンハイ</span>
-                      <span className="drink-price">¥462</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">ウーロンハイ</span>
-                      <span className="drink-price">¥418</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">コーン茶ハイ</span>
-                      <span className="drink-price">¥418</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">緑茶ハイ</span>
-                      <span className="drink-price">¥462</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">黒ウーロンハイ</span>
-                      <span className="drink-price">¥462</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* 焼酎 */}
-                <div className="drink-category">
-                  <div className="category-header">焼酎</div>
-                  <div className="category-items">
-                    <div className="drink-item">
-                      <span className="drink-name">大隅（芋）</span>
-                      <span className="drink-price">¥418</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">大隅（芋）ボトル</span>
-                      <span className="drink-price">¥2,728</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">大隅（麦）</span>
-                      <span className="drink-price">¥418</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">大隅（麦）ボトル</span>
-                      <span className="drink-price">¥2,728</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">茉莉花ボトル</span>
-                      <span className="drink-price">¥3,058</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">キンミヤボトル</span>
-                      <span className="drink-price">¥3,058</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* 日本酒 */}
-                <div className="drink-category">
-                  <div className="category-header">日本酒</div>
-                  <div className="category-items">
-                    <div className="drink-item">
-                      <span className="drink-name">獺祭 純米大吟醸45</span>
-                      <span className="drink-price">¥1,408</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">黒龍 大吟醸</span>
-                      <span className="drink-price">¥1,100</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">天狗舞 山廃仕込純米酒</span>
-                      <span className="drink-price">¥825</span>
-                    </div>
-                    <div className="drink-item">
-                      <span className="drink-name">賀茂鶴 本醸造</span>
-                      <span className="drink-price">¥550</span>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>

@@ -1,14 +1,15 @@
+import fs from 'fs/promises'
+import path from 'path'
+
 // ページコンテンツを取得するユーティリティ
 export async function getPageContent() {
   try {
-    const response = await fetch('http://localhost:3000/api/content', {
-      cache: 'no-cache'
-    })
-    if (response.ok) {
-      return await response.json()
-    }
+    // サーバーサイドで直接ファイルを読み込む
+    const contentPath = path.join(process.cwd(), 'src/data/page-content.json')
+    const fileContent = await fs.readFile(contentPath, 'utf-8')
+    return JSON.parse(fileContent)
   } catch (error) {
-    console.error('Error fetching content:', error)
+    console.error('Error reading content file:', error)
   }
   
   // エラー時はデフォルトコンテンツを返す

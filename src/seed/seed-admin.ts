@@ -1,7 +1,14 @@
 import { getPayload } from 'payload'
 import config from '../../payload.config'
+import * as dotenv from 'dotenv'
+import * as path from 'path'
+
+// Load environment variables
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
 
 async function seed() {
+  console.log('Starting seed process...')
+  console.log('DATABASE_URI:', process.env.DATABASE_URI ? 'Set' : 'Not set')
   const payload = await getPayload({ config })
 
   try {

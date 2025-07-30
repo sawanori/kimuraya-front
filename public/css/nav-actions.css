@@ -1,0 +1,55 @@
+/* ナビゲーションアクション部分のスタイル */
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* PCデバイス時のスタイル */
+@media (min-width: 769px) {
+    .nav-actions {
+        /* ヘッダー内で右端に配置 */
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+        z-index: 10;
+        flex-shrink: 0;
+        margin-left: 40px;
+    }
+    
+    /* 言語切り替えボタンとWEB予約ボタンを横並びに */
+    .nav-actions .language-switcher {
+        order: 1;
+        position: relative;
+        z-index: 1002;
+    }
+    
+    .nav-actions .nav-reservation-btn {
+        order: 2;
+        position: relative;
+        z-index: 1001;
+    }
+}
+
+/* モバイルデバイス時のスタイル */
+@media (max-width: 768px) {
+    .nav-actions {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        z-index: 100;
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+    
+    .header.hero-hidden .nav-actions {
+        display: none;
+    }
+    
+    /* モバイルで言語切り替えを非表示 */
+    .desktop-language-switcher {
+        display: none;
+    }
+}

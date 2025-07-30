@@ -431,3 +431,1020 @@
 .editor-content::-webkit-scrollbar-thumb:hover {
   background: var(--editor-text-secondary);
 }
+
+/* メニューカードスタイル */
+.menu-card-editor {
+  background: var(--editor-input-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.menu-card-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: var(--editor-card-bg);
+  border-bottom: 1px solid var(--editor-border);
+}
+
+.menu-card-number {
+  width: 40px;
+  height: 40px;
+  background: var(--editor-accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 1rem;
+}
+
+.menu-card-index {
+  color: white;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.menu-card-header-content {
+  flex-grow: 1;
+}
+
+.menu-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.menu-card-subtitle {
+  font-size: 0.875rem;
+  color: var(--editor-text-secondary);
+}
+
+.menu-card-delete {
+  background: transparent;
+  border: none;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.menu-card-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.menu-card-body {
+  padding: 1.5rem;
+}
+
+.menu-card-section {
+  margin-bottom: 1.5rem;
+}
+
+.menu-card-section:last-child {
+  margin-bottom: 0;
+}
+
+.menu-card-fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.menu-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.menu-field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--editor-text-primary);
+}
+
+.label-hint {
+  font-size: 0.75rem;
+  color: var(--editor-text-secondary);
+}
+
+.menu-field-input,
+.menu-field-textarea {
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.menu-field-input:focus,
+.menu-field-textarea:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+  background: var(--editor-input-bg);
+}
+
+.menu-field-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.menu-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.menu-items-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+}
+
+.menu-items-count {
+  font-size: 0.75rem;
+  color: var(--editor-text-secondary);
+}
+
+.menu-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.menu-item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.menu-item-number {
+  width: 24px;
+  height: 24px;
+  background: var(--editor-card-bg);
+  border: 1px solid var(--editor-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--editor-text-secondary);
+  flex-shrink: 0;
+}
+
+.menu-item-fields {
+  display: flex;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.menu-item-input {
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.menu-item-input:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+}
+
+.menu-item-name {
+  flex: 2;
+}
+
+.menu-item-price {
+  flex: 1;
+}
+
+.menu-item-delete {
+  background: transparent;
+  border: none;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.menu-item-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.menu-add-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px dashed var(--editor-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: var(--editor-text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.menu-add-item-btn:hover {
+  border-color: var(--editor-accent);
+  color: var(--editor-accent);
+  background: rgba(16, 163, 127, 0.05);
+}
+
+.menu-add-card-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--editor-card-bg);
+  border: 1px dashed var(--editor-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.menu-add-card-btn:hover {
+  border-color: var(--editor-accent);
+  color: var(--editor-accent);
+  background: rgba(16, 163, 127, 0.05);
+}
+
+/* 宴会コースカードスタイル */
+.course-card-editor {
+  background: var(--editor-input-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.course-card-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: var(--editor-card-bg);
+  border-bottom: 1px solid var(--editor-border);
+}
+
+.course-card-number {
+  width: 40px;
+  height: 40px;
+  background: var(--editor-accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 1rem;
+}
+
+.course-card-index {
+  color: white;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.course-card-header-content {
+  flex-grow: 1;
+}
+
+.course-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.course-card-subtitle {
+  font-size: 0.875rem;
+  color: var(--editor-text-secondary);
+}
+
+.course-card-delete {
+  background: transparent;
+  border: none;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.course-card-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.course-card-body {
+  padding: 1.5rem;
+}
+
+.course-card-section {
+  margin-bottom: 2rem;
+}
+
+.course-card-section:last-child {
+  margin-bottom: 0;
+}
+
+.course-section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+  margin-bottom: 1rem;
+}
+
+.course-card-fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.course-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.course-field-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--editor-text-primary);
+}
+
+.course-field-input,
+.course-field-textarea {
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.course-field-input:focus,
+.course-field-textarea:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+  background: var(--editor-input-bg);
+}
+
+.course-field-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.course-image-preview {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--editor-card-bg);
+  border: 1px solid var(--editor-border);
+}
+
+.course-image-preview img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.course-upload-button {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.course-upload-button:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.course-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.course-items-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+}
+
+.course-items-count {
+  font-size: 0.75rem;
+  color: var(--editor-text-secondary);
+}
+
+.course-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.course-item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.course-item-number {
+  width: 24px;
+  height: 24px;
+  background: var(--editor-card-bg);
+  border: 1px solid var(--editor-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--editor-text-secondary);
+  flex-shrink: 0;
+}
+
+.course-item-input {
+  flex: 1;
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.course-item-input:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+}
+
+.course-item-delete {
+  background: transparent;
+  border: none;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.course-item-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.course-add-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px dashed var(--editor-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: var(--editor-text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.course-add-item-btn:hover {
+  border-color: var(--editor-accent);
+  color: var(--editor-accent);
+  background: rgba(16, 163, 127, 0.05);
+}
+
+.course-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.course-feature-item {
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.course-feature-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.course-feature-number {
+  width: 20px;
+  height: 20px;
+  background: var(--editor-accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: white;
+  font-weight: 600;
+}
+
+.course-feature-delete {
+  background: transparent;
+  border: none;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.course-feature-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.course-feature-fields {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 100px 1fr 2fr;
+}
+
+.course-feature-input {
+  background: var(--editor-input-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.course-feature-input:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+}
+
+.course-add-feature-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px dashed var(--editor-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: var(--editor-text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.course-add-feature-btn:hover {
+  border-color: var(--editor-accent);
+  color: var(--editor-accent);
+  background: rgba(16, 163, 127, 0.05);
+}
+
+.course-add-card-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--editor-card-bg);
+  border: 1px dashed var(--editor-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.course-add-card-btn:hover {
+  border-color: var(--editor-accent);
+  color: var(--editor-accent);
+  background: rgba(16, 163, 127, 0.05);
+}
+
+/* ドリンクメニュースタイル */
+.drink-category-editor {
+  background: var(--editor-input-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.drink-category-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: var(--editor-card-bg);
+  border-bottom: 1px solid var(--editor-border);
+  gap: 0.75rem;
+}
+
+.drink-category-number {
+  width: 40px;
+  height: 40px;
+  background: var(--editor-accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.drink-category-index {
+  color: white;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.drink-category-name-input {
+  flex: 1;
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.drink-category-name-input:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+  background: var(--editor-input-bg);
+}
+
+.drink-category-delete {
+  background: transparent;
+  border: none;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.drink-category-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.drink-category-body {
+  padding: 1.5rem;
+}
+
+.drink-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.drink-items-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+}
+
+.drink-items-count {
+  font-size: 0.75rem;
+  color: var(--editor-text-secondary);
+}
+
+.drink-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.drink-item-editor {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--editor-bg);
+  border-radius: 6px;
+  border: 1px solid var(--editor-border);
+}
+
+.drink-item-number {
+  width: 24px;
+  height: 24px;
+  background: var(--editor-card-bg);
+  border: 1px solid var(--editor-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--editor-text-secondary);
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}
+
+.drink-item-fields {
+  display: flex;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.drink-item-name-input {
+  flex: 2;
+  background: var(--editor-input-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.drink-item-price-input {
+  flex: 1;
+  background: var(--editor-input-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.drink-item-name-input:focus,
+.drink-item-price-input:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+}
+
+.drink-item-delete {
+  background: transparent;
+  border: none;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}
+
+.drink-item-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.drink-add-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px dashed var(--editor-border);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  color: var(--editor-text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.drink-add-item-btn:hover {
+  border-color: var(--editor-accent);
+  color: var(--editor-accent);
+  background: rgba(16, 163, 127, 0.05);
+}
+
+.drink-add-category-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--editor-card-bg);
+  border: 1px dashed var(--editor-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.drink-add-category-btn:hover {
+  border-color: var(--editor-accent);
+  color: var(--editor-accent);
+  background: rgba(16, 163, 127, 0.05);
+}
+
+/* もつ鍋スタイル */
+.editor-subsection-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--editor-text-primary);
+  margin-bottom: 1rem;
+}
+
+.editor-badges-section {
+  margin-top: 2rem;
+}
+
+.editor-badges-list {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.editor-badge-input {
+  background: var(--editor-input-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.editor-badge-input:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+}
+
+.editor-options-section {
+  margin-top: 2rem;
+}
+
+.motsunabe-option-editor {
+  background: var(--editor-input-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.option-number {
+  width: 28px;
+  height: 28px;
+  background: var(--editor-accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.option-delete {
+  background: transparent;
+  border: none;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.option-delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.option-content {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1rem;
+}
+
+.option-image-section {
+  position: relative;
+}
+
+.option-image-preview {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--editor-card-bg);
+  border: 1px solid var(--editor-border);
+}
+
+.option-image-preview img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.option-upload-button {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option-upload-button:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.option-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.option-title-input {
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.option-description-input {
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-input-border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  color: var(--editor-text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  resize: vertical;
+  min-height: 60px;
+}
+
+.option-title-input:focus,
+.option-description-input:focus {
+  outline: none;
+  border-color: var(--editor-input-focus);
+}
+
+.motsunabe-add-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px dashed var(--editor-border);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  color: var(--editor-text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.motsunabe-add-option-btn:hover {
+  border-color: var(--editor-accent);
+  color: var(--editor-accent);
+  background: rgba(16, 163, 127, 0.05);
+}

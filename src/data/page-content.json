@@ -24,7 +24,7 @@
   },
   "introParallax": {
     "textFields": {
-      "message": "季節折々、\n美味いもんだらけ！"
+      "message": "季節折々、\n美味いもんだらけ"
     },
     "imageFields": {
       "parallaxBg": "/uploads/69852e6f-ed72-4b1a-aefb-ea1fe47d67e7.jpg"
@@ -33,7 +33,7 @@
   "craft": {
     "textFields": {
       "leftText": "少し九州じゃない料理",
-      "rightText": "楽しい宴会！"
+      "rightText": "楽しい宴会"
     },
     "imageFields": {
       "image1": "/uploads/eb7f5f41-ac7a-431d-9e4a-42d6aa1ccbff.jpg",
@@ -43,7 +43,7 @@
   },
   "features": {
     "textFields": {
-      "mainTitle": "秘伝４つのこだわり",
+      "mainTitle": "秘伝４つの拘り",
       "feature1Title": "当店名物！\nこだわりの博多もつ鍋",
       "feature1Description": "厳選した国産牛もつと秘伝の特製スープで作る本場博多の味。",
       "feature2Title": "季節の食材と調理で\n味わう逸品料理",
@@ -64,7 +64,69 @@
     "textFields": {
       "sectionTitle": "お品書き",
       "subTitle": "心安らぐ空間で、特別なひとときを"
-    }
+    },
+    "menuCards": [
+      {
+        "id": "card-1",
+        "subTitle": "HAKATA MOTSUNABE",
+        "title": "博多もつ鍋",
+        "items": [
+          {
+            "name": "濃厚味噌",
+            "price": "¥1,628"
+          },
+          {
+            "name": "醤油",
+            "price": "¥1,628"
+          },
+          {
+            "name": "塩",
+            "price": "¥1,628"
+          }
+        ],
+        "note": "鍋のご注文は2人前から承ります。価格は1人前（税込）"
+      },
+      {
+        "id": "card-2",
+        "subTitle": "KYUSHU CUISINE",
+        "title": "九州料理",
+        "items": [
+          {
+            "name": "馬刺し",
+            "price": "¥2,178"
+          },
+          {
+            "name": "明太子",
+            "price": "¥858"
+          },
+          {
+            "name": "高菜チャーハン",
+            "price": "¥968"
+          }
+        ],
+        "note": "※季節により内容が変更になる場合があります"
+      },
+      {
+        "id": "card-1753859599553",
+        "subTitle": "food",
+        "title": "逸品料理",
+        "items": [
+          {
+            "name": "卵焼き",
+            "price": "800"
+          },
+          {
+            "name": "蒲焼",
+            "price": "1000"
+          },
+          {
+            "name": "とろろそば",
+            "price": "1500"
+          }
+        ],
+        "note": ""
+      }
+    ]
   },
   "seats": {
     "textFields": {
@@ -139,12 +201,12 @@
       "partyFeature2": "貸切対応可能",
       "partyFeature3": "飲み放題充実",
       "partyCTA": "宴会コースを見る",
-      "sakeTitle": "日本酒",
-      "sakeDescription": "全国から厳選した日本酒を多数ご用意。季節限定の銘柄や希少な地酒も楽しめます。",
+      "sakeTitle": "ドリンク",
+      "sakeDescription": "全国から厳選した日本酒と各種アルコール、ソフトドリンクを豊富にご用意しています。",
       "sakeFeature1": "厳選された銘柄",
       "sakeFeature2": "季節限定酒あり",
-      "sakeFeature3": "利き酒セット",
-      "sakeCTA": "日本酒メニューを見る"
+      "sakeFeature3": "豊富な種類",
+      "sakeCTA": "ドリンクメニューを見る"
     },
     "imageFields": {
       "partyBg": "/uploads/8e19b306-7db8-4fde-8861-9f98d3fdbb58.jpg",
@@ -177,12 +239,275 @@
       "phone": "050-5484-9698",
       "businessHours": "月～金: 17:00～23:30 (L.O.23:00)\n土日祝: 16:00～23:30 (L.O.23:00)",
       "closedDays": "無休",
-      "seats": "110席（貸切最大110名様まで）"
+      "seats": "110席（貸切最大110名様まで）",
+      "googleMapUrl": "https://www.google.com/maps/place/%E3%82%AA%E3%83%BC%E3%82%B7%E3%83%A3%E3%83%B3%E3%82%B2%E3%83%BC%E3%83%88%E3%81%BF%E3%81%AA%E3%81%A8%E3%81%BF%E3%82%89%E3%81%84/@35.4580313,139.6343461,17z/data=!3m1!4b1!4m6!3m5!1s0x60185d78ca7a3717:0x33aa5bd414f4fa67!8m2!3d35.4580313!4d139.6343461!16s%2Fg%2F11fwgsr94k?entry=ttu&g_ep=EgoyMDI1MDcyNy4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   "intro-parallax": {
     "textFields": {
       "message": "季節折々、\nいいもの作りやす！"
     }
+  },
+  "courses": {
+    "cards": [
+      {
+        "id": "course-1",
+        "image": "/images/DSC00406.jpg",
+        "title": "～夏の宴会～",
+        "subtitle": "3時間飲み放題付き！夏の食材＆佐賀牛を堪能",
+        "price": "5,000円（税込）",
+        "note": "※金曜・土曜は2時間でのご案内になります",
+        "itemCount": "8",
+        "description": "佐賀牛のステーキや本マグロも入ったお刺身、夏の食材にもこだわった全8品。暑気払いや納涼会などに最適。",
+        "menuItems": [
+          "季節のお通し",
+          "新鮮野菜のバーニャカウダ",
+          "木村屋特製サラダ",
+          "本マグロ入りお刺身盛り合わせ",
+          "佐賀牛のステーキ",
+          "夏野菜の天ぷら",
+          "冷やしうどん",
+          "季節のデザート"
+        ],
+        "features": [
+          {
+            "icon": "users",
+            "title": "2名様〜",
+            "description": "少人数から大人数まで対応"
+          },
+          {
+            "icon": "calendar",
+            "title": "要予約",
+            "description": "前日までにご予約ください"
+          },
+          {
+            "icon": "clock",
+            "title": "17:00〜22:00",
+            "description": "ラストオーダー21:30"
+          }
+        ],
+        "ctaText": "このコースを予約する"
+      },
+      {
+        "id": "course-2",
+        "image": "/images/DSC00440.jpg",
+        "title": "もつ鍋食べ飲み放題♪",
+        "subtitle": "",
+        "price": "２時間　4,280円（税込）",
+        "note": "※金曜日・土曜日のご利用は＋300円になります",
+        "itemCount": "16",
+        "description": "木村屋自慢のもつ鍋が完全予約制で食べ飲み放題。サイドメニューも充実で大満足間違いなし。",
+        "menuItems": [
+          "【もつ鍋】",
+          "醤油・味噌・塩からお選びください",
+          "【〆】",
+          "ちゃんぽん麺・雑炊",
+          "【サイドメニュー】",
+          "キムチ各種",
+          "枝豆",
+          "冷奴",
+          "フライドポテト",
+          "鶏の唐揚げ",
+          "だし巻き卵",
+          "高菜チャーハン 他"
+        ],
+        "features": [
+          {
+            "icon": "users",
+            "title": "2名様〜",
+            "description": "完全予約制"
+          },
+          {
+            "icon": "calendar",
+            "title": "前日予約",
+            "description": "前日17時までにご予約"
+          },
+          {
+            "icon": "beer",
+            "title": "飲み放題",
+            "description": "ビール・焼酎・日本酒・ソフトドリンク"
+          }
+        ],
+        "ctaText": "このコースを予約する"
+      },
+      {
+        "id": "course-1753860605804",
+        "image": "/uploads/77a1e65a-f97a-4e2b-8d62-c2a66f4d66d1.jpeg",
+        "title": "セフレ万歳コース",
+        "subtitle": "射精３発まで",
+        "price": "30000000",
+        "note": "病気は自己責任",
+        "itemCount": "３",
+        "description": "中出しOK",
+        "menuItems": [
+          "女１っっっっっっっっっっっっっっっっっっs",
+          "女２女１っっっっっっっっっっっっっっっっっっs",
+          "女３女１っっっっっっっっっっっっっっっっっっs",
+          "女４女１っっっっっっっっっっっっっっっっっっs",
+          "女５女１っっっっっっっっっっっっっっっっっっs"
+        ],
+        "features": [
+          {
+            "icon": "users",
+            "title": "３名",
+            "description": "乱交プランです"
+          }
+        ],
+        "ctaText": "このコースを予約する"
+      }
+    ]
+  },
+  "drinks": {
+    "title": "お酒メニュー",
+    "subtitle": "全国から厳選した日本酒と焼酎、季節限定の銘柄から定番まで",
+    "categories": [
+      {
+        "id": "beer",
+        "name": "ビール",
+        "items": [
+          {
+            "name": "プレミアムモルツ中ジョッキ",
+            "price": "¥605"
+          },
+          {
+            "name": "プレミアムモルツ中瓶",
+            "price": "¥748"
+          },
+          {
+            "name": "アサヒスーパードライ中瓶",
+            "price": "¥748"
+          }
+        ]
+      },
+      {
+        "id": "highball",
+        "name": "ハイボール",
+        "items": [
+          {
+            "name": "ジムビームハイボール",
+            "price": "¥319"
+          },
+          {
+            "name": "ジムビームハイボール メガサイズ",
+            "price": "¥594"
+          },
+          {
+            "name": "角ハイボール",
+            "price": "¥572"
+          },
+          {
+            "name": "角ハイボール メガサイズ",
+            "price": "¥704"
+          }
+        ]
+      },
+      {
+        "id": "whisky",
+        "name": "プレミアムウイスキー",
+        "items": [
+          {
+            "name": "知多",
+            "price": "¥1,078"
+          },
+          {
+            "name": "余市",
+            "price": "¥1,078"
+          },
+          {
+            "name": "白州",
+            "price": "¥1,078"
+          },
+          {
+            "name": "碧Ao",
+            "price": "¥748"
+          }
+        ]
+      },
+      {
+        "id": "sour",
+        "name": "サワー",
+        "items": [
+          {
+            "name": "ごろごろレモンサワー",
+            "price": "¥550"
+          },
+          {
+            "name": "タコハイ",
+            "price": "¥429"
+          },
+          {
+            "name": "こだわり酒場のレモンサワー",
+            "price": "¥429"
+          },
+          {
+            "name": "すっぱいレモンサワー",
+            "price": "¥429"
+          },
+          {
+            "name": "コーラレモンサワー",
+            "price": "¥429"
+          },
+          {
+            "name": "梅干しサワー",
+            "price": "¥495"
+          },
+          {
+            "name": "奏ゆずサワー",
+            "price": "¥495"
+          },
+          {
+            "name": "omannkoサワー",
+            "price": "¥495"
+          }
+        ]
+      }
+    ]
+  },
+  "motsunabe": {
+    "textFields": {
+      "sectionTitle": "名物もつ鍋",
+      "sectionSubtitle": "本場博多の味を、横浜で",
+      "catchphrase": "厳選された国産牛もつと秘伝のスープが織りなす極上の味わい",
+      "description": "博多の伝統的な調理法で、新鮮な国産牛もつをじっくりと煮込みました。コラーゲンたっぷりの濃厚スープと、シャキシャキのキャベツ、ニラの組み合わせが絶品です。",
+      "priceLabel": "お一人様",
+      "priceAmount": "1,680",
+      "priceUnit": "円",
+      "priceTax": "（税込）",
+      "optionsTitle": "選べる味",
+      "feature1Title": "国産牛もつ",
+      "feature1Desc": "新鮮な国産牛もつを厳選",
+      "feature2Title": "秘伝のスープ",
+      "feature2Desc": "受け継がれる伝統の味",
+      "feature3Title": "じっくり煮込み",
+      "feature3Desc": "旨味を最大限に引き出す"
+    },
+    "imageFields": {
+      "mainImage": "/images/no1-0241.jpg"
+    },
+    "showOptions": true,
+    "options": [
+      {
+        "id": "shoyu",
+        "title": "醤油味",
+        "description": "あっさりとした醤油ベースに、にんにくと唐辛子がアクセント",
+        "image": "/images/DSC00440.jpg"
+      },
+      {
+        "id": "miso",
+        "title": "味噌味",
+        "description": "濃厚な味噌ベースに、コクと深みのある味",
+        "image": "/images/DSC00439.jpg"
+      },
+      {
+        "id": "shio",
+        "title": "塩味",
+        "description": "さっぱりとした塩ベースで、もつ本来の旨味を楽しめる",
+        "image": "/images/DSC00440.jpg"
+      }
+    ],
+    "badges": [
+      "博多直伝",
+      "横浜No.1"
+    ]
   }
 }

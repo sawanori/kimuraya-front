@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { LanguageProvider } from '@/contexts/LanguageContext';
 
 export const metadata: Metadata = {
   title: "木村屋本店 サンプル店",
@@ -31,9 +32,13 @@ export default function RootLayout({
         <link rel="stylesheet" href="/css/motsunabe-section.css" />
         <link rel="stylesheet" href="/css/seat-tags-fix.css" />
         <link rel="stylesheet" href="/css/intro-title-fix.css" />
+        <link rel="stylesheet" href="/css/language-switcher.css" />
+        <link rel="stylesheet" href="/css/nav-actions.css" />
       </head>
       <body>
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

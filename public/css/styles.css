@@ -46,7 +46,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 100;
+            z-index: 1000;
             background: rgba(38, 38, 43, 0.98);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(166, 152, 71, 0.3);
@@ -75,7 +75,7 @@
             position: fixed;
             top: 0;
             right: 0;
-            z-index: 200;
+            z-index: 999;
             background: linear-gradient(135deg, var(--accent-gold) 0%, #d4a859 100%);
             color: var(--deep-navy);
             padding: 37px 48px;
@@ -103,14 +103,13 @@
             
             /* スマートフォンでもロゴを左上に配置 */
             .nav .logo {
-                position: static !important;
-                text-align: left !important;
-                left: auto !important;
+                margin-right: 0;
             }
             
             .nav {
                 justify-content: space-between !important;
-                padding: 0 20px !important;
+                padding: 15px 20px !important;
+                height: 60px;
             }
             
             /* メニューボタンを右端に配置 */
@@ -189,17 +188,18 @@
 
         .nav {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            padding: 25px 5%;
+            padding: 20px 5%;
             max-width: 1600px;
             margin: 0 auto;
             position: relative;
+            height: 80px;
         }
 
         .nav .logo {
-            position: absolute;
-            left: 5%;
+            flex-shrink: 0;
+            margin-right: 40px;
         }
 
         .logo {
@@ -213,7 +213,11 @@
         .nav-menu {
             display: none;
             list-style: none;
-            gap: 45px;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+            flex: 1;
+            justify-content: center;
         }
 
         .nav-menu a {
@@ -224,6 +228,8 @@
             letter-spacing: 1.5px;
             transition: color 0.3s ease;
             position: relative;
+            padding: 5px 10px;
+            white-space: nowrap;
         }
 
         .nav-menu a:hover {
@@ -234,7 +240,7 @@
             display: none;
             background: linear-gradient(135deg, var(--accent-gold) 0%, #d4a859 100%);
             color: var(--deep-navy);
-            padding: 25px 32px;
+            padding: 16px 28px;
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
@@ -242,13 +248,11 @@
             transition: all 0.3s ease;
             white-space: nowrap;
             box-shadow: 0 3px 10px rgba(200, 158, 87, 0.4);
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
+            position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
+            border-radius: 4px;
         }
 
         .nav-reservation-btn::before {
@@ -846,6 +850,9 @@
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
         }
 
         .menu-card::before {
@@ -868,6 +875,14 @@
         .menu-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        /* メニューカード内のアイテムコンテナ */
+        .menu-card .menu-items {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin: 24px 0;
         }
 
         .menu-category {
@@ -932,7 +947,7 @@
         .menu-note {
             font-size: 12px;
             color: var(--text-light);
-            margin-top: 20px;
+            margin-top: auto;
             padding-top: 20px;
             border-top: 1px solid var(--border-subtle);
             opacity: 0.8;
@@ -1036,6 +1051,7 @@
 
             .menu-card {
                 padding: 30px 25px;
+                min-height: 320px;
             }
         }
 
@@ -1894,6 +1910,39 @@
 
         .mobile-nav a:hover {
             color: var(--accent-gold);
+        }
+
+        /* モバイルメニュー内の言語切り替え */
+        .mobile-language-switcher {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+        }
+
+        .mobile-language-switcher .language-switcher-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 24px;
+            font-size: 16px;
+        }
+
+        .mobile-language-switcher .language-dropdown {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            right: auto;
+            min-width: 260px;
+            background: rgba(26, 22, 17, 0.98);
+            border: 1px solid var(--accent-gold);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .mobile-language-switcher .language-option {
+            padding: 16px 24px;
+            font-size: 16px;
         }
 
         .menu-toggle.active .menu-line:nth-child(1) {
@@ -5347,6 +5396,313 @@
             }
         }
         
+        /* メニューカードエディタースタイル */
+        .menu-card-editor {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .menu-card-editor:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .menu-card-header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .menu-card-number {
+            width: 40px;
+            height: 40px;
+            background: #6366f1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .menu-card-index {
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .menu-card-header-content {
+            flex: 1;
+        }
+
+        .menu-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+            margin: 0;
+        }
+
+        .menu-card-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 0;
+            margin-top: 2px;
+        }
+
+        .menu-card-delete {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .menu-card-delete:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .menu-card-body {
+            padding: 24px;
+        }
+
+        .menu-card-section {
+            margin-bottom: 24px;
+        }
+
+        .menu-card-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .menu-card-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .menu-field-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-field-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .label-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .label-hint {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .menu-field-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .menu-field-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .menu-field-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            transition: all 0.2s ease;
+            background: white;
+            font-family: inherit;
+        }
+
+        .menu-field-textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .menu-items-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .menu-items-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin: 0;
+        }
+
+        .menu-items-count {
+            font-size: 12px;
+            color: #9ca3af;
+            background: #f3f4f6;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .menu-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu-item-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .menu-item-number {
+            width: 24px;
+            height: 24px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .menu-item-fields {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+        }
+
+        .menu-item-input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .menu-item-name {
+            min-width: 0;
+        }
+
+        .menu-item-price {
+            width: 120px;
+        }
+
+        .menu-item-delete {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-item-delete:hover {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .menu-add-item-btn {
+            width: 100%;
+            padding: 10px;
+            border: 1px dashed #d1d5db;
+            border-radius: 6px;
+            background: none;
+            color: #6366f1;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .menu-add-item-btn:hover {
+            border-color: #6366f1;
+            background: #f0f1ff;
+        }
+
+        .menu-add-card-btn {
+            width: 100%;
+            padding: 20px;
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            background: white;
+            color: #6b7280;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .menu-add-card-btn:hover {
+            border-color: #6366f1;
+            color: #6366f1;
+            background: #f0f1ff;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .menu-card-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-item-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-item-price {
+                width: 100%;
+            }
+        }
+
         /* お酒モーダルスタイル */
         .drinks-modal {
             position: fixed;
@@ -5935,5 +6291,401 @@
 
             .info-icon {
                 font-size: 18px;
+            }
+        }
+
+        /* もつ鍋セクション */
+        .motsunabe-section {
+            padding: 80px 0;
+            background: #f8f8f8;
+        }
+
+        .motsunabe-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .motsunabe-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .motsunabe-title {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .motsunabe-subtitle {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .motsunabe-content {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+
+        .motsunabe-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .motsunabe-image-wrapper {
+            position: relative;
+        }
+
+        .motsunabe-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .motsunabe-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .motsunabe-badge span {
+            background: #b8860b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .motsunabe-info {
+            padding: 20px;
+        }
+
+        .motsunabe-catch {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .motsunabe-description {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .motsunabe-features {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .motsunabe-feature {
+            flex: 1;
+            text-align: center;
+        }
+
+        .motsunabe-feature .feature-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+            border-radius: 50%;
+        }
+
+        .motsunabe-feature h4 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .motsunabe-feature p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .motsunabe-price {
+            background: #fff;
+            border: 2px solid #b8860b;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .price-amount {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .price-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #b8860b;
+        }
+
+        .price-unit,
+        .price-tax {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .motsunabe-options {
+            margin-top: 40px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .options-title {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .options-grid {
+            display: flex !important;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: nowrap !important;
+            overflow-x: auto;
+            padding: 10px 0;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .option-card {
+            flex: 0 0 240px;
+            min-width: 240px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .option-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .option-card h4 {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 15px 5px;
+        }
+
+        .option-card p {
+            font-size: 12px;
+            color: #666;
+            padding: 0 15px 15px;
+            line-height: 1.5;
+        }
+
+        /* スライドインジケーター */
+        .options-slide-indicators {
+            display: none;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .slide-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: none;
+            background: #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .slide-indicator.active {
+            background: #b8860b;
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 768px) {
+            .motsunabe-main {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .motsunabe-features {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .options-grid {
+                display: flex !important;
+                gap: 0;
+                padding: 0;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                scroll-behavior: smooth;
+            }
+
+            .options-grid::-webkit-scrollbar {
+                display: none;
+            }
+
+            .motsunabe-options {
+                padding: 0 20px;
+            }
+
+            .option-card {
+                flex: 0 0 80%;
+                min-width: 80%;
+                max-width: 80%;
+                margin: 0 10%;
+                scroll-snap-align: center;
+                transition: transform 0.3s, opacity 0.3s;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            }
+
+            .option-card img {
+                height: 200px;
+                width: 100%;
+                object-fit: cover;
+                border-radius: 12px 12px 0 0;
+            }
+
+            .option-card h4 {
+                font-size: 20px;
+                padding: 20px 25px 10px;
+                font-weight: bold;
+            }
+
+            .option-card p {
+                font-size: 15px;
+                padding: 0 25px 25px;
+                line-height: 1.7;
+                color: #555;
+            }
+
+            .options-slide-indicators {
+                display: flex;
+            }
+        }
+
+        /* ギャラリースライドショー（モバイル用） */
+        .gallery-slideshow {
+            display: none;
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .gallery-slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .gallery-slides::-webkit-scrollbar {
+            display: none;
+        }
+
+        .gallery-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            scroll-snap-align: center;
+            position: relative;
+        }
+
+        .gallery-slide-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            padding: 20px;
+            color: white;
+        }
+
+        .gallery-slide-caption {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .gallery-slide-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 20px;
+        }
+
+        .gallery-slide-indicators .slide-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: none;
+            background: #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .gallery-slide-indicators .slide-indicator.active {
+            background: #b8860b;
+        }
+
+        /* モバイル表示制御 */
+        .mobile-only {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-only {
+                display: block;
+            }
+
+            .gallery-slideshow {
+                display: block;
+            }
+
+            .gallery-grid {
+                display: none !important;
             }
         }
