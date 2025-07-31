@@ -9,7 +9,10 @@
     "lint": "next lint",
     "seed:admin": "tsx src/seed/seed-admin.ts",
     "seed:users": "tsx src/seed/seed-users.ts",
-    "test:db": "tsx src/seed/test-db-connection.ts"
+    "test:db": "tsx src/seed/test-db-connection.ts",
+    "migrate:multitenant": "tsx src/seed/migrate-to-multitenant.ts",
+    "add:tenant": "tsx src/cli/add-tenant.ts",
+    "list:tenants": "tsx src/cli/list-tenants.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.48.0",
@@ -33,11 +36,15 @@
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^20",
     "@types/pg": "^8.15.5",
+    "@types/prompts": "^2.4.9",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
+    "chalk": "^5.4.1",
     "dotenv": "^17.2.1",
+    "ora": "^8.2.0",
     "postcss": "^8.5.6",
+    "prompts": "^2.4.2",
     "sharp": "^0.34.3",
     "styled-jsx": "^5.1.7",
     "tailwindcss": "^4.1.11",

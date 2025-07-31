@@ -4,6 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useMultilingual } from '@/hooks/useMultilingual';
+import { fetchLatestArticles } from '@/lib/news/api';
+import { Article } from '@/types/news';
+import { mockArticles } from '@/lib/news/mock-data';
+import Link from 'next/link';
 
 interface ContentData {
   hero: {
@@ -247,7 +251,35 @@ export default function HomePage({ content }: { content: ContentData }) {
   const [currentMotsunabeSlide, setCurrentMotsunabeSlide] = useState(0);
   const [currentGallerySlide, setCurrentGallerySlide] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
+  // 初期データとしてモックデータの最新3件を使用
+  const initialNews = mockArticles
+    .filter(article => article.status === 'published' && new Date(article.publishedAt) <= new Date())
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, 3);
+  
+  console.log('初期ニュース数:', initialNews.length);
+  console.log('初期ニュース:', initialNews);
+  
+  const [latestNews, setLatestNews] = useState<Article[]>(initialNews);
 
+  // 最新のニュースを取得（localStorageから）
+  useEffect(() => {
+    const loadLatestNews = async () => {
+      try {
+        // クライアントサイドでのみ実行
+        if (typeof window !== 'undefined') {
+          const articles = await fetchLatestArticles(3);
+          console.log('取得した記事数:', articles.length);
+          console.log('記事:', articles);
+          setLatestNews(articles);
+        }
+      } catch (error) {
+        console.error('ニュースの取得に失敗しました:', error);
+      }
+    };
+    loadLatestNews();
+  }, []);
+  
   useEffect(() => {
     // 初期状態でナビゲーション非表示設定（PC・タブレットサイズのみ）
     const handleInitialNavigation = () => {
@@ -1645,30 +1677,51 @@ export default function HomePage({ content }: { content: ContentData }) {
           <h2 className="section-title jp-title fade-up">{t('section.news') || '新着情報'}</h2>
           
           <div className="news-grid">
-            <article className="news-item fade-up">
-              <time className="news-date">2024.01.15</time>
-              <h3 className="news-title">{t('news.winterMenu')}</h3>
-              <span className="news-category">MENU</span>
-              <div className="news-arrow">→</div>
-            </article>
-            
-            <article className="news-item fade-up">
-              <time className="news-date">2024.01.08</time>
-              <h3 className="news-title">{t('news.newYearHours')}</h3>
-              <span className="news-category">INFO</span>
-              <div className="news-arrow">→</div>
-            </article>
-            
-            <article className="news-item fade-up">
-              <time className="news-date">2023.12.20</time>
-              <h3 className="news-title">{t('news.yearEndNotice')}</h3>
-              <span className="news-category">INFO</span>
-              <div className="news-arrow">→</div>
-            </article>
+            {latestNews.length > 0 ? (
+              latestNews.map((article) => {
+                const publishDate = new Date(article.publishedAt);
+                const formattedDate = `${publishDate.getFullYear()}.${String(publishDate.getMonth() + 1).padStart(2, '0')}.${String(publishDate.getDate()).padStart(2, '0')}`;
+                const categoryName = article.categories[0]?.name || 'INFO';
+                
+                return (
+                  <Link href={`/news/${article.slug}`} key={article.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <article className="news-item fade-up">
+                      <time className="news-date">{formattedDate}</time>
+                      <h3 className="news-title">{article.title}</h3>
+                      <span className="news-category">{categoryName}</span>
+                      <div className="news-arrow">→</div>
+                    </article>
+                  </Link>
+                );
+              })
+            ) : (
+              <>
+                <article className="news-item fade-up">
+                  <time className="news-date">2024.01.15</time>
+                  <h3 className="news-title">{t('news.winterMenu')}</h3>
+                  <span className="news-category">MENU</span>
+                  <div className="news-arrow">→</div>
+                </article>
+                
+                <article className="news-item fade-up">
+                  <time className="news-date">2024.01.08</time>
+                  <h3 className="news-title">{t('news.newYearHours')}</h3>
+                  <span className="news-category">INFO</span>
+                  <div className="news-arrow">→</div>
+                </article>
+                
+                <article className="news-item fade-up">
+                  <time className="news-date">2023.12.20</time>
+                  <h3 className="news-title">{t('news.yearEndNotice')}</h3>
+                  <span className="news-category">INFO</span>
+                  <div className="news-arrow">→</div>
+                </article>
+              </>
+            )}
           </div>
 
           <div className="news-more fade-up">
-            <a href="#" className="news-more-link">{t('news.viewAll')}</a>
+            <Link href="/news" className="news-more-link">{t('news.viewAll')}</Link>
           </div>
         </div>
       </section>

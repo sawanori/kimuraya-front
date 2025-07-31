@@ -10,7 +10,7 @@ import {
   TrendingUp, TrendingDown, Users, Eye, MousePointer,
   Clock, Globe, Monitor, Smartphone, Tablet,
   LogOut, Calendar,
-  Activity, Zap, Target, ChartBar, Edit3
+  Activity, Zap, Target, ChartBar, Edit3, FileText
 } from 'lucide-react'
 
 interface User {
@@ -115,6 +115,13 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => router.push('/home/articles')}
+                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-3 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl font-medium"
+              >
+                <FileText className="w-5 h-5" />
+                <span>記事管理</span>
+              </button>
               <button
                 onClick={() => router.push('/home/editor')}
                 className="px-6 py-3 bg-[#10a37f] hover:bg-[#0d8f6f] text-white rounded-lg flex items-center gap-3 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl font-medium"

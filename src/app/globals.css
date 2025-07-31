@@ -2,3 +2,6 @@
 
 /* globals.css - 空のファイル */
 /* CSSはpublic/css/original.cssから読み込まれます */
+
+/* 新着情報ページ用のスタイル */
+@import '../styles/news/news.css';

@@ -1,0 +1,52 @@
+/* 管理画面用のグローバルスタイル */
+
+.admin-articles-page,
+.admin-article-new-page,
+.admin-article-edit-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.admin-page-header {
+  margin-bottom: 32px;
+}
+
+.admin-page-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.admin-page-description {
+  font-size: 16px;
+  color: #666;
+}
+
+/* ダッシュボードボタンの調整 */
+.dashboard-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .admin-articles-page,
+  .admin-article-new-page,
+  .admin-article-edit-page {
+    padding: 20px;
+  }
+  
+  .admin-page-title {
+    font-size: 24px;
+  }
+  
+  .dashboard-actions {
+    flex-direction: column;
+  }
+  
+  .dashboard-actions button {
+    width: 100%;
+  }
+}

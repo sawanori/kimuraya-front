@@ -1,0 +1,29 @@
+{
+  "name": "木村屋 新宿店",
+  "slug": "shinjuku-branch",
+  "domain": "shinjuku.kimuraya.com",
+  "primaryColor": "#0066ff",
+  "address": "東京都新宿区新宿1-2-3",
+  "phone": "03-1234-5678",
+  "email": "shinjuku@kimuraya.com",
+  "businessHours": "平日 17:00-23:00\n土日祝 11:00-23:00",
+  "preset": {
+    "settings": {
+      "features": {
+        "enableNews": true,
+        "enableReservation": true,
+        "enableAnalytics": true
+      },
+      "limits": {
+        "maxUsers": 20,
+        "maxArticles": 2000
+      }
+    }
+  },
+  "admin": {
+    "createAdmin": true,
+    "adminEmail": "admin.shinjuku@kimuraya.com",
+    "adminPassword": "SecurePassword123!",
+    "adminName": "新宿店管理者"
+  }
+}
