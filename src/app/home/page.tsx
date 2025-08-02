@@ -174,18 +174,31 @@ export default function HomePage() {
             </div>
           </div>
           {/* 編集CTA */}
-          <div className="mt-6 p-4 bg-[#10a37f]/10 rounded-lg border border-[#10a37f]/30">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[#ececec] font-medium">サイトの内容を更新しますか？</p>
-                <p className="text-[#a8a8a8] text-sm mt-1">テキスト、画像、レイアウトを簡単に編集できます</p>
-              </div>
+          <div className="mt-6 p-6 bg-[#10a37f]/10 rounded-lg border border-[#10a37f]/30">
+            <div className="mb-4">
+              <p className="text-[#ececec] font-medium text-lg">コンテンツ管理</p>
+              <p className="text-[#a8a8a8] text-sm mt-1">サイトのコンテンツを管理・編集するための機能にアクセスできます</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                onClick={() => router.push('/home/articles')}
+                className="p-6 bg-purple-600 hover:bg-purple-700 text-white rounded-xl flex flex-col items-center gap-3 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                <FileText className="w-10 h-10" />
+                <div className="text-center">
+                  <span className="text-lg font-bold block">記事管理</span>
+                  <span className="text-sm opacity-90 mt-1 block">ブログ記事の作成・編集・削除</span>
+                </div>
+              </button>
               <button
                 onClick={() => router.push('/home/editor')}
-                className="px-6 py-3 bg-[#10a37f] hover:bg-[#0d8f6f] text-white rounded-lg flex items-center gap-3 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl font-medium"
+                className="p-6 bg-[#10a37f] hover:bg-[#0d8f6f] text-white rounded-xl flex flex-col items-center gap-3 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
-                <Edit3 className="w-5 h-5" />
-                <span>編集画面へ</span>
+                <Edit3 className="w-10 h-10" />
+                <div className="text-center">
+                  <span className="text-lg font-bold block">ページを編集する</span>
+                  <span className="text-sm opacity-90 mt-1 block">サイトのコンテンツを直接編集</span>
+                </div>
               </button>
             </div>
           </div>
