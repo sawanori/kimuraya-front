@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Save, Eye, Edit3, Image, Type, Palette, Video } from 'lucide-react'
+import { ArrowLeft, Save, Eye, Edit3, Image, Type, Palette, Video, Menu, X, ChevronRight } from 'lucide-react'
 import './editor.css'
+import './responsive-editor.css'
 
 interface User {
   id: string
@@ -85,6 +86,7 @@ export default function EditorPage() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   
   // YouTube URLから動画IDを抽出する関数
   const extractYouTubeId = (url: string): string | null => {
@@ -520,6 +522,20 @@ export default function EditorPage() {
       return () => document.removeEventListener('keydown', handleEscape)
     }
   }, [imagePickerOpen])
+  
+  // Handle body scroll lock for mobile sidebar
+  useEffect(() => {
+    if (mobileSidebarOpen) {
+      // Store original body overflow
+      const originalOverflow = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      
+      return () => {
+        // Restore original overflow when sidebar closes
+        document.body.style.overflow = originalOverflow
+      }
+    }
+  }, [mobileSidebarOpen])
 
   const loadR2Images = async () => {
     console.log('Loading R2 images...')
@@ -1385,6 +1401,14 @@ export default function EditorPage() {
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <h1 className="editor-title">ページ編集</h1>
+              {/* Mobile menu toggle */}
+              <button
+                onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+                className="editor-mobile-menu-toggle md:hidden ml-2"
+                aria-label="メニューを開く"
+              >
+                {mobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
             </div>
             <div className="editor-header-actions">
               <button
@@ -1392,15 +1416,16 @@ export default function EditorPage() {
                 className="editor-button editor-button-secondary"
               >
                 <Eye className="w-4 h-4" />
-                <span>プレビュー</span>
+                <span className="hidden sm:inline">プレビュー</span>
               </button>
               <button
                 onClick={handleSave}
-                disabled={isSaving}
+                disabled={isSaving || !hasChanges}
                 className="editor-button editor-button-primary"
               >
                 <Save className="w-4 h-4" />
-                <span>{isSaving ? '保存中...' : '保存'}</span>
+                <span className="hidden sm:inline">{isSaving ? '保存中...' : '保存'}</span>
+                {isSaving && <span className="sm:hidden">...</span>}
               </button>
             </div>
           </div>
@@ -1408,18 +1433,41 @@ export default function EditorPage() {
       </header>
 
       <div className="editor-main">
+        {/* Mobile sidebar overlay */}
+        {mobileSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+        )}
+        
         {/* サイドバー */}
-        <aside className="editor-sidebar">
+        <aside className={`editor-sidebar ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
           <div className="editor-sidebar-content">
-            <h2 className="editor-sidebar-title">セクション一覧</h2>
+            <div className="flex items-center justify-between md:hidden mb-4">
+              <h2 className="editor-sidebar-title mb-0">セクション一覧</h2>
+              <button
+                onClick={() => setMobileSidebarOpen(false)}
+                className="p-2 hover:bg-gray-700 rounded"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <h2 className="editor-sidebar-title hidden md:block">セクション一覧</h2>
             <nav className="editor-nav">
               {sections.map((section) => (
                 <button
                   key={section.id}
-                  onClick={() => setActiveSection(section.id)}
+                  onClick={() => {
+                    setActiveSection(section.id)
+                    setMobileSidebarOpen(false)
+                  }}
                   className={`editor-nav-button ${activeSection === section.id ? 'active' : ''}`}
                 >
-                  {section.name}
+                  <span>{section.name}</span>
+                  {activeSection === section.id && (
+                    <ChevronRight className="w-4 h-4 ml-auto md:hidden" />
+                  )}
                 </button>
               ))}
             </nav>
@@ -2780,6 +2828,24 @@ export default function EditorPage() {
           </div>
         </main>
       </div>
+      
+      {/* Mobile floating action button */}
+      <button
+        onClick={handleSave}
+        disabled={isSaving || !hasChanges}
+        className="editor-floating-menu md:hidden"
+        aria-label="変更を保存"
+      >
+        <Save className="w-6 h-6" />
+      </button>
+      
+      {/* Mobile save indicator */}
+      {hasChanges && (
+        <div className={`editor-save-indicator md:hidden ${hasChanges ? 'has-changes' : ''}`}>
+          <div className="w-2 h-2 bg-current rounded-full animate-pulse" />
+          <span>未保存の変更</span>
+        </div>
+      )}
       
       {/* Image Picker Modal */}
       {imagePickerOpen && (

@@ -1,0 +1,339 @@
+/* Responsive styles for /home page (dashboard) */
+
+/* Mobile-first approach */
+
+/* Small mobile (< 375px) */
+@media (max-width: 374px) {
+  .min-h-screen {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  header .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  main.p-8 {
+    padding: 1rem;
+  }
+  
+  /* Header adjustments */
+  header h1 {
+    font-size: 1.25rem !important;
+  }
+  
+  header .w-8.h-8 {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  /* Hide date range selector on very small screens */
+  header select {
+    display: none;
+  }
+  
+  /* Real-time activity card */
+  .text-5xl {
+    font-size: 2.5rem !important;
+  }
+  
+  /* KPI cards - single column */
+  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+    gap: 0.75rem;
+  }
+  
+  /* Chart height reduction */
+  .h-80 {
+    height: 250px;
+  }
+}
+
+/* Mobile (375px - 640px) */
+@media (max-width: 639px) {
+  /* Header layout */
+  header .flex.items-center.justify-between {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  header .flex.items-center.gap-4:last-child {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  
+  /* Header buttons */
+  header button[onclick*="articles"],
+  header button[onclick*="editor"] {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  header button[onclick*="articles"] .w-5,
+  header button[onclick*="editor"] .w-5 {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  /* Live indicator */
+  .bg-\\[\\#10a37f\\]\\/20.px-3.py-1 {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  /* Date range selector */
+  header select {
+    width: 100%;
+    font-size: 0.875rem;
+  }
+  
+  /* Real-time activity section */
+  .mb-10.p-8 {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .text-5xl {
+    font-size: 3rem;
+  }
+  
+  /* Content management buttons grid */
+  .grid.grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  /* Content management buttons */
+  button.p-6 {
+    padding: 1.25rem;
+  }
+  
+  button.p-6 .w-10 {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  button.p-6 .text-lg {
+    font-size: 1rem;
+  }
+  
+  /* KPI cards */
+  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .relative.bg-\\[\\#2a2a2a\\].rounded-2xl.p-6 {
+    padding: 1.25rem;
+  }
+  
+  .text-3xl {
+    font-size: 1.75rem;
+  }
+  
+  /* Traffic trend section */
+  .bg-\\[\\#2a2a2a\\].rounded-2xl.p-6 {
+    padding: 1.25rem;
+  }
+  
+  /* Chart controls */
+  .flex.gap-2 button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  /* Chart container */
+  .h-80 {
+    height: 300px;
+  }
+  
+  /* Device access section */
+  .space-y-6 {
+    gap: 1.25rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.5rem;
+  }
+}
+
+/* Tablet (640px - 1024px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Header adjustments */
+  header .flex.items-center.justify-between {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  header .flex.items-center.gap-4:last-child {
+    flex-wrap: wrap;
+  }
+  
+  /* Buttons size adjustment */
+  header button[onclick*="articles"],
+  header button[onclick*="editor"] {
+    padding: 0.625rem 1.25rem;
+  }
+  
+  /* Real-time activity */
+  .mb-10.p-8 {
+    padding: 2rem;
+  }
+  
+  /* Content management grid */
+  .grid.grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* KPI cards - 2 columns */
+  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  
+  /* Chart height */
+  .h-80 {
+    height: 350px;
+  }
+}
+
+/* Desktop adjustments (1024px+) */
+@media (min-width: 1024px) {
+  /* Ensure proper 4-column layout for KPI cards */
+  .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase button tap targets */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Remove hover effects on touch devices */
+  button:hover {
+    transform: none !important;
+  }
+  
+  /* Improve select dropdown */
+  select {
+    min-height: 44px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+  /* Reduce vertical spacing */
+  header {
+    position: relative;
+  }
+  
+  .mb-10 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .p-8 {
+    padding: 1.5rem;
+  }
+  
+  /* Reduce chart height */
+  .h-80 {
+    height: 200px;
+  }
+}
+
+/* Print styles */
+@media print {
+  header button,
+  header select {
+    display: none;
+  }
+  
+  .bg-\\[\\#212121\\],
+  .bg-\\[\\#171717\\],
+  .bg-\\[\\#2a2a2a\\] {
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  .text-\\[\\#ececec\\],
+  .text-\\[\\#a8a8a8\\] {
+    color: black !important;
+  }
+  
+  .border-\\[\\#424242\\] {
+    border-color: #ddd !important;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .bg-\\[\\#2a2a2a\\] {
+    border: 2px solid currentColor;
+  }
+  
+  button {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Dark mode adjustments (already dark by default, but for system preferences) */
+@media (prefers-color-scheme: light) {
+  /* Could add light mode overrides here if needed */
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Utility classes for responsive */
+@media (max-width: 767px) {
+  .md\\:hidden {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\\:block {
+    display: block !important;
+  }
+  
+  .md\\:hidden {
+    display: none !important;
+  }
+}
+
+/* Smooth transitions */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a,
+select {
+  -webkit-touch-callout: none;
+}

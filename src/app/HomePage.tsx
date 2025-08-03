@@ -258,8 +258,6 @@ export default function HomePage({ content }: { content: ContentData }) {
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
     .slice(0, 3);
   
-  console.log('初期ニュース数:', initialNews.length);
-  console.log('初期ニュース:', initialNews);
   
   const [latestNews, setLatestNews] = useState<Article[]>(initialNews);
 
@@ -270,8 +268,6 @@ export default function HomePage({ content }: { content: ContentData }) {
         // クライアントサイドでのみ実行
         if (typeof window !== 'undefined') {
           const articles = await fetchLatestArticles(3);
-          console.log('取得した記事数:', articles.length);
-          console.log('記事:', articles);
           setLatestNews(articles);
         }
       } catch (error) {
@@ -279,6 +275,47 @@ export default function HomePage({ content }: { content: ContentData }) {
       }
     };
     loadLatestNews();
+  }, []);
+  
+  // PageTopボタンの設定
+  useEffect(() => {
+    const handlePageTop = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('.page-top-btn')) {
+        e.preventDefault();
+        
+        // スクロールコンテナの存在を確認
+        const scrollContainer = document.querySelector('.scroll-container');
+        if (scrollContainer) {
+          // モバイルの場合はスクロールコンテナをスムーズスクロール
+          const startPosition = scrollContainer.scrollTop;
+          const duration = 500; // アニメーション時間（ミリ秒）
+          const startTime = performance.now();
+          
+          const animateScroll = (currentTime: number) => {
+            const elapsedTime = currentTime - startTime;
+            const progress = Math.min(elapsedTime / duration, 1);
+            
+            // イージング関数（easeInOutQuad）
+            const easeInOutQuad = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+            
+            scrollContainer.scrollTop = startPosition * (1 - easeInOutQuad(progress));
+            
+            if (progress < 1) {
+              requestAnimationFrame(animateScroll);
+            }
+          };
+          
+          requestAnimationFrame(animateScroll);
+        } else {
+          // デスクトップの場合は通常のスムーズスクロール
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    };
+    
+    document.addEventListener('click', handlePageTop);
+    return () => document.removeEventListener('click', handlePageTop);
   }, []);
   
   useEffect(() => {
@@ -483,26 +520,78 @@ export default function HomePage({ content }: { content: ContentData }) {
 
   // モバイルメニューの開閉
   useEffect(() => {
+    
+    // 要素の存在確認
     const menuToggle = document.getElementById('menuToggle');
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
-    const mobileMenuClose = document.getElementById('mobileMenuClose');
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    
+    
+    // イベント委譲を使用してより確実にイベントを処理
+    const handleClick = (e: MouseEvent) => {
+      
+      const target = e.target as HTMLElement;
+      const mobileMenu = document.getElementById('mobileMenu');
+      
+      if (!mobileMenu) {
+        return;
+      }
 
-    const openMenu = () => {
-      if (mobileMenu) mobileMenu.classList.add('active');
-      document.body.classList.add('menu-open');
+      // ハンバーガーボタンのクリック
+      if (target.id === 'menuToggle' || target.closest('#menuToggle') || 
+          target.id === 'mobileMenuBtn' || target.closest('#mobileMenuBtn')) {
+        e.preventDefault();
+        mobileMenu.classList.add('active');
+        document.body.classList.add('menu-open');
+        
+        // デバッグ：スタイルを直接適用
+        mobileMenu.style.display = 'block';
+        mobileMenu.style.pointerEvents = 'auto';
+        const menuContent = mobileMenu.querySelector('.mobile-menu-content') as HTMLElement;
+        const menuOverlay = mobileMenu.querySelector('.mobile-menu-overlay') as HTMLElement;
+        if (menuContent) {
+          menuContent.style.transform = 'translateX(0)';
+        }
+        if (menuOverlay) {
+          menuOverlay.style.opacity = '1';
+        }
+        
+        // ハンバーガーボタンのアニメーション
+        const menuToggle = document.getElementById('menuToggle');
+        if (menuToggle) {
+          menuToggle.classList.add('active');
+        }
+      }
+      
+      // 閉じるボタンのクリック
+      if (target.id === 'mobileMenuClose' || target.closest('#mobileMenuClose') ||
+          target.id === 'mobileMenuOverlay') {
+        e.preventDefault();
+        mobileMenu.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        
+        // デバッグ：スタイルをリセット
+        mobileMenu.style.display = '';
+        mobileMenu.style.pointerEvents = '';
+        const menuContent = mobileMenu.querySelector('.mobile-menu-content') as HTMLElement;
+        const menuOverlay = mobileMenu.querySelector('.mobile-menu-overlay') as HTMLElement;
+        if (menuContent) {
+          menuContent.style.transform = '';
+        }
+        if (menuOverlay) {
+          menuOverlay.style.opacity = '';
+        }
+        
+        // ハンバーガーボタンのアニメーションを戻す
+        const menuToggle = document.getElementById('menuToggle');
+        if (menuToggle) {
+          menuToggle.classList.remove('active');
+        }
+      }
     };
 
-    const closeMenu = () => {
-      if (mobileMenu) mobileMenu.classList.remove('active');
-      document.body.classList.remove('menu-open');
-    };
-
-    if (menuToggle) menuToggle.addEventListener('click', openMenu);
-    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMenu);
-    if (mobileMenuClose) mobileMenuClose.addEventListener('click', closeMenu);
-    if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMenu);
+    // documentレベルでイベントを監視
+    document.addEventListener('click', handleClick);
 
     // スムーズスクロール
     const navLinks = document.querySelectorAll('a[href^="#"]');
@@ -515,16 +604,18 @@ export default function HomePage({ content }: { content: ContentData }) {
         const targetElement = document.querySelector(href);
         if (targetElement) {
           targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          closeMenu();
+          // メニューを閉じる
+          const mobileMenu = document.getElementById('mobileMenu');
+          if (mobileMenu && mobileMenu.classList.contains('active')) {
+            mobileMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+          }
         }
       });
     });
 
     return () => {
-      if (menuToggle) menuToggle.removeEventListener('click', openMenu);
-      if (mobileMenuBtn) mobileMenuBtn.removeEventListener('click', openMenu);
-      if (mobileMenuClose) mobileMenuClose.removeEventListener('click', closeMenu);
-      if (mobileMenuOverlay) mobileMenuOverlay.removeEventListener('click', closeMenu);
+      document.removeEventListener('click', handleClick);
     };
   }, []);
 
@@ -1858,7 +1949,38 @@ export default function HomePage({ content }: { content: ContentData }) {
         
         <div className="footer-bottom">
           <p className="copyright">&copy; 2024 {getContent('shopInfo.shopName', content).split(' ')[0]}. {t('footer.rights')}</p>
-          <button className="page-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <button 
+            className="page-top-btn" 
+            onClick={(e) => {
+              e.preventDefault();
+              const scrollContainer = document.querySelector('.scroll-container');
+              if (scrollContainer) {
+                // モバイルの場合はスクロールコンテナをスムーズスクロール
+                const startPosition = scrollContainer.scrollTop;
+                const duration = 500;
+                const startTime = performance.now();
+                
+                const animateScroll = (currentTime: number) => {
+                  const elapsedTime = currentTime - startTime;
+                  const progress = Math.min(elapsedTime / duration, 1);
+                  
+                  // イージング関数
+                  const easeInOutQuad = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+                  
+                  scrollContainer.scrollTop = startPosition * (1 - easeInOutQuad(progress));
+                  
+                  if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                  }
+                };
+                
+                requestAnimationFrame(animateScroll);
+              } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            type="button"
+          >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 19V5M5 12l7-7 7 7"/>
             </svg>

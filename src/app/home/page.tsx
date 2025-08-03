@@ -10,8 +10,9 @@ import {
   TrendingUp, TrendingDown, Users, Eye, MousePointer,
   Clock, Globe, Monitor, Smartphone, Tablet,
   LogOut, Calendar,
-  Activity, Zap, Target, ChartBar, Edit3, FileText
+  Activity, Zap, Target, ChartBar, Edit3, FileText, Menu, X
 } from 'lucide-react'
+import './responsive-home.css'
 
 interface User {
   id: string
@@ -26,6 +27,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [dateRange, setDateRange] = useState('7days')
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // リアルタイムカウンター用（アニメーション削除）
   const currentUsers = 127

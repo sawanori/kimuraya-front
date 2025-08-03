@@ -123,6 +123,7 @@
 .editor-main {
   display: flex;
   height: calc(100vh - 73px);
+  overflow: hidden;
 }
 
 /* サイドバー */
@@ -190,7 +191,9 @@
 .editor-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   background-color: var(--editor-bg);
+  -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
 }
 
 .editor-content-inner {

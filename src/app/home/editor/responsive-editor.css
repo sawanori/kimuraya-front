@@ -1,0 +1,544 @@
+/* Responsive styles for /home/editor page */
+
+/* Mobile-first approach */
+
+/* Small mobile (< 375px) */
+@media (max-width: 374px) {
+  /* Don't hide sidebar, use mobile menu instead */
+  .editor-main {
+    flex-direction: column;
+  }
+  
+  /* Header adjustments */
+  .editor-header-content {
+    padding: 0.75rem 1rem;
+  }
+  
+  .editor-title {
+    font-size: 1rem;
+  }
+  
+  .editor-button {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  /* Content area */
+  .editor-content-inner {
+    padding: 1rem;
+  }
+  
+  .editor-section-title {
+    font-size: 1.25rem;
+  }
+  
+  /* Form fields */
+  .editor-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  /* Cards */
+  .editor-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Make image upload areas more visible on mobile */
+  .editor-image-field {
+    background-color: var(--editor-card-bg);
+    border: 1px solid var(--editor-border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .editor-image-preview {
+    min-height: 150px;
+    background-color: var(--editor-input-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .editor-upload-button {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Mobile (375px - 640px) */
+@media (max-width: 639px) {
+  /* Reset container height */
+  .editor-container {
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  /* Convert to mobile navigation */
+  .editor-main {
+    flex-direction: column;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  
+  /* Fix content scrolling - IMPORTANT */
+  .editor-content {
+    flex: none !important;
+    height: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden;
+    min-height: auto;
+  }
+  
+  .editor-content-inner {
+    height: auto;
+    padding-bottom: 120px; /* Space for floating button */
+    min-height: calc(100vh - 200px);
+  }
+  
+  /* Keep mobile sidebar vertical - remove horizontal scroll */
+  .editor-sidebar-content {
+    padding: 1rem;
+  }
+  
+  /* Keep nav vertical on mobile */
+  .editor-nav {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .editor-nav-button {
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .editor-nav-button.active::before {
+    display: none;
+  }
+  
+  .editor-nav-button.active {
+    background-color: var(--editor-accent);
+    color: white;
+  }
+  
+  /* Header responsive */
+  .editor-header-inner {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  
+  .editor-header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  /* Content adjustments */
+  .editor-content {
+    flex: initial;
+    min-height: calc(100vh - 160px);
+  }
+  
+  .editor-content-inner {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+  
+  /* Section header */
+  .editor-section-meta {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  
+  /* Grid layouts */
+  .editor-grid,
+  .editor-seat-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Image fields */
+  .editor-image-preview {
+    aspect-ratio: 4 / 3;
+  }
+  
+  /* Menu cards */
+  .menu-card-header {
+    flex-wrap: wrap;
+  }
+  
+  .menu-item-fields {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .menu-item-name,
+  .menu-item-price {
+    flex: initial;
+    width: 100%;
+  }
+  
+  /* Course cards */
+  .course-feature-fields {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  /* Drink categories */
+  .drink-category-header {
+    flex-wrap: wrap;
+  }
+  
+  .drink-item-fields {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  /* Motsunabe options */
+  .option-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .option-image-section {
+    margin-bottom: 1rem;
+  }
+  
+  /* Image storage grid */
+  .image-storage-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  
+  .image-storage-preview {
+    height: 120px;
+  }
+  
+  /* Success message position */
+  .editor-success-message {
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    text-align: center;
+  }
+}
+
+/* Tablet (640px - 1024px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Sidebar adjustments */
+  .editor-sidebar {
+    width: 200px;
+  }
+  
+  .editor-sidebar-content {
+    padding: 1.25rem 0.75rem;
+  }
+  
+  /* Content area */
+  .editor-content-inner {
+    padding: 1.5rem;
+  }
+  
+  /* Grid layouts - 2 columns */
+  .editor-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .editor-seat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Menu cards responsive */
+  .menu-item-fields {
+    flex-wrap: wrap;
+  }
+  
+  /* Course features */
+  .course-feature-fields {
+    grid-template-columns: 80px 1fr 1.5fr;
+  }
+  
+  /* Image storage grid */
+  .image-storage-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+/* Large screens (1024px+) */
+@media (min-width: 1024px) {
+  /* Maintain desktop layout */
+  .editor-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
+  .editor-seat-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase tap targets */
+  .editor-button,
+  .editor-nav-button,
+  .editor-upload-button,
+  button {
+    min-height: 44px;
+  }
+  
+  /* Better touch scrolling */
+  .editor-sidebar {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Remove hover states */
+  .editor-nav-button:hover,
+  .editor-button:hover {
+    transform: none;
+  }
+  
+  /* Larger form inputs */
+  .editor-input,
+  .editor-textarea,
+  select {
+    font-size: 16px; /* Prevent zoom on iOS */
+    min-height: 44px;
+  }
+}
+
+/* Landscape mobile adjustments */
+@media (max-height: 600px) and (orientation: landscape) and (max-width: 812px) {
+  /* Reduce header height */
+  .editor-header {
+    position: relative;
+  }
+  
+  .editor-header-content {
+    padding: 0.5rem 1rem;
+  }
+  
+  /* Adjust main layout */
+  .editor-main {
+    height: calc(100vh - 50px);
+  }
+  
+  /* Compact sidebar */
+  .editor-sidebar {
+    width: 180px;
+  }
+  
+  .editor-nav-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.813rem;
+  }
+  
+  /* Reduce spacing */
+  .editor-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .editor-field {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Modal/Picker responsiveness */
+@media (max-width: 639px) {
+  /* Image picker modal (when implemented) */
+  .image-picker-modal {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    border-radius: 0;
+    max-height: 100vh;
+    max-width: 100vw;
+  }
+  
+  .image-picker-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 1rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .editor-sidebar,
+  .editor-header {
+    display: none;
+  }
+  
+  .editor-main {
+    display: block;
+    height: auto;
+  }
+  
+  .editor-content {
+    overflow: visible;
+  }
+  
+  .editor-button,
+  .editor-upload-button,
+  button {
+    display: none;
+  }
+  
+  /* Show all content */
+  .editor-content-inner {
+    max-width: 100%;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .editor-spinner {
+    animation: none;
+  }
+  
+  .editor-success-message {
+    animation: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .editor-card,
+  .editor-input,
+  .editor-textarea {
+    border-width: 2px;
+  }
+  
+  .editor-nav-button.active {
+    outline: 2px solid var(--editor-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* Mobile-specific navigation menu */
+.editor-mobile-menu-toggle {
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--editor-text-primary);
+  transition: all 0.2s;
+}
+
+.editor-mobile-menu-toggle:hover {
+  background-color: var(--editor-hover-bg);
+}
+
+/* Mobile sidebar overlay and animation */
+@media (max-width: 767px) {
+  .editor-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    bottom: 0;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 50;
+    transition: left 0.3s ease-in-out;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+  }
+  
+  .editor-sidebar.mobile-open {
+    left: 0;
+  }
+  
+  .editor-main {
+    position: relative;
+    overflow: visible;
+    height: auto;
+  }
+  
+  /* Fix body and html overflow on mobile */
+  html, body {
+    overflow-x: hidden;
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Ensure content is scrollable */
+  .editor-container {
+    min-height: 100vh;
+    overflow-x: hidden;
+    height: auto !important;
+    position: relative;
+  }
+}
+
+/* Floating action button for mobile */
+@media (max-width: 639px) {
+  /* Add floating menu button */
+  .editor-floating-menu {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    background-color: var(--editor-accent);
+    color: white;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 30;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  
+  .editor-floating-menu:hover {
+    background-color: var(--editor-accent-hover);
+    transform: scale(1.05);
+  }
+  
+  .editor-floating-menu svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Save indicator for mobile */
+  .editor-save-indicator {
+    position: fixed;
+    bottom: 6rem;
+    right: 2rem;
+    background: var(--editor-card-bg);
+    border: 1px solid var(--editor-border);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    color: var(--editor-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .editor-save-indicator.has-changes {
+    color: var(--editor-accent);
+    border-color: var(--editor-accent);
+  }
+}
+
+/* Ensure desktop doesn't show mobile elements */
+@media (min-width: 768px) {
+  .editor-mobile-menu-toggle {
+    display: none !important;
+  }
+  
+  .editor-floating-menu {
+    display: none !important;
+  }
+  
+  .editor-save-indicator {
+    display: none !important;
+  }
+}

@@ -1,6 +1,6 @@
-/* モバイルメニューの背景を透明にする */
+/* モバイルメニューの背景を半透明にする */
 .mobile-menu-content {
-    background: transparent !important;
+    background: rgba(26, 22, 17, 0.98) !important;
 }
 
 .mobile-menu-overlay {

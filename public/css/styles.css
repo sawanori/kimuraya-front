@@ -1839,6 +1839,7 @@
 
         /* モバイルメニュー */
         .mobile-menu {
+            display: block;
             position: fixed;
             top: 0;
             left: 0;
@@ -1853,6 +1854,7 @@
         }
 
         .mobile-menu-overlay {
+            display: block;
             position: absolute;
             top: 0;
             left: 0;
@@ -1869,13 +1871,13 @@
         }
 
         .mobile-menu-content {
+            display: flex;
             position: absolute;
             top: 0;
             right: 0;
             width: 100%;
             height: 100%;
             background: rgba(26, 22, 17, 0.98);
-            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -4994,7 +4996,8 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                z-index: 90;
+                z-index: 9999;
+                cursor: pointer;
             }
             
             .page-top-btn span {
