@@ -252,6 +252,7 @@ export default function HomePage({ content }: { content: ContentData }) {
   const [currentMotsunabeSlide, setCurrentMotsunabeSlide] = useState(0);
   const [currentGallerySlide, setCurrentGallerySlide] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
+  const [currentReviewSlide, setCurrentReviewSlide] = useState(0);
   // 初期データとしてモックデータの最新3件を使用
   const initialNews = mockArticles
     .filter(article => article.status === 'published' && new Date(article.publishedAt) <= new Date())
@@ -842,6 +843,121 @@ export default function HomePage({ content }: { content: ContentData }) {
       gallerySlides.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
+
+  // レビューカルーセルの制御
+  useEffect(() => {
+    const reviewsTrack = document.querySelector('.reviews-track') as HTMLElement;
+    const reviewCards = document.querySelectorAll('.review-card');
+    const reviewIndicators = document.querySelectorAll('.review-indicator');
+    const prevBtn = document.getElementById('reviewPrevBtn');
+    const nextBtn = document.getElementById('reviewNextBtn');
+    
+    if (!reviewsTrack || reviewCards.length === 0) return;
+    
+    const isMobile = window.innerWidth <= 768;
+    const cardWidth = isMobile ? window.innerWidth - 80 : 430; // モバイルは画面幅-80px、デスクトップは400+30
+    const totalSlides = reviewCards.length;
+    
+    // スライドを更新する関数
+    const updateSlide = (index: number) => {
+      const offset = index * cardWidth;
+      reviewsTrack.style.transform = `translateX(-${offset}px)`;
+      
+      // インジケーター更新
+      reviewIndicators.forEach((indicator, i) => {
+        if (i === index) {
+          indicator.classList.add('active');
+        } else {
+          indicator.classList.remove('active');
+        }
+      });
+      
+      setCurrentReviewSlide(index);
+    };
+    
+    // 前へボタン
+    const handlePrev = () => {
+      const newIndex = currentReviewSlide === 0 ? totalSlides - 1 : currentReviewSlide - 1;
+      updateSlide(newIndex);
+    };
+    
+    // 次へボタン
+    const handleNext = () => {
+      const newIndex = (currentReviewSlide + 1) % totalSlides;
+      updateSlide(newIndex);
+    };
+    
+    // ボタンイベントリスナー
+    prevBtn?.addEventListener('click', handlePrev);
+    nextBtn?.addEventListener('click', handleNext);
+    
+    // インジケータークリック
+    reviewIndicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        updateSlide(index);
+      });
+    });
+    
+    // タッチ/スワイプ対応
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging) return;
+      currentX = e.touches[0].clientX;
+    };
+    
+    const handleTouchEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      
+      const diffX = startX - currentX;
+      const threshold = 50;
+      
+      if (Math.abs(diffX) > threshold) {
+        if (diffX > 0) {
+          handleNext();
+        } else {
+          handlePrev();
+        }
+      }
+    };
+    
+    reviewsTrack.addEventListener('touchstart', handleTouchStart as any);
+    reviewsTrack.addEventListener('touchmove', handleTouchMove as any);
+    reviewsTrack.addEventListener('touchend', handleTouchEnd);
+    
+    // 自動スライド
+    const autoSlideInterval = setInterval(() => {
+      handleNext();
+    }, 5000);
+    
+    // ウィンドウリサイズ対応
+    const handleResize = () => {
+      const newIsMobile = window.innerWidth <= 768;
+      const newCardWidth = newIsMobile ? window.innerWidth - 80 : 430;
+      const offset = currentReviewSlide * newCardWidth;
+      reviewsTrack.style.transform = `translateX(-${offset}px)`;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      prevBtn?.removeEventListener('click', handlePrev);
+      nextBtn?.removeEventListener('click', handleNext);
+      reviewsTrack.removeEventListener('touchstart', handleTouchStart as any);
+      reviewsTrack.removeEventListener('touchmove', handleTouchMove as any);
+      reviewsTrack.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('resize', handleResize);
+      clearInterval(autoSlideInterval);
+    };
+  }, [currentReviewSlide]);
 
   return (
     <>
@@ -1710,6 +1826,146 @@ export default function HomePage({ content }: { content: ContentData }) {
                 </>
               )}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 口コミセクション */}
+      <section className="reviews-section" id="reviews">
+        <div className="reviews-container">
+          <div className="reviews-header fade-up">
+            <h2 className="reviews-title jp-title">お客様の声</h2>
+            <p className="reviews-subtitle">Googleビジネスプロフィールより</p>
+            <div className="reviews-rating-summary">
+              <div className="rating-stars">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} className="star-icon filled">★</span>
+                ))}
+              </div>
+              <span className="rating-text">4.8 / 5.0</span>
+            </div>
+          </div>
+
+          <div className="reviews-carousel-wrapper">
+            <div className="reviews-carousel" id="reviewsCarousel">
+              <div className="reviews-track">
+                {/* モックデータ */}
+                {[
+                  {
+                    id: 1,
+                    rating: 5,
+                    text: "本格的な九州料理が楽しめる素晴らしいお店です。特に、馬刺しは絶品でした。スタッフの方々も親切で、居心地の良い空間でした。また必ず訪れたいと思います。",
+                    author: "山田太郎",
+                    date: "2024年1月"
+                  },
+                  {
+                    id: 2,
+                    rating: 5,
+                    text: "会社の宴会で利用させていただきました。個室でゆったりと過ごせ、料理のクオリティも高く、みんな大満足でした。特に、もつ鍋が絶品で、締めのちゃんぽん麺も最高でした。",
+                    author: "佐藤花子",
+                    date: "2024年1月"
+                  },
+                  {
+                    id: 3,
+                    rating: 4,
+                    text: "デートで利用しました。窓際の席で夜景を見ながらの食事は本当にロマンチックでした。お料理も美味しく、特に地鶏の炭火焼きが香ばしくて忘れられない味です。",
+                    author: "鈴木一郎",
+                    date: "2023年12月"
+                  },
+                  {
+                    id: 4,
+                    rating: 5,
+                    text: "九州出身の私も納得の味です。故郷の味を東京で楽しめるのは本当に嬉しいです。焼酎の種類も豊富で、料理との相性も抜群。店員さんの対応も素晴らしかったです。",
+                    author: "田中美咲",
+                    date: "2023年12月"
+                  },
+                  {
+                    id: 5,
+                    rating: 5,
+                    text: "雰囲気、料理、サービス、すべてが最高でした。特別な日の食事にぴったりのお店です。コース料理を注文しましたが、どれも丁寧に作られていて感動しました。",
+                    author: "高橋健二",
+                    date: "2023年11月"
+                  },
+                  {
+                    id: 6,
+                    rating: 4,
+                    text: "友人との飲み会で利用。料理はどれも美味しく、特に明太子料理のバリエーションに驚きました。価格も良心的で、コスパが良いお店だと思います。",
+                    author: "渡辺真由美",
+                    date: "2023年11月"
+                  },
+                  {
+                    id: 7,
+                    rating: 5,
+                    text: "接待で使わせていただきましたが、お客様にも大変喜んでいただけました。個室の雰囲気も良く、料理の提供タイミングも完璧でした。",
+                    author: "中村正志",
+                    date: "2023年10月"
+                  },
+                  {
+                    id: 8,
+                    rating: 5,
+                    text: "家族の誕生日祝いで訪問。サプライズケーキの対応もしていただき、素敵な思い出になりました。子供向けのメニューもあり、家族連れにも優しいお店です。",
+                    author: "小林由美",
+                    date: "2023年10月"
+                  },
+                  {
+                    id: 9,
+                    rating: 4,
+                    text: "カウンター席で板前さんとの会話を楽しみながら食事ができました。旬の食材を使った料理の説明も丁寧で、食への理解が深まりました。",
+                    author: "加藤浩",
+                    date: "2023年9月"
+                  },
+                  {
+                    id: 10,
+                    rating: 5,
+                    text: "何度来ても飽きない味と雰囲気。季節ごとにメニューが変わるのも楽しみの一つです。今回は秋の味覚を堪能させていただきました。また近いうちに伺います。",
+                    author: "斎藤恵子",
+                    date: "2023年9月"
+                  }
+                ].map((review, index) => (
+                  <div key={review.id} className="review-card">
+                    <div className="review-rating">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span 
+                          key={star} 
+                          className={`star-icon ${star <= review.rating ? 'filled' : 'empty'}`}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                    <p className="review-text">{review.text}</p>
+                    <div className="review-footer">
+                      <span className="review-author">{review.author}</span>
+                      <span className="review-date">{review.date}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* ナビゲーションボタン */}
+            <button className="review-nav-btn prev" id="reviewPrevBtn" aria-label="前のレビュー">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button className="review-nav-btn next" id="reviewNextBtn" aria-label="次のレビュー">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* インジケーター */}
+          <div className="review-indicators">
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
+              <button
+                key={index}
+                className={`review-indicator ${index === 0 ? 'active' : ''}`}
+                data-index={index}
+                aria-label={`レビュー ${index + 1} へ移動`}
+              />
+            ))}
           </div>
         </div>
       </section>

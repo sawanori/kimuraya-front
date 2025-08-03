@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { setTenantContext } from '../util/dbTenant'
+import { encrypt, decrypt } from '../lib/crypto'
+import { decryptApiKeys } from '../hooks/afterReadTenant'
 
 export const Tenants: CollectionConfig = {
   slug: 'tenants',
@@ -189,6 +191,53 @@ export const Tenants: CollectionConfig = {
             },
           ],
         },
+        {
+          name: 'apiSettings',
+          type: 'group',
+          label: 'API設定',
+          admin: {
+            description: 'Google Business Profile APIなどの外部API設定',
+          },
+          fields: [
+            {
+              name: 'googleBusinessProfile',
+              type: 'group',
+              label: 'Google Business Profile',
+              fields: [
+                {
+                  name: 'apiKeyEncrypted',
+                  type: 'text',
+                  label: 'APIキー',
+                  admin: {
+                    description: '安全に暗号化されて保存されます',
+                  },
+                },
+                {
+                  name: 'placeId',
+                  type: 'text',
+                  label: 'Place ID',
+                  admin: {
+                    description: 'Google Business ProfileのPlace ID',
+                  },
+                },
+                {
+                  name: 'isEnabled',
+                  type: 'checkbox',
+                  label: '有効化',
+                  defaultValue: false,
+                },
+              ],
+            },
+            {
+              name: 'customApiEndpoint',
+              type: 'text',
+              label: 'カスタムAPIエンドポイント',
+              admin: {
+                description: '外部レビューAPIのエンドポイントURL',
+              },
+            },
+          ],
+        },
       ],
     },
     {
@@ -243,6 +292,18 @@ export const Tenants: CollectionConfig = {
             .replace(/-+/g, '-')
             .trim()
         }
+        
+        // APIキーの暗号化
+        if (data.settings?.apiSettings?.googleBusinessProfile?.apiKeyEncrypted) {
+          const apiKey = data.settings.apiSettings.googleBusinessProfile.apiKeyEncrypted
+          // 既に暗号化されているかチェック（base64形式で長い文字列）
+          if (apiKey.length < 100 || !apiKey.match(/^[A-Za-z0-9+/]+=*$/)) {
+            // 暗号化されていない場合は暗号化
+            const secret = process.env.PAYLOAD_SECRET || 'default-secret-key'
+            data.settings.apiSettings.googleBusinessProfile.apiKeyEncrypted = encrypt(apiKey, secret)
+          }
+        }
+        
         return data
       },
     ],
@@ -254,6 +315,7 @@ export const Tenants: CollectionConfig = {
         return doc
       },
     ],
+    afterRead: [decryptApiKeys],
   },
   timestamps: true,
 }

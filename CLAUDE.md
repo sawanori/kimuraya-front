@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Development
 ```bash
 npm run dev        # Start development server on port 3000 (or 3001 if occupied)
-npm run build      # Build the production application
+npm run build      # Build the production application (runs prisma generate first)
 npm run start      # Start the production server
 npm run lint       # Run ESLint
 ```
@@ -24,6 +24,15 @@ npm run seed:users           # Seed multiple test users (see LOGIN_CREDENTIALS.m
 npm run migrate:multitenant  # Migrate to multi-tenant architecture
 npm run add:tenant           # Add a new tenant (interactive CLI)
 npm run list:tenants         # List all tenants
+
+# Prisma Commands
+npm run prisma:generate      # Generate Prisma client
+npm run prisma:migrate:dev   # Run database migrations in development
+npm run prisma:migrate:deploy # Deploy migrations to production
+npm run prisma:studio        # Open Prisma Studio database GUI
+npm run prisma:db:push       # Push schema changes to database
+npm run prisma:db:pull       # Pull schema from database
+npm run prisma:seed          # Run database seeding
 ```
 
 ## Architecture Overview
@@ -35,6 +44,7 @@ This is a multilingual Next.js 15.4.3 restaurant website with content management
 - **TypeScript**: Strict mode enabled
 - **Authentication**: Custom session-based auth with PostgreSQL (via Payload CMS)
 - **Database**: PostgreSQL via pg driver
+- **ORMs**: Dual ORM setup - Payload CMS for content, Prisma for complex queries
 - **Styling**: Tailwind CSS v4 + Custom CSS (public/css/styles.css, public/css/language-switcher.css, public/css/nav-actions.css)
 - **Charts**: Recharts for analytics dashboard
 - **Content Storage**: JSON file-based content management (src/data/page-content.json)
@@ -42,7 +52,7 @@ This is a multilingual Next.js 15.4.3 restaurant website with content management
 - **i18n**: Custom multilingual system supporting Japanese (default), English, Korean, and Chinese
 - **Icons**: Lucide React
 - **Cloud Storage**: Cloudflare R2 for media uploads (S3-compatible)
-- **Multi-tenancy**: Host-based tenant detection with separate databases per tenant
+- **Multi-tenancy**: Host-based tenant detection with Row-Level Security (RLS)
 
 ### Key Application Structure
 
@@ -62,6 +72,11 @@ This is a multilingual Next.js 15.4.3 restaurant website with content management
    - Allows editing text, images, and videos
    - Changes saved to `src/data/page-content.json`
    - Upload functionality saves to `public/uploads/`
+
+4. **Google Business Profile Management** (`/home/gbp`)
+   - Review management interface (currently mock data)
+   - Configurable response templates
+   - Prepared for Google Business Profile API integration
 
 ### Multilingual Architecture
 - **Language Support**: Japanese (ja), English (en), Korean (ko), Chinese (zh)
@@ -87,19 +102,44 @@ This is a multilingual Next.js 15.4.3 restaurant website with content management
 - Middleware protects `/home/*` and `/admin/*` routes (excluding /admin/login)
 - Cookie-based authentication using 'payload-token'
 - Logout clears session cookie
+- Role-based access: admin/user roles with super admin capabilities
+
+### Multi-tenant Architecture
+- Host-based tenant detection (e.g., tenant1.domain.com, tenant2.domain.com)
+- PostgreSQL Row-Level Security (RLS) for data isolation
+- Tenant context managed via PostgreSQL session variables
+- Middleware intercepts requests and sets tenant context
+- Collections include tenantId field for data isolation
+- Tenant management CLI tools for adding/listing tenants
+- Super Admin can access all tenants
+
+### Row-Level Security (RLS) Implementation
+- **Tenant Context Utility**: `src/util/dbTenant.ts` manages PostgreSQL session variables
+- **Session Variables**: `app.current_tenant`, `app.current_user_id`, `app.is_super_admin`
+- **Automatic Context Setting**: Hooks in collections automatically set tenant context
+- **Context Clearing**: Session variables are cleared after operations
+
+### API Security Features
+- **API Key Encryption**: AES-256-GCM encryption for sensitive API keys
+- **Secure Storage**: API keys stored encrypted in database
+- **Server-side Only**: Decryption happens only on server-side
+- **Tenant-specific APIs**: Each tenant can have separate API configurations
 
 ### Important Files
 - `src/lib/content.ts` - Content fetching utility
 - `src/lib/i18n.ts` - i18n configuration and utilities
 - `src/lib/translations.ts` - Translation helper functions
+- `src/lib/crypto.ts` - Encryption/decryption utilities for API keys
 - `src/app/api/content/route.ts` - Content API endpoints (GET/POST with deep merge)
 - `src/app/HomePage.tsx` - Main landing page component
-- `src/middleware.ts` - Authentication middleware
+- `src/middleware.ts` - Authentication and multi-tenant middleware
 - `src/contexts/LanguageContext.tsx` - Language state management
 - `src/components/LanguageSwitcher.tsx` - Language selection UI
 - `src/components/MultilingualText.tsx` - Multilingual content renderer
 - `src/data/page-content.json` - JSON content storage with multilingual data
+- `src/util/dbTenant.ts` - Database tenant context management
 - `payload.config.ts` - Payload CMS configuration
+- `prisma/schema.prisma` - Prisma database schema
 - `.env.local` - Environment variables including DATABASE_URI
 
 ### Development Notes
@@ -109,13 +149,16 @@ This is a multilingual Next.js 15.4.3 restaurant website with content management
 - Image uploads stored in `public/uploads/`
 - Database: PostgreSQL (connection string in `.env.local`)
 - TypeScript path aliases: `@/*` → `./src/*`, `@payload-config` → `./payload.config.ts`
-- Uses tsx for TypeScript execution (seed scripts)
+- Uses tsx for TypeScript execution (seed scripts and CLI tools)
 - Styled-jsx included for component-scoped styles
+- Prisma client generates to `src/generated/prisma/` (git-ignored)
+- Build process requires `prisma generate` before `next build`
 
 ### API Structure
 - `/api/content` - Content management endpoints
 - `/api/upload` - File upload handling
 - `/api/[...slug]` - Payload CMS API routes
+- `/api/tenant/reviews` - Tenant-specific review API (Google Business Profile integration)
 
 ### Environment Configuration (.env.local)
 ```bash
@@ -130,19 +173,13 @@ S3_ACCESS_KEY=[your-access-key]
 S3_SECRET_KEY=[your-secret-key]
 ```
 
-### Multi-tenant Architecture
-- Host-based tenant detection (e.g., tenant1.domain.com, tenant2.domain.com)
-- Each tenant has separate database schema
-- Middleware intercepts requests and sets tenant context
-- Collections include tenantId field for data isolation
-- Tenant management CLI tools for adding/listing tenants
-
 ### Environment Notes
 - No test framework configured (no Jest, Vitest, or testing-library)
 - Content is managed through both Payload CMS and custom JSON-based system
 - Analytics dashboard displays mock data (not connected to real analytics)
 - Uses js-yaml for YAML parsing functionality
 - Uses tsx for TypeScript execution (seed scripts and CLI tools)
+- Dual ORM setup: Payload CMS for content management, Prisma for complex queries
 
 ## Troubleshooting
 
@@ -167,3 +204,9 @@ If the `/home` routes are not accessible:
 4. **Port conflicts**:
    - Next.js defaults to port 3000, but often falls back to 3001 or 3002
    - Check the console output for the actual port being used
+
+### Database Issues
+- Ensure PostgreSQL is running and accessible
+- Verify DATABASE_URI in `.env.local`
+- Run `npm run prisma:generate` if Prisma client is missing
+- Use `npm run prisma:studio` to inspect database directly
