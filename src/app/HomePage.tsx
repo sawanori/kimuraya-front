@@ -864,7 +864,18 @@ export default function HomePage({ content }: { content: ContentData }) {
             <div className="desktop-language-switcher">
               <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
             </div>
-            <a href="#" className="nav-reservation-btn">{t('button.webReservation')}</a>
+            <a 
+              href="#" 
+              className="nav-reservation-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                if (typeof window !== 'undefined' && (window as any).plausible) {
+                  (window as any).plausible('ReserveClick');
+                }
+              }}
+            >
+              {t('button.webReservation')}
+            </a>
           </div>
           
           <button className="menu-toggle" id="menuToggle">
@@ -876,7 +887,19 @@ export default function HomePage({ content }: { content: ContentData }) {
       </header>
       
       {/* ヒーロー用WEB予約ボタン */}
-      <a href="#reservation" className="hero-reservation-btn" id="heroReservationBtn">{t('button.webReservationHere')}</a>
+      <a 
+        href="#reservation" 
+        className="hero-reservation-btn" 
+        id="heroReservationBtn"
+        onClick={(e) => {
+          e.preventDefault();
+          if (typeof window !== 'undefined' && (window as any).plausible) {
+            (window as any).plausible('ReserveClick');
+          }
+        }}
+      >
+        {t('button.webReservationHere')}
+      </a>
 
       {/* ヒーロー用縦書きナビゲーション */}
       <nav className="hero-nav-menu" id="heroNavMenu">
@@ -1923,7 +1946,18 @@ export default function HomePage({ content }: { content: ContentData }) {
               <div className="footer-tel">Tel: {content.info.textFields.phone}</div>
               <div className="footer-message">ホームページを見たとお伝えいただけるとスムーズです。</div>
             </div>
-            <a href="#reservation" className="footer-reservation-btn">WEB予約はこちら</a>
+            <a 
+              href="#reservation" 
+              className="footer-reservation-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                if (typeof window !== 'undefined' && (window as any).plausible) {
+                  (window as any).plausible('ReserveClick');
+                }
+              }}
+            >
+              WEB予約はこちら
+            </a>
           </div>
           <div className="footer-right">
             <div className="footer-info-group">
@@ -2026,7 +2060,16 @@ export default function HomePage({ content }: { content: ContentData }) {
             </svg>
             <span className="bottom-nav-text">LINE登録</span>
           </a>
-          <a href="#reservation" className="bottom-nav-item">
+          <a 
+            href="#reservation" 
+            className="bottom-nav-item"
+            onClick={(e) => {
+              e.preventDefault();
+              if (typeof window !== 'undefined' && (window as any).plausible) {
+                (window as any).plausible('ReserveClick');
+              }
+            }}
+          >
             <svg className="bottom-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
             </svg>

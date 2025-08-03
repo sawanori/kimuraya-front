@@ -100,7 +100,18 @@ export default function NewsHeader() {
           <div className="desktop-language-switcher">
             <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
           </div>
-          <a href="#" className="nav-reservation-btn">{t('button.webReservation')}</a>
+          <a 
+            href="#" 
+            className="nav-reservation-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              if (typeof window !== 'undefined' && (window as any).plausible) {
+                (window as any).plausible('ReserveClick');
+              }
+            }}
+          >
+            {t('button.webReservation')}
+          </a>
         </div>
         
         <button className="menu-toggle" id="menuToggle">
@@ -139,7 +150,18 @@ export default function NewsHeader() {
           <div className="mobile-menu-language">
             <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
           </div>
-          <a href="#reservation" className="mobile-menu-reservation">{t('button.webReservation')}</a>
+          <a 
+            href="#reservation" 
+            className="mobile-menu-reservation"
+            onClick={(e) => {
+              e.preventDefault();
+              if (typeof window !== 'undefined' && (window as any).plausible) {
+                (window as any).plausible('ReserveClick');
+              }
+            }}
+          >
+            {t('button.webReservation')}
+          </a>
         </div>
       </div>
     </header>

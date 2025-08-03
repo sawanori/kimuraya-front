@@ -23,7 +23,18 @@ export default function NewsOnlyHeader() {
             <div className="desktop-language-switcher">
               <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
             </div>
-            <a href="#" className="news-only-reservation-btn">{t('button.webReservation')}</a>
+            <a 
+              href="#" 
+              className="news-only-reservation-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                if (typeof window !== 'undefined' && (window as any).plausible) {
+                  (window as any).plausible('ReserveClick');
+                }
+              }}
+            >
+              {t('button.webReservation')}
+            </a>
           </div>
           
           <button 
@@ -54,7 +65,18 @@ export default function NewsOnlyHeader() {
           <div className="news-only-mobile-language">
             <LanguageSwitcher currentLanguage={language} onLanguageChange={setLanguage} />
           </div>
-          <a href="#reservation" className="news-only-mobile-reservation">{t('button.webReservation')}</a>
+          <a 
+            href="#reservation" 
+            className="news-only-mobile-reservation"
+            onClick={(e) => {
+              e.preventDefault();
+              if (typeof window !== 'undefined' && (window as any).plausible) {
+                (window as any).plausible('ReserveClick');
+              }
+            }}
+          >
+            {t('button.webReservation')}
+          </a>
         </div>
       </div>
     </>

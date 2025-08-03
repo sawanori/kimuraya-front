@@ -26,7 +26,18 @@ export default function NewsFooter() {
             <div className="footer-tel">Tel: {content.info.textFields.phone}</div>
             <div className="footer-message">ホームページを見たとお伝えいただけるとスムーズです。</div>
           </div>
-          <a href="#reservation" className="footer-reservation-btn">WEB予約はこちら</a>
+          <a 
+            href="#reservation" 
+            className="footer-reservation-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              if (typeof window !== 'undefined' && (window as any).plausible) {
+                (window as any).plausible('ReserveClick');
+              }
+            }}
+          >
+            WEB予約はこちら
+          </a>
         </div>
         <div className="footer-right">
           <div className="footer-info-group">
