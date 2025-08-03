@@ -77,7 +77,7 @@
   }
   
   /* Live indicator */
-  .bg-\\[\\#10a37f\\]\\/20.px-3.py-1 {
+  .px-3.py-1 {
     padding: 0.25rem 0.75rem;
     font-size: 0.75rem;
   }
@@ -124,7 +124,7 @@
     gap: 1rem;
   }
   
-  .relative.bg-\\[\\#2a2a2a\\].rounded-2xl.p-6 {
+  .relative.rounded-2xl.p-6 {
     padding: 1.25rem;
   }
   
@@ -133,7 +133,7 @@
   }
   
   /* Traffic trend section */
-  .bg-\\[\\#2a2a2a\\].rounded-2xl.p-6 {
+  .rounded-2xl.p-6 {
     padding: 1.25rem;
   }
   
@@ -254,19 +254,19 @@
     display: none;
   }
   
-  .bg-\\[\\#212121\\],
-  .bg-\\[\\#171717\\],
-  .bg-\\[\\#2a2a2a\\] {
+  /* Dark backgrounds to white for print */
+  [class*="bg-"] {
     background-color: white !important;
     color: black !important;
   }
   
-  .text-\\[\\#ececec\\],
-  .text-\\[\\#a8a8a8\\] {
+  /* Text colors to black for print */
+  [class*="text-"] {
     color: black !important;
   }
   
-  .border-\\[\\#424242\\] {
+  /* Border colors for print */
+  [class*="border-"] {
     border-color: #ddd !important;
   }
 }
@@ -282,7 +282,8 @@
 
 /* High contrast mode */
 @media (prefers-contrast: high) {
-  .bg-\\[\\#2a2a2a\\] {
+  /* High contrast borders */
+  .rounded-2xl {
     border: 2px solid currentColor;
   }
   
