@@ -34,6 +34,9 @@ export default function RootLayout({
         <link rel="stylesheet" href="/css/intro-title-fix.css" />
         <link rel="stylesheet" href="/css/language-switcher.css" />
         <link rel="stylesheet" href="/css/nav-actions.css" />
+        
+        {/* Plausible Analytics */}
+        <script defer data-domain="nonturn-app.onrender.com" src="https://plausible.io/js/script.js"></script>
       </head>
       <body>
         <LanguageProvider>
