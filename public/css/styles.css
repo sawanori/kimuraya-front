@@ -323,6 +323,26 @@
             overflow: hidden;
         }
         
+        /* YouTube埋め込みの不要な要素を隠す */
+        .hero-video-wrapper iframe {
+            pointer-events: none;
+        }
+        
+        /* YouTube Player API によって生成される要素を隠す */
+        .hero-video-wrapper .ytp-gradient-top,
+        .hero-video-wrapper .ytp-chrome-top,
+        .hero-video-wrapper .ytp-show-cards-title,
+        .hero-video-wrapper .ytp-pause-overlay,
+        .hero-video-wrapper .ytp-watermark,
+        .hero-video-wrapper .ytp-title,
+        .hero-video-wrapper .ytp-title-channel,
+        .hero-video-wrapper .ytp-title-text,
+        .hero-video-wrapper .ytp-info-panel-preview,
+        .hero-video-wrapper .ytp-cards-teaser,
+        .hero-video-wrapper .ytp-ce-element {
+            display: none !important;
+        }
+        
         .hero-video {
             position: absolute;
             top: 50%;

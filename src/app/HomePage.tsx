@@ -8,6 +8,7 @@ import { fetchLatestArticles } from '@/lib/news/api';
 import { Article } from '@/types/news';
 import { mockArticles } from '@/lib/news/mock-data';
 import Link from 'next/link';
+import YouTubeLoop from '@/components/YouTubeLoop';
 
 interface ContentData {
   hero: {
@@ -798,18 +799,50 @@ export default function HomePage({ content }: { content: ContentData }) {
       <section className="hero" id="home">
         <div className="hero-bg">
           {content.hero.textFields.backgroundType === 'video' && content.hero.videoFields?.bgVideo ? (
-            <div className="hero-video-wrapper">
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="hero-video"
-              >
-                <source src={content.hero.videoFields.bgVideo} type="video/mp4" />
-              </video>
-              <div className="hero-video-overlay"></div>
-            </div>
+            (() => {
+              // YouTube URLから動画IDを抽出
+              const extractYouTubeId = (url: string): string | null => {
+                if (!url) return null
+                if (url.match(/^[a-zA-Z0-9_-]{11}$/)) return url
+                const patterns = [
+                  /(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtube\.com\/v\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+                  /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/
+                ]
+                for (const pattern of patterns) {
+                  const match = url.match(pattern)
+                  if (match) return match[1]
+                }
+                return null
+              }
+              
+              const youtubeId = extractYouTubeId(content.hero.videoFields.bgVideo)
+              
+              if (youtubeId) {
+                // YouTube動画の場合
+                return (
+                  <div className="hero-video-wrapper">
+                    <YouTubeLoop videoId={youtubeId} loopDuration={5} />
+                    <div className="hero-video-overlay"></div>
+                  </div>
+                )
+              } else {
+                // 通常の動画ファイルの場合
+                return (
+                  <div className="hero-video-wrapper">
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="hero-video"
+                    >
+                      <source src={content.hero.videoFields.bgVideo} type="video/mp4" />
+                    </video>
+                    <div className="hero-video-overlay"></div>
+                  </div>
+                )
+              }
+            })()
           ) : (
             <div className="hero-slider">
               {/* PC・タブレット用 */}

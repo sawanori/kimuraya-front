@@ -4,8 +4,7 @@ import { setTenantContext } from '../util/dbTenant'
 export const Media: CollectionConfig = {
   slug: 'media',
   upload: {
-    staticDir: 'public/uploads',
-    mimeTypes: ['image/*'],
+    mimeTypes: ['image/*', 'video/*'],
     imageSizes: [
       {
         name: 'thumbnail',

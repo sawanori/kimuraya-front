@@ -1,16 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs/promises'
-import path from 'path'
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { v4 as uuidv4 } from 'uuid'
+import path from 'path'
+
+// R2クライアントの初期化
+const s3Client = new S3Client({
+  endpoint: process.env.S3_ENDPOINT!,
+  region: 'auto',
+  credentials: {
+    accessKeyId: process.env.S3_ACCESS_KEY!,
+    secretAccessKey: process.env.S3_SECRET_KEY!,
+  },
+  forcePathStyle: true, // R2の場合は必要
+})
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Upload API called')
+    
     const formData = await request.formData()
     const file = formData.get('file') as File
     
     if (!file) {
+      console.error('No file in request')
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
     }
+    
+    console.log('File received:', file.name, 'Type:', file.type, 'Size:', file.size)
     
     // ファイルタイプの検証
     const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
@@ -37,20 +53,27 @@ export async function POST(request: NextRequest) {
     const ext = path.extname(file.name).toLowerCase()
     const filename = `${uuidv4()}${ext}`
     
-    // 保存先ディレクトリの確保
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads')
-    await fs.mkdir(uploadDir, { recursive: true })
+    // R2にアップロード
+    const command = new PutObjectCommand({
+      Bucket: process.env.S3_BUCKET!,
+      Key: filename,
+      Body: buffer,
+      ContentType: file.type,
+      // R2はACLをサポートしていないため削除
+    })
     
-    // ファイルを保存
-    const filepath = path.join(uploadDir, filename)
-    await fs.writeFile(filepath, buffer)
+    console.log('Uploading to R2:', filename)
+    await s3Client.send(command)
+    console.log('Upload successful')
     
-    // URLを返す
-    const url = `/uploads/${filename}`
+    // プロキシエンドポイント経由でアクセスするURLを生成
+    const url = `/api/media/${filename}`
+    console.log('Generated URL:', url)
     
     return NextResponse.json({ url })
   } catch (error) {
-    console.error('Upload error:', error)
-    return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 })
+    console.error('Upload error details:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    return NextResponse.json({ error: 'Failed to upload file', details: errorMessage }, { status: 500 })
   }
 }

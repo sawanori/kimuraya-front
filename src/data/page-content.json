@@ -6,20 +6,20 @@
       "openTime": "OPEN 10:00",
       "closeTime": "CLOSE 22:00",
       "closedDay": "定休日 水曜日",
-      "backgroundType": "slideshow"
+      "backgroundType": "video"
     },
     "imageFields": {
       "logo": "/images/log.png",
-      "bgPC1": "/uploads/5a916110-03e9-40f5-a52e-8679e179dba0.jpg",
+      "bgPC1": "/api/media/eb7f5f41-ac7a-431d-9e4a-42d6aa1ccbff.jpg",
       "bgPC2": "/images/DSC00456.jpg",
       "bgPC3": "/images/DSC00398.jpg",
-      "bgPC4": "/uploads/4437ae76-77a5-4da8-b48c-2ae57b7afa17.jpg",
+      "bgPC4": "/api/media/d991f2d0-b9c9-41df-ba19-32a1a81fa8d9.jpg",
       "bgMobile1": "/images/DSC00400.jpg",
       "bgMobile2": "/images/DSC00480.jpg",
       "bgMobile3": "/images/DSC00653.jpg"
     },
     "videoFields": {
-      "bgVideo": "/uploads/4c623154-fe31-4823-9496-10e979cafa96.mp4"
+      "bgVideo": "https://youtu.be/FJguuiSpvag"
     }
   },
   "introParallax": {
@@ -27,7 +27,7 @@
       "message": "季節折々、\n美味いもんだらけ"
     },
     "imageFields": {
-      "parallaxBg": "/uploads/69852e6f-ed72-4b1a-aefb-ea1fe47d67e7.jpg"
+      "parallaxBg": "/api/media/ee03a205-94a7-4777-a731-9172e83167df.jpg"
     }
   },
   "craft": {
@@ -36,7 +36,7 @@
       "rightText": "楽しい宴会"
     },
     "imageFields": {
-      "image1": "/uploads/eb7f5f41-ac7a-431d-9e4a-42d6aa1ccbff.jpg",
+      "image1": "/api/media/99ad6ee2-444a-43d1-9993-bf15744f954c.jpg",
       "image2": "/images/no1-0357.jpg",
       "image3": "/images/no1-0208.jpg"
     }
@@ -177,7 +177,7 @@
           "大人数対応",
           "部署飲み向け"
         ],
-        "image": "/images/DSC00429.jpg"
+        "image": "/api/media/f9572136-f319-4c11-bd00-62da7157f218.jpg"
       },
       {
         "id": "window-date-seats",
@@ -209,7 +209,7 @@
       "sakeCTA": "ドリンクメニューを見る"
     },
     "imageFields": {
-      "partyBg": "/uploads/8e19b306-7db8-4fde-8861-9f98d3fdbb58.jpg",
+      "partyBg": "/api/media/8e19b306-7db8-4fde-8861-9f98d3fdbb58.jpg",
       "sakeBg": "/images/DSC00493.jpg"
     }
   },
@@ -219,7 +219,7 @@
       "subTitle": "木村屋本店の様々な風景"
     },
     "imageFields": {
-      "gallery1": "/images/no1-0241.jpg",
+      "gallery1": "/api/media/da7fbda4-7d07-4112-a5c0-ebfba9e615c4.jpg",
       "gallery2": "/images/no1-0283.jpg",
       "gallery3": "/images/no1-0361.jpg",
       "gallery4": "/images/no1-0151.jpg",
@@ -290,7 +290,7 @@
       },
       {
         "id": "course-2",
-        "image": "/images/DSC00440.jpg",
+        "image": "/api/media/ecb5bd5c-186b-4420-9cc9-456e822c5517.jpg",
         "title": "もつ鍋食べ飲み放題♪",
         "subtitle": "",
         "price": "２時間　4,280円（税込）",
@@ -332,7 +332,7 @@
       },
       {
         "id": "course-1753860605804",
-        "image": "/uploads/77a1e65a-f97a-4e2b-8d62-c2a66f4d66d1.jpeg",
+        "image": "https://2e1f85f8c4a833bbf38c1cec2eb8c931.r2.cloudflarestorage.com/payload-media/77a1e65a-f97a-4e2b-8d62-c2a66f4d66d1.jpeg",
         "title": "セフレ万歳コース",
         "subtitle": "射精３発まで",
         "price": "30000000",

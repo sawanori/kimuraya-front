@@ -47,3 +47,5 @@ next-env.d.ts
 
 # PostgreSQL
 .pgdata/
+
+/src/generated/prisma

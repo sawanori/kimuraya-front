@@ -18,9 +18,12 @@ npm run lint       # Run ESLint
 # Default connection: postgresql://postgres:password@localhost:5432/kimuraya
 # macOS default: postgresql://[your-username]@localhost:5432/kimuraya
 
-npm run test:db     # Test database connection
-npm run seed:admin  # Seed admin user for authentication (credentials: admin@example.com / password123)
-npm run seed:users  # Seed multiple test users (see LOGIN_CREDENTIALS.md for all credentials)
+npm run test:db              # Test database connection
+npm run seed:admin           # Seed admin user for authentication (credentials: admin@example.com / password123)
+npm run seed:users           # Seed multiple test users (see LOGIN_CREDENTIALS.md for all credentials)
+npm run migrate:multitenant  # Migrate to multi-tenant architecture
+npm run add:tenant           # Add a new tenant (interactive CLI)
+npm run list:tenants         # List all tenants
 ```
 
 ## Architecture Overview
@@ -35,9 +38,11 @@ This is a multilingual Next.js 15.4.3 restaurant website with content management
 - **Styling**: Tailwind CSS v4 + Custom CSS (public/css/styles.css, public/css/language-switcher.css, public/css/nav-actions.css)
 - **Charts**: Recharts for analytics dashboard
 - **Content Storage**: JSON file-based content management (src/data/page-content.json)
-- **CMS**: Payload CMS integration (payload.config.ts)
+- **CMS**: Payload CMS v3.48.0 integration (payload.config.ts)
 - **i18n**: Custom multilingual system supporting Japanese (default), English, Korean, and Chinese
 - **Icons**: Lucide React
+- **Cloud Storage**: Cloudflare R2 for media uploads (S3-compatible)
+- **Multi-tenancy**: Host-based tenant detection with separate databases per tenant
 
 ### Key Application Structure
 
@@ -112,8 +117,53 @@ This is a multilingual Next.js 15.4.3 restaurant website with content management
 - `/api/upload` - File upload handling
 - `/api/[...slug]` - Payload CMS API routes
 
+### Environment Configuration (.env.local)
+```bash
+DATABASE_URI=postgresql://[username]@localhost:5432/kimuraya
+PAYLOAD_SECRET=your-super-secret-key-change-this-in-production
+NEXT_PUBLIC_ENABLE_HOST_MW=true  # Enable multi-tenant host detection
+
+# Cloudflare R2 (S3-compatible storage)
+S3_ENDPOINT=https://[account].r2.cloudflarestorage.com
+S3_BUCKET=payload-media
+S3_ACCESS_KEY=[your-access-key]
+S3_SECRET_KEY=[your-secret-key]
+```
+
+### Multi-tenant Architecture
+- Host-based tenant detection (e.g., tenant1.domain.com, tenant2.domain.com)
+- Each tenant has separate database schema
+- Middleware intercepts requests and sets tenant context
+- Collections include tenantId field for data isolation
+- Tenant management CLI tools for adding/listing tenants
+
 ### Environment Notes
-- Payload CMS dependencies included but configuration details not fully documented
+- No test framework configured (no Jest, Vitest, or testing-library)
 - Content is managed through both Payload CMS and custom JSON-based system
 - Analytics dashboard displays mock data (not connected to real analytics)
 - Uses js-yaml for YAML parsing functionality
+- Uses tsx for TypeScript execution (seed scripts and CLI tools)
+
+## Troubleshooting
+
+### /home routes not displaying
+If the `/home` routes are not accessible:
+
+1. **Missing API endpoints**: The `/home` page requires authentication endpoints:
+   - `/api/users/me` - Returns current user information
+   - `/api/users/logout` - Handles user logout
+   
+2. **Authentication flow**:
+   - Ensure you're logged in via `/login`
+   - Check that `payload-token` cookie is set
+   - Verify database connection with `npm run test:db`
+   - Run `npm run seed:admin` to create admin user
+
+3. **Multi-tenant middleware**:
+   - If `NEXT_PUBLIC_ENABLE_HOST_MW=true`, the middleware adds tenant filtering
+   - This may affect authentication checks
+   - Try setting `NEXT_PUBLIC_ENABLE_HOST_MW=false` for debugging
+
+4. **Port conflicts**:
+   - Next.js defaults to port 3000, but often falls back to 3001 or 3002
+   - Check the console output for the actual port being used

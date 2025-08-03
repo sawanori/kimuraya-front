@@ -18,7 +18,11 @@ export function middleware(request: NextRequest) {
         pathname !== '/favicon.ico') {
       
       // Payload APIへのリクエストにテナントクエリを追加
-      if (pathname.startsWith('/api')) {
+      // ただし、media, upload, content APIは除外
+      if (pathname.startsWith('/api') && 
+          !pathname.startsWith('/api/media') && 
+          !pathname.startsWith('/api/upload') &&
+          !pathname.startsWith('/api/content')) {
         const url = request.nextUrl.clone()
         
         // 既存のクエリパラメータを保持しつつ、テナントフィルタを追加

@@ -84,11 +84,43 @@ export default function EditorPage() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  
+  // YouTube URLから動画IDを抽出する関数
+  const extractYouTubeId = (url: string): string | null => {
+    if (!url) return null
+    
+    // 既にIDのみの場合
+    if (url.match(/^[a-zA-Z0-9_-]{11}$/)) {
+      return url
+    }
+    
+    // YouTube URLからIDを抽出
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtube\.com\/v\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/
+    ]
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern)
+      if (match) {
+        return match[1]
+      }
+    }
+    
+    return null
+  }
   const [activeSection, setActiveSection] = useState<string>('hero')
   const [isSaving, setIsSaving] = useState(false)
   const [editedContent, setEditedContent] = useState<Record<string, any>>({})
   const [savedContent, setSavedContent] = useState<Record<string, any>>({})
   const [uploadingImages, setUploadingImages] = useState<Set<string>>(new Set())
+  const [r2Images, setR2Images] = useState<any[]>([])
+  const [isLoadingImages, setIsLoadingImages] = useState(false)
+  const [imagePickerOpen, setImagePickerOpen] = useState(false)
+  const [hasChanges, setHasChanges] = useState(false)
+  const [imagePickerCallback, setImagePickerCallback] = useState<((url: string) => void) | null>(null)
+  const [imageSearchQuery, setImageSearchQuery] = useState('')
+  const [imagePickerAcceptVideo, setImagePickerAcceptVideo] = useState(false)
 
   // デフォルトの席データ
   const defaultSeats: SeatData[] = [
@@ -337,6 +369,14 @@ export default function EditorPage() {
       ]
     },
     {
+      id: 'imageStorage',
+      name: '画像置き場',
+      hasBackground: false,
+      hasText: false,
+      hasImage: false,
+      hasImageStorage: true
+    },
+    {
       id: 'info',
       name: '店舗情報',
       hasBackground: false,
@@ -417,6 +457,7 @@ export default function EditorPage() {
         // 保存されたコンテンツを更新
         setSavedContent(updatedContent.content)
         setEditedContent({})
+        setHasChanges(false)
         
         // スクロール位置を復元
         setTimeout(() => {
@@ -450,6 +491,156 @@ export default function EditorPage() {
     }
   }
 
+  // R2画像一覧を読み込む
+  useEffect(() => {
+    if (activeSection === 'imageStorage') {
+      loadR2Images()
+    }
+  }, [activeSection])
+  
+  // 初回ロード時にも画像を読み込む
+  useEffect(() => {
+    loadR2Images()
+  }, [])
+
+  // Handle escape key to close image picker modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && imagePickerOpen) {
+        setImagePickerOpen(false)
+        setImagePickerCallback(null)
+        setImageSearchQuery('')
+        setImagePickerAcceptVideo(false)
+      }
+    }
+    
+    if (imagePickerOpen) {
+      document.addEventListener('keydown', handleEscape)
+      return () => document.removeEventListener('keydown', handleEscape)
+    }
+  }, [imagePickerOpen])
+
+  const loadR2Images = async () => {
+    console.log('Loading R2 images...')
+    setIsLoadingImages(true)
+    try {
+      const response = await fetch('/api/media/list')
+      console.log('Response status:', response.status)
+      if (response.ok) {
+        const { files } = await response.json()
+        console.log('Loaded images:', files?.length || 0, files)
+        setR2Images(files || [])
+      } else {
+        console.error('Failed to load images, status:', response.status)
+        const text = await response.text()
+        console.error('Response:', text)
+        
+        // APIが利用できない場合は、既知の画像をテスト用に表示
+        // 一部は公開画像URLも試す
+        const testImages = [
+          { key: 'eb7f5f41-ac7a-431d-9e4a-42d6aa1ccbff.jpg', url: '/api/media/eb7f5f41-ac7a-431d-9e4a-42d6aa1ccbff.jpg', isImage: true },
+          { key: 'f9572136-f319-4c11-bd00-62da7157f218.jpg', url: '/api/media/f9572136-f319-4c11-bd00-62da7157f218.jpg', isImage: true },
+          { key: 'ecb5bd5c-186b-4420-9cc9-456e822c5517.jpg', url: '/api/media/ecb5bd5c-186b-4420-9cc9-456e822c5517.jpg', isImage: true },
+          { key: '77a1e65a-f97a-4e2b-8d62-c2a66f4d66d1.jpeg', url: '/api/media/77a1e65a-f97a-4e2b-8d62-c2a66f4d66d1.jpeg', isImage: true },
+          // 公開画像も追加
+          { key: 'DSC00456.jpg', url: '/images/DSC00456.jpg', isImage: true },
+          { key: 'DSC00398.jpg', url: '/images/DSC00398.jpg', isImage: true },
+        ]
+        console.log('Using test images:', testImages)
+        setR2Images(testImages)
+      }
+    } catch (error) {
+      console.error('Failed to load R2 images:', error)
+      
+      // エラーの場合も既知の画像を表示
+      const testImages = [
+        { key: 'eb7f5f41-ac7a-431d-9e4a-42d6aa1ccbff.jpg', url: '/api/media/eb7f5f41-ac7a-431d-9e4a-42d6aa1ccbff.jpg', isImage: true },
+        { key: 'f9572136-f319-4c11-bd00-62da7157f218.jpg', url: '/api/media/f9572136-f319-4c11-bd00-62da7157f218.jpg', isImage: true },
+        { key: 'ecb5bd5c-186b-4420-9cc9-456e822c5517.jpg', url: '/api/media/ecb5bd5c-186b-4420-9cc9-456e822c5517.jpg', isImage: true },
+        { key: '77a1e65a-f97a-4e2b-8d62-c2a66f4d66d1.jpeg', url: '/api/media/77a1e65a-f97a-4e2b-8d62-c2a66f4d66d1.jpeg', isImage: true },
+        // 公開画像も追加
+        { key: 'DSC00456.jpg', url: '/images/DSC00456.jpg', isImage: true },
+        { key: 'DSC00398.jpg', url: '/images/DSC00398.jpg', isImage: true },
+      ]
+      console.log('Using test images due to error:', testImages)
+      setR2Images(testImages)
+    } finally {
+      setIsLoadingImages(false)
+    }
+  }
+
+  const copyImageUrl = (url: string) => {
+    navigator.clipboard.writeText(url).then(() => {
+      // コピー成功のフィードバック
+      const message = document.createElement('div')
+      message.className = 'editor-success-message'
+      message.textContent = 'URLをコピーしました'
+      document.body.appendChild(message)
+      
+      setTimeout(() => {
+        message.remove()
+      }, 2000)
+    }).catch(err => {
+      console.error('Failed to copy URL:', err)
+      alert('URLのコピーに失敗しました')
+    })
+  }
+
+  const deleteR2Image = async (key: string) => {
+    if (!confirm(`画像「${key}」を削除してもよろしいですか？\n\n⚠️ 注意事項：\n• この操作は取り消せません\n• 既にページで使用されている場合は表示されなくなります\n• 削除前に使用状況を確認してください`)) {
+      return
+    }
+
+    try {
+      const response = await fetch('/api/media/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ key }),
+      })
+
+      if (response.ok) {
+        // 成功したら画像リストを更新
+        setR2Images(prev => prev.filter(img => img.key !== key))
+        
+        // 成功通知
+        const message = document.createElement('div')
+        message.className = 'editor-success-message'
+        message.textContent = '画像を削除しました'
+        message.style.backgroundColor = '#28a745'
+        document.body.appendChild(message)
+        
+        setTimeout(() => {
+          message.remove()
+        }, 2000)
+      } else {
+        const error = await response.json()
+        alert(`削除に失敗しました: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('削除中にエラーが発生しました')
+    }
+  }
+
+  const openImagePicker = (callback: (url: string) => void, acceptVideo: boolean = false) => {
+    console.log('Opening image picker, acceptVideo:', acceptVideo)
+    setImagePickerCallback(() => callback)
+    setImagePickerAcceptVideo(acceptVideo)
+    setImagePickerOpen(true)
+    // 常に最新の画像を読み込む
+    loadR2Images()
+  }
+
+  const selectImage = (url: string) => {
+    if (imagePickerCallback) {
+      imagePickerCallback(url)
+      setImagePickerOpen(false)
+      setImagePickerCallback(null)
+    }
+  }
+
   const handleFieldChange = (sectionId: string, fieldType: string, fieldKey: string, value: string) => {
     setEditedContent(prev => ({
       ...prev,
@@ -461,6 +652,7 @@ export default function EditorPage() {
         }
       }
     }))
+    setHasChanges(true)
   }
 
   const handleImageUpload = async (sectionId: string, fieldKey: string, file: File) => {
@@ -482,7 +674,9 @@ export default function EditorPage() {
         const { url } = await response.json()
         handleFieldChange(sectionId, 'imageFields', fieldKey, url)
       } else {
-        alert('画像のアップロードに失敗しました')
+        const errorData = await response.json()
+        console.error('Upload failed:', errorData)
+        alert(`画像のアップロードに失敗しました: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
       alert('画像のアップロード中にエラーが発生しました')
@@ -515,7 +709,9 @@ export default function EditorPage() {
         const { url } = await response.json()
         handleFieldChange(sectionId, 'videoFields', fieldKey, url)
       } else {
-        alert('動画のアップロードに失敗しました')
+        const errorData = await response.json()
+        console.error('Upload failed:', errorData)
+        alert(`動画のアップロードに失敗しました: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
       alert('動画のアップロード中にエラーが発生しました')
@@ -1522,25 +1718,20 @@ export default function EditorPage() {
                                   </div>
                                 )}
                               </div>
-                              <input
-                                type="file"
-                                accept={field.label === '背景動画' ? "video/*" : "image/*"}
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0]
-                                  if (file) {
-                                    handleImageUpload(currentSection.id, fieldKey, file)
-                                  }
-                                }}
-                                className="hidden"
-                                id={`file-${currentSection.id}-${fieldKey}`}
-                                disabled={isUploading}
-                              />
-                              <label
-                                htmlFor={`file-${currentSection.id}-${fieldKey}`}
+                              <button
+                                onClick={() => openImagePicker((url) => {
+                                  const updatedContent = { ...editedContent }
+                                  if (!updatedContent[currentSection.id]) updatedContent[currentSection.id] = {}
+                                  if (!updatedContent[currentSection.id].imageFields) updatedContent[currentSection.id].imageFields = {}
+                                  updatedContent[currentSection.id].imageFields[fieldKey] = url
+                                  setEditedContent(updatedContent)
+                                  setHasChanges(true)
+                                }, field.label === '背景動画')}
                                 className={`editor-upload-button ${isUploading ? 'disabled' : ''}`}
+                                disabled={isUploading}
                               >
                                 {isUploading ? 'アップロード中...' : field.label === '背景動画' ? '動画を変更' : '画像を変更'}
-                              </label>
+                              </button>
                             </div>
                           </div>
                         )
@@ -1567,6 +1758,56 @@ export default function EditorPage() {
                         const uploadKey = `${currentSection.id}-${fieldKey}`
                         const isUploading = uploadingImages.has(uploadKey)
                         
+                        // YouTube動画の場合は特別な処理
+                        if (field.label === '背景動画' && currentSection.id === 'hero') {
+                          const youtubeId = extractYouTubeId(currentValue)
+                          
+                          return (
+                            <div key={index} className="editor-field">
+                              <label className="editor-label">
+                                {field.label} (YouTube)
+                              </label>
+                              <div>
+                                {youtubeId ? (
+                                  <div className="editor-image-preview" style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+                                    <iframe
+                                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+                                      src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&cc_load_policy=0`}
+                                      frameBorder="0"
+                                      allow="autoplay; encrypted-media"
+                                      allowFullScreen
+                                    />
+                                  </div>
+                                ) : (
+                                  <div style={{ 
+                                    width: '100%', 
+                                    height: '200px', 
+                                    backgroundColor: '#f3f4f6', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    justifyContent: 'center',
+                                    color: '#6b7280'
+                                  }}>
+                                    YouTube動画未設定
+                                  </div>
+                                )}
+                                <input
+                                  type="text"
+                                  value={currentValue || ''}
+                                  onChange={(e) => handleFieldChange(currentSection.id, 'videoFields', fieldKey, e.target.value)}
+                                  placeholder="YouTube URL または 動画ID を入力"
+                                  className="editor-input"
+                                  style={{ marginTop: '0.5rem' }}
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  例: https://www.youtube.com/watch?v=VIDEO_ID または VIDEO_ID
+                                </p>
+                              </div>
+                            </div>
+                          )
+                        }
+                        
+                        // その他の動画フィールドは従来通り
                         return (
                           <div key={index} className="editor-image-field">
                             <label className="editor-label">
@@ -1600,25 +1841,20 @@ export default function EditorPage() {
                                   </div>
                                 )}
                               </div>
-                              <input
-                                type="file"
-                                accept="video/*"
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0]
-                                  if (file) {
-                                    handleVideoUpload(currentSection.id, fieldKey, file)
-                                  }
-                                }}
-                                className="hidden"
-                                id={`file-${currentSection.id}-${fieldKey}`}
-                                disabled={isUploading}
-                              />
-                              <label
-                                htmlFor={`file-${currentSection.id}-${fieldKey}`}
+                              <button
+                                onClick={() => openImagePicker((url) => {
+                                  const updatedContent = { ...editedContent }
+                                  if (!updatedContent[currentSection.id]) updatedContent[currentSection.id] = {}
+                                  if (!updatedContent[currentSection.id].videoFields) updatedContent[currentSection.id].videoFields = {}
+                                  updatedContent[currentSection.id].videoFields[fieldKey] = url
+                                  setEditedContent(updatedContent)
+                                  setHasChanges(true)
+                                }, true)}
                                 className={`editor-upload-button ${isUploading ? 'disabled' : ''}`}
+                                disabled={isUploading}
                               >
                                 {isUploading ? 'アップロード中...' : '動画を変更'}
-                              </label>
+                              </button>
                             </div>
                           </div>
                         )
@@ -1658,25 +1894,12 @@ export default function EditorPage() {
                                     </div>
                                   )}
                                 </div>
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  onChange={(e) => {
-                                    const file = e.target.files?.[0]
-                                    if (file) {
-                                      handleSeatImageUpload(index, seat.id, file)
-                                    }
-                                  }}
-                                  className="hidden"
-                                  id={`seat-file-${seat.id}`}
-                                  disabled={isUploadingSeat}
-                                />
-                                <label
-                                  htmlFor={`seat-file-${seat.id}`}
-                                  className={`editor-upload-button ${isUploadingSeat ? 'disabled' : ''}`}
+                                <button
+                                  onClick={() => openImagePicker((url) => handleSeatFieldChange(index, 'image', url))}
+                                  className="editor-upload-button"
                                 >
-                                  {isUploadingSeat ? 'アップロード中...' : '画像を変更'}
-                                </label>
+                                  画像を選択
+                                </button>
                               </div>
                               
                               {/* 詳細編集 */}
@@ -1935,21 +2158,12 @@ export default function EditorPage() {
                                   <label className="course-field-label">画像</label>
                                   <div className="course-image-preview">
                                     <img src={card.image} alt={card.title} />
-                                    <input
-                                      type="file"
-                                      accept="image/*"
-                                      onChange={(e) => {
-                                        const file = e.target.files?.[0]
-                                        if (file) {
-                                          handleCourseImageUpload(index, file)
-                                        }
-                                      }}
-                                      className="hidden"
-                                      id={`course-image-${index}`}
-                                    />
-                                    <label htmlFor={`course-image-${index}`} className="course-upload-button">
-                                      画像を変更
-                                    </label>
+                                    <button
+                                      onClick={() => openImagePicker((url) => handleCourseCardChange(index, 'image', url))}
+                                      className="course-upload-button"
+                                    >
+                                      画像を選択
+                                    </button>
                                   </div>
                                 </div>
                                 
@@ -2334,25 +2548,12 @@ export default function EditorPage() {
                                       </div>
                                     )}
                                   </div>
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => {
-                                      const file = e.target.files?.[0]
-                                      if (file) {
-                                        handleImageUpload(currentSection.id, fieldKey, file)
-                                      }
-                                    }}
-                                    className="hidden"
-                                    id={`file-${currentSection.id}-${fieldKey}`}
-                                    disabled={isUploading}
-                                  />
-                                  <label
-                                    htmlFor={`file-${currentSection.id}-${fieldKey}`}
-                                    className={`editor-upload-button ${isUploading ? 'disabled' : ''}`}
+                                  <button
+                                    onClick={() => openImagePicker((url) => handleFieldChange(currentSection.id, 'imageFields', fieldKey, url))}
+                                    className="editor-upload-button"
                                   >
-                                    {isUploading ? 'アップロード中...' : '画像を変更'}
-                                  </label>
+                                    画像を選択
+                                  </button>
                                 </div>
                               </div>
                             )
@@ -2447,21 +2648,12 @@ export default function EditorPage() {
                               <div className="option-image-section">
                                 <div className="option-image-preview">
                                   <img src={option.image} alt={option.title} />
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => {
-                                      const file = e.target.files?.[0]
-                                      if (file) {
-                                        handleMotsunabeImageUpload(index, file)
-                                      }
-                                    }}
-                                    className="hidden"
-                                    id={`motsunabe-image-${index}`}
-                                  />
-                                  <label htmlFor={`motsunabe-image-${index}`} className="option-upload-button">
-                                    画像を変更
-                                  </label>
+                                  <button
+                                    onClick={() => openImagePicker((url) => handleMotsunabeOptionChange(index, 'image', url))}
+                                    className="option-upload-button"
+                                  >
+                                    画像を選択
+                                  </button>
                                 </div>
                               </div>
                               
@@ -2501,11 +2693,300 @@ export default function EditorPage() {
                     </div>
                   </div>
                 )}
+
+                {/* 画像置き場 */}
+                {currentSection && activeSection === 'imageStorage' && (
+                  <div className="editor-card">
+                    <h3 className="editor-card-title">
+                      <Image className="w-5 h-5" />
+                      画像置き場
+                    </h3>
+                    <p className="text-sm text-[#a8a8a8] mb-4">
+                      R2にアップロードされた画像の一覧です。画像をクリックするとURLがコピーされます。
+                    </p>
+                    
+                    {isLoadingImages ? (
+                      <div className="text-center py-8">
+                        <div className="text-[#a8a8a8]">画像を読み込み中...</div>
+                      </div>
+                    ) : r2Images.length === 0 ? (
+                      <div className="text-center py-8">
+                        <div className="text-[#a8a8a8]">画像がありません</div>
+                      </div>
+                    ) : (
+                      <div className="image-storage-grid">
+                        {r2Images.map((image, index) => (
+                          <div
+                            key={index}
+                            className="image-storage-item"
+                          >
+                            <div 
+                              className="image-storage-preview"
+                              onClick={() => copyImageUrl(image.url)}
+                              title="クリックでURLをコピー"
+                              style={{ cursor: 'pointer' }}
+                            >
+                              {image.isVideo ? (
+                                <video src={image.url} className="w-full h-full object-cover" />
+                              ) : (
+                                <img src={image.url} alt={image.key} className="w-full h-full object-cover" />
+                              )}
+                              <div className="image-storage-overlay">
+                                <span className="text-xs">クリックでコピー</span>
+                              </div>
+                            </div>
+                            <div className="image-storage-info">
+                              <p className="image-storage-filename">{image.key}</p>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <p className="image-storage-size">
+                                  {image.size ? `${(image.size / 1024).toFixed(1)} KB` : ''}
+                                </p>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    deleteR2Image(image.key)
+                                  }}
+                                  className="text-red-500 hover:text-red-700 text-sm"
+                                  style={{
+                                    padding: '2px 8px',
+                                    borderRadius: '4px',
+                                    border: '1px solid #ef4444',
+                                    backgroundColor: 'transparent',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#ef4444'
+                                    e.currentTarget.style.color = 'white'
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'transparent'
+                                    e.currentTarget.style.color = '#ef4444'
+                                  }}
+                                >
+                                  削除
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </>
             )}
           </div>
         </main>
       </div>
+      
+      {/* Image Picker Modal */}
+      {imagePickerOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          zIndex: 50,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '0.5rem',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+            maxWidth: '56rem',
+            width: '100%',
+            maxHeight: '80vh',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <div className="p-4 border-b">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-semibold">{imagePickerAcceptVideo ? '動画を選択' : '画像を選択'}</h3>
+                <button
+                  onClick={() => {
+                    setImagePickerOpen(false)
+                    setImagePickerCallback(null)
+                    setImageSearchQuery('')
+                    setImagePickerAcceptVideo(false)
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder={imagePickerAcceptVideo ? "動画を検索..." : "画像を検索..."}
+                  value={imageSearchQuery}
+                  onChange={(e) => setImageSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+            
+            <div style={{
+              flex: 1,
+              overflowY: 'auto',
+              padding: '1rem',
+              backgroundColor: 'white'
+            }}>
+              {r2Images.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  画像を読み込み中...
+                </div>
+              ) : (() => {
+                console.log('r2Images in modal:', r2Images.length, r2Images)
+                const filteredImages = r2Images
+                  .filter(file => imagePickerAcceptVideo ? file.isVideo : file.isImage)
+                  .filter(file => !imageSearchQuery || file.key?.toLowerCase().includes(imageSearchQuery.toLowerCase()))
+                console.log('Filtered images:', filteredImages.length)
+                
+                if (filteredImages.length === 0) {
+                  return (
+                    <div className="text-center py-8 text-gray-500">
+                      {imageSearchQuery ? `"${imageSearchQuery}" に一致する${imagePickerAcceptVideo ? '動画' : '画像'}が見つかりません` : `${imagePickerAcceptVideo ? '動画' : '画像'}がありません`}
+                    </div>
+                  )
+                }
+                
+                return (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                    gap: '1rem',
+                    width: '100%'
+                  }}>
+                    {filteredImages.map((file, index) => {
+                      console.log('Rendering image:', file.url, file)
+                      return (
+                      <div
+                        key={index}
+                        style={{
+                          position: 'relative',
+                          cursor: 'pointer',
+                          borderRadius: '0.5rem',
+                          overflow: 'hidden',
+                          border: '2px solid #e5e7eb',
+                          width: '100%',
+                          height: '0',
+                          paddingBottom: '100%',
+                          backgroundColor: '#f3f4f6',
+                          transition: 'border-color 0.2s'
+                        }}
+                        onClick={() => selectImage(file.url)}
+                        onMouseEnter={(e) => e.currentTarget.style.borderColor = '#3b82f6'}
+                        onMouseLeave={(e) => e.currentTarget.style.borderColor = '#e5e7eb'}
+                      >
+                        <div style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          backgroundColor: '#fff'
+                        }}>
+                          {file.isVideo ? (
+                            <video
+                              src={file.url}
+                              style={{ 
+                                width: '100%', 
+                                height: '100%', 
+                                objectFit: 'cover',
+                                display: 'block'
+                              }}
+                              muted
+                            />
+                          ) : (
+                            <img
+                              src={file.url}
+                              alt={file.key}
+                              style={{ 
+                                width: '100%', 
+                                height: '100%', 
+                                objectFit: 'cover',
+                                display: 'block'
+                              }}
+                              loading="lazy"
+                              onError={(e) => {
+                                console.error('Image failed to load:', file.url)
+                                e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect width="100" height="100" fill="%23ddd"/%3E%3Ctext x="50" y="50" text-anchor="middle" dy=".3em" fill="%23999"%3ENo Image%3C/text%3E%3C/svg%3E'
+                              }}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    )})}
+                  </div>
+                )
+              })()}
+            </div>
+            
+            <div className="p-4 border-t flex justify-between items-center">
+              <div className="text-sm text-gray-500">
+                {r2Images.filter(f => (imagePickerAcceptVideo ? f.isVideo : f.isImage) && (!imageSearchQuery || f.key?.toLowerCase().includes(imageSearchQuery.toLowerCase()))).length} {imagePickerAcceptVideo ? '本の動画' : '枚の画像'}
+              </div>
+              <div className="flex gap-2">
+                <label className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 cursor-pointer">
+                  <span>新しい{imagePickerAcceptVideo ? '動画' : '画像'}をアップロード</span>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept={imagePickerAcceptVideo ? "video/*" : "image/*"}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        const formData = new FormData()
+                        formData.append('file', file)
+                        
+                        try {
+                          const response = await fetch('/api/upload', {
+                            method: 'POST',
+                            body: formData,
+                          })
+                          
+                          if (response.ok) {
+                            const data = await response.json()
+                            selectImage(data.url)
+                            // Reload R2 images to include the new upload
+                            loadR2Images()
+                          } else {
+                            alert('アップロードに失敗しました')
+                          }
+                        } catch (error) {
+                          console.error('Upload error:', error)
+                          alert('アップロードに失敗しました')
+                        }
+                      }
+                    }}
+                  />
+                </label>
+                <button
+                  onClick={() => {
+                    setImagePickerOpen(false)
+                    setImagePickerCallback(null)
+                    setImagePickerAcceptVideo(false)
+                  }}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                >
+                  キャンセル
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

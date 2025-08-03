@@ -1,0 +1,246 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URI")
+}
+
+model User {
+  id                      Int                        @id @default(autoincrement())
+  name                    String                     @db.VarChar
+  role                    UserRole                   @default(user)
+  updatedAt               DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt               DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  email                   String                     @unique(map: "users_email_idx") @db.VarChar
+  resetPasswordToken      String?                    @map("reset_password_token") @db.VarChar
+  resetPasswordExpiration DateTime?                  @map("reset_password_expiration") @db.Timestamptz(3)
+  salt                    String?                    @db.VarChar
+  hash                    String?                    @db.VarChar
+  loginAttempts           Decimal?                   @default(0) @map("login_attempts") @db.Decimal
+  lockUntil               DateTime?                  @map("lock_until") @db.Timestamptz(3)
+  isSuperAdmin            Boolean?                   @default(false) @map("is_super_admin")
+  currentTenantId         Int?                       @map("current_tenant_id")
+  lockedDocumentRels      PayloadLockedDocumentRel[] @relation("PayloadLockedDocumentRelUser")
+  preferenceRels          PayloadPreferenceRel[]     @relation("PayloadPreferenceRelUser")
+  currentTenant           Tenant?                    @relation("UserCurrentTenant", fields: [currentTenantId], references: [id], onUpdate: NoAction, map: "users_current_tenant_id_tenants_id_fk")
+  userRels                UserRel[]
+  sessions                UserSession[]
+
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([currentTenantId], map: "users_current_tenant_idx")
+  @@map("users")
+}
+
+model Tenant {
+  id                                Int                        @id @default(autoincrement())
+  name                              String                     @db.VarChar
+  slug                              String                     @unique(map: "tenants_slug_idx") @db.VarChar
+  status                            TenantStatus               @default(active)
+  isDefault                         Boolean?                   @default(false) @map("is_default")
+  settingsDomain                    String?                    @map("settings_domain") @db.VarChar
+  settingsThemePrimaryColor         String?                    @default("#0066ff") @map("settings_theme_primary_color") @db.VarChar
+  settingsThemeLogoId               Int?                       @map("settings_theme_logo_id")
+  settingsFeaturesEnableNews        Boolean?                   @default(true) @map("settings_features_enable_news")
+  settingsFeaturesEnableReservation Boolean?                   @default(true) @map("settings_features_enable_reservation")
+  settingsFeaturesEnableAnalytics   Boolean?                   @default(true) @map("settings_features_enable_analytics")
+  settingsLimitsMaxUsers            Decimal?                   @default(10) @map("settings_limits_max_users") @db.Decimal
+  settingsLimitsMaxArticles         Decimal?                   @default(1000) @map("settings_limits_max_articles") @db.Decimal
+  contactAddress                    String?                    @map("contact_address") @db.VarChar
+  contactPhone                      String?                    @map("contact_phone") @db.VarChar
+  contactEmail                      String?                    @map("contact_email") @db.VarChar
+  contactBusinessHours              String?                    @map("contact_business_hours") @db.VarChar
+  updatedAt                         DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt                         DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  media                             Media[]                    @relation("MediaTenant")
+  lockedDocumentRels                PayloadLockedDocumentRel[] @relation("PayloadLockedDocumentRelTenant")
+  settingsThemeLogo                 Media?                     @relation("TenantLogo", fields: [settingsThemeLogoId], references: [id], onUpdate: NoAction, map: "tenants_settings_theme_logo_id_media_id_fk")
+  domains                           TenantDomain[]
+  users                             User[]                     @relation("UserCurrentTenant")
+  userRels                          UserRel[]
+
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([settingsThemeLogoId], map: "tenants_settings_theme_settings_theme_logo_idx")
+  @@map("tenants")
+}
+
+model Media {
+  id                     Int                        @id @default(autoincrement())
+  alt                    String?                    @db.VarChar
+  tenantId               Int?                       @map("tenant_id")
+  updatedAt              DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt              DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  url                    String?                    @db.VarChar
+  thumbnailUrl           String?                    @map("thumbnail_u_r_l") @db.VarChar
+  filename               String?                    @unique(map: "media_filename_idx") @db.VarChar
+  mimeType               String?                    @map("mime_type") @db.VarChar
+  filesize               Decimal?                   @db.Decimal
+  width                  Decimal?                   @db.Decimal
+  height                 Decimal?                   @db.Decimal
+  focalX                 Decimal?                   @map("focal_x") @db.Decimal
+  focalY                 Decimal?                   @map("focal_y") @db.Decimal
+  sizesThumbnailUrl      String?                    @map("sizes_thumbnail_url") @db.VarChar
+  sizesThumbnailWidth    Decimal?                   @map("sizes_thumbnail_width") @db.Decimal
+  sizesThumbnailHeight   Decimal?                   @map("sizes_thumbnail_height") @db.Decimal
+  sizesThumbnailMimeType String?                    @map("sizes_thumbnail_mime_type") @db.VarChar
+  sizesThumbnailFilesize Decimal?                   @map("sizes_thumbnail_filesize") @db.Decimal
+  sizesThumbnailFilename String?                    @map("sizes_thumbnail_filename") @db.VarChar
+  sizesMediumUrl         String?                    @map("sizes_medium_url") @db.VarChar
+  sizesMediumWidth       Decimal?                   @map("sizes_medium_width") @db.Decimal
+  sizesMediumHeight      Decimal?                   @map("sizes_medium_height") @db.Decimal
+  sizesMediumMimeType    String?                    @map("sizes_medium_mime_type") @db.VarChar
+  sizesMediumFilesize    Decimal?                   @map("sizes_medium_filesize") @db.Decimal
+  sizesMediumFilename    String?                    @map("sizes_medium_filename") @db.VarChar
+  sizesLargeUrl          String?                    @map("sizes_large_url") @db.VarChar
+  sizesLargeWidth        Decimal?                   @map("sizes_large_width") @db.Decimal
+  sizesLargeHeight       Decimal?                   @map("sizes_large_height") @db.Decimal
+  sizesLargeMimeType     String?                    @map("sizes_large_mime_type") @db.VarChar
+  sizesLargeFilesize     Decimal?                   @map("sizes_large_filesize") @db.Decimal
+  sizesLargeFilename     String?                    @map("sizes_large_filename") @db.VarChar
+  prefix                 String?                    @default(".") @db.VarChar
+  tenant                 Tenant?                    @relation("MediaTenant", fields: [tenantId], references: [id], onUpdate: NoAction, map: "media_tenant_id_tenants_id_fk")
+  lockedDocumentRels     PayloadLockedDocumentRel[] @relation("PayloadLockedDocumentRelMedia")
+  logoForTenants         Tenant[]                   @relation("TenantLogo")
+
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([tenantId], map: "media_tenant_idx")
+  @@index([sizesThumbnailFilename], map: "media_sizes_thumbnail_sizes_thumbnail_filename_idx")
+  @@index([sizesMediumFilename], map: "media_sizes_medium_sizes_medium_filename_idx")
+  @@index([sizesLargeFilename], map: "media_sizes_large_sizes_large_filename_idx")
+  @@map("media")
+}
+
+model UserSession {
+  order      Int       @map("_order")
+  parentId   Int       @map("_parent_id")
+  id         String    @id @db.VarChar
+  created_at DateTime? @db.Timestamptz(3)
+  expiresAt  DateTime  @map("expires_at") @db.Timestamptz(3)
+  parent     User      @relation(fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "users_sessions_parent_id_fk")
+
+  @@index([order], map: "users_sessions_order_idx")
+  @@index([parentId], map: "users_sessions_parent_id_idx")
+  @@map("users_sessions")
+}
+
+model TenantDomain {
+  order     Int      @map("_order")
+  parentId  Int      @map("_parent_id")
+  id        String   @id @db.VarChar
+  url       String   @db.VarChar
+  is_active Boolean? @default(true)
+  parent    Tenant   @relation(fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tenants_domains_parent_id_fk")
+
+  @@index([order], map: "tenants_domains_order_idx")
+  @@index([parentId], map: "tenants_domains_parent_id_idx")
+  @@map("tenants_domains")
+}
+
+model UserRel {
+  id        Int     @id @default(autoincrement())
+  order     Int?
+  parentId  Int     @map("parent_id")
+  path      String  @db.VarChar
+  tenantsId Int?    @map("tenants_id")
+  parent    User    @relation(fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "users_rels_parent_fk")
+  tenant    Tenant? @relation(fields: [tenantsId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "users_rels_tenants_fk")
+
+  @@index([path])
+  @@index([parentId], map: "users_rels_parent_idx")
+  @@index([order])
+  @@index([tenantsId])
+  @@map("users_rels")
+}
+
+model PayloadLockedDocument {
+  id           Int                        @id @default(autoincrement())
+  globalSlug   String?                    @map("global_slug") @db.VarChar
+  updatedAt    DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt    DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  documentRels PayloadLockedDocumentRel[]
+
+  @@index([createdAt])
+  @@index([globalSlug])
+  @@index([updatedAt])
+  @@map("payload_locked_documents")
+}
+
+model PayloadLockedDocumentRel {
+  id        Int                   @id @default(autoincrement())
+  order     Int?
+  parentId  Int                   @map("parent_id")
+  path      String                @db.VarChar
+  usersId   Int?                  @map("users_id")
+  tenantsId Int?                  @map("tenants_id")
+  mediaId   Int?                  @map("media_id")
+  media     Media?                @relation("PayloadLockedDocumentRelMedia", fields: [mediaId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_media_fk")
+  parent    PayloadLockedDocument @relation(fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_parent_fk")
+  tenant    Tenant?               @relation("PayloadLockedDocumentRelTenant", fields: [tenantsId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_tenants_fk")
+  user      User?                 @relation("PayloadLockedDocumentRelUser", fields: [usersId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_locked_documents_rels_users_fk")
+
+  @@index([path])
+  @@index([parentId], map: "payload_locked_documents_rels_parent_idx")
+  @@index([usersId])
+  @@index([tenantsId])
+  @@index([mediaId])
+  @@index([order])
+  @@map("payload_locked_documents_rels")
+}
+
+model PayloadPreference {
+  id             Int                    @id @default(autoincrement())
+  key            String?                @db.VarChar
+  value          Json?
+  updatedAt      DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt      DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  preferenceRels PayloadPreferenceRel[]
+
+  @@index([createdAt])
+  @@index([key])
+  @@index([updatedAt])
+  @@map("payload_preferences")
+}
+
+model PayloadPreferenceRel {
+  id       Int               @id @default(autoincrement())
+  order    Int?
+  parentId Int               @map("parent_id")
+  path     String            @db.VarChar
+  usersId  Int?              @map("users_id")
+  parent   PayloadPreference @relation(fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_preferences_rels_parent_fk")
+  user     User?             @relation("PayloadPreferenceRelUser", fields: [usersId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payload_preferences_rels_users_fk")
+
+  @@index([path])
+  @@index([parentId], map: "payload_preferences_rels_parent_idx")
+  @@index([usersId])
+  @@index([order])
+  @@map("payload_preferences_rels")
+}
+
+model PayloadMigration {
+  id        Int      @id @default(autoincrement())
+  name      String?  @db.VarChar
+  batch     Decimal? @db.Decimal
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("payload_migrations")
+}
+
+enum TenantStatus {
+  active
+  inactive
+  maintenance
+}
+
+enum UserRole {
+  admin
+  user
+}
