@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
+import { readFile } from 'fs/promises'
+import { join } from 'path'
+import { existsSync } from 'fs'
 
 // R2クライアントの初期化
 const s3Client = new S3Client({
@@ -20,7 +23,36 @@ export async function GET(
     const resolvedParams = await params
     const filename = resolvedParams.path.join('/')
     
-    // R2からオブジェクトを取得
+    // まずローカルファイルをチェック
+    const localPath = join(process.cwd(), 'public', 'uploads', filename)
+    if (existsSync(localPath)) {
+      const buffer = await readFile(localPath)
+      
+      // MIMEタイプを推定
+      const ext = filename.split('.').pop()?.toLowerCase() || ''
+      const mimeTypes: { [key: string]: string } = {
+        jpg: 'image/jpeg',
+        jpeg: 'image/jpeg',
+        png: 'image/png',
+        gif: 'image/gif',
+        webp: 'image/webp',
+        mp4: 'video/mp4',
+        webm: 'video/webm',
+        ogg: 'video/ogg',
+        mov: 'video/quicktime',
+      }
+      
+      const headers = new Headers()
+      headers.set('Content-Type', mimeTypes[ext] || 'application/octet-stream')
+      headers.set('Cache-Control', 'public, max-age=31536000')
+      
+      return new NextResponse(buffer, {
+        status: 200,
+        headers,
+      })
+    }
+    
+    // ローカルに存在しない場合はR2から取得を試みる
     const command = new GetObjectCommand({
       Bucket: process.env.S3_BUCKET!,
       Key: filename,
