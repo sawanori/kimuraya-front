@@ -27,6 +27,9 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || 'postgresql://noritakasawada@localhost:5432/kimuraya',
+      ssl: process.env.DATABASE_URI?.includes('render.com') ? {
+        rejectUnauthorized: false
+      } : false,
     },
   }),
   plugins: [
