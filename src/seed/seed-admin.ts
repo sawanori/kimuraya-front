@@ -4,7 +4,10 @@ import * as dotenv from 'dotenv'
 import * as path from 'path'
 
 // Load environment variables
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
+// Only load .env.local in development
+if (!process.env.DATABASE_URI) {
+  dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
+}
 
 async function seed() {
   console.log('Starting seed process...')

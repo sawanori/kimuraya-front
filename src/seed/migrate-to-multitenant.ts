@@ -3,7 +3,10 @@ import config from '@payload-config'
 import * as dotenv from 'dotenv'
 import { resolve } from 'path'
 
-dotenv.config({ path: resolve(__dirname, '../../.env.local') })
+// Only load .env.local in development
+if (!process.env.DATABASE_URI) {
+  dotenv.config({ path: resolve(__dirname, '../../.env.local') })
+}
 
 async function migrateToMultiTenant() {
   console.log('🔄 マルチテナント移行を開始します...')
