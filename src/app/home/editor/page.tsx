@@ -24,6 +24,7 @@ interface SectionEdit {
   videoFields?: { label: string; value: string }[]
   backgroundField?: { label: string; value: string }
   hasSeats?: boolean
+  hasImageStorage?: boolean
 }
 
 interface SeatData {

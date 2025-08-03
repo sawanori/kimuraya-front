@@ -14,10 +14,11 @@ const s3Client = new S3Client({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   try {
-    const filename = params.path.join('/')
+    const resolvedParams = await params
+    const filename = resolvedParams.path.join('/')
     
     // R2からオブジェクトを取得
     const command = new GetObjectCommand({
