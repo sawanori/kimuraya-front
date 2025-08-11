@@ -62,7 +62,7 @@ export async function GET(
     
     // ストリームをバッファに変換
     const chunks = []
-    for await (const chunk of response.Body as any) {
+    for await (const chunk of response.Body as AsyncIterable<Uint8Array>) {
       chunks.push(chunk)
     }
     const buffer = Buffer.concat(chunks)

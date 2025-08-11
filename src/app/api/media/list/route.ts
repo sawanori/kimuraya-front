@@ -12,7 +12,7 @@ const s3Client = new S3Client({
   forcePathStyle: true, // R2の場合は必要
 })
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   console.log('Media list API called')
   console.log('S3_ENDPOINT:', process.env.S3_ENDPOINT)
   console.log('S3_BUCKET:', process.env.S3_BUCKET)

@@ -28,14 +28,20 @@ export default function HomePage() {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [dateRange, setDateRange] = useState('30d')
+  const [viewMode, setViewMode] = useState<'monthly' | 'daily'>('monthly')
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
   
   // Plausible Analytics データの取得
-  const domain = typeof window !== 'undefined' ? window.location.host : ''
+  const [domain, setDomain] = useState<string>('')
   const { data: analyticsData } = useSWR(
-    () => domain ? `/api/plausible?domain=${domain}` : null, 
+    domain ? `/api/plausible?domain=${domain}` : null, 
     fetcher, 
     { refreshInterval: 60000 }
   )
+
+  useEffect(() => {
+    setDomain(window.location.host)
+  }, [])
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -72,6 +78,117 @@ export default function HomePage() {
     }
   }
 
+  const handleMonthClick = (data: any) => {
+    console.log('=== Chart click event ===')
+    console.log('Full event data:', JSON.stringify(data, null, 2))
+    
+    // Handle different possible event structures from Recharts
+    let monthKey: string | null = null
+    
+    // Try multiple ways to extract the month key
+    if (data && data.activePayload && data.activePayload.length > 0) {
+      const payload = data.activePayload[0].payload
+      console.log('Payload from activePayload:', payload)
+      monthKey = payload?.date || payload?.month
+      console.log('Found monthKey from activePayload:', monthKey)
+    } 
+    
+    if (!monthKey && data && data.activeLabel) {
+      // Alternative: activeLabel might contain the month
+      monthKey = data.activeLabel
+      console.log('Found monthKey from activeLabel:', monthKey)
+    }
+    
+    if (!monthKey && data && data.payload) {
+      // Direct payload access
+      monthKey = data.payload.date || data.payload.month
+      console.log('Found monthKey from direct payload:', monthKey)
+    }
+    
+    if (monthKey) {
+      console.log('✅ Setting selected month:', monthKey)
+      console.log('Available daily data keys:', Object.keys(analyticsData?.dailyDataByMonth || {}))
+      
+      // Check if we have daily data for this month
+      if (analyticsData?.dailyDataByMonth && analyticsData.dailyDataByMonth[monthKey]) {
+        console.log('✅ Daily data found for month:', monthKey)
+        console.log('Number of days:', analyticsData.dailyDataByMonth[monthKey].length)
+        setSelectedMonth(monthKey)
+        setViewMode('daily')
+      } else {
+        console.error('❌ No daily data found for month:', monthKey)
+        console.log('Available months:', Object.keys(analyticsData?.dailyDataByMonth || {}))
+      }
+    } else {
+      console.warn('❌ Could not extract month key from click event')
+    }
+  }
+
+  const handleBackToMonthly = () => {
+    setViewMode('monthly')
+    setSelectedMonth(null)
+  }
+
+
+
+  // デバッグ情報をログ出力（useEffectはすべて最初に宣言）
+  useEffect(() => {
+    if (analyticsData) {
+      const data = viewMode === 'daily' && selectedMonth && analyticsData.dailyDataByMonth
+        ? analyticsData.dailyDataByMonth[selectedMonth]
+        : analyticsData.monthlyData || analyticsData.timeseries || []
+      
+      if (data && data.length > 0) {
+        console.log('Current data sample:', data[0])
+        console.log('Current view mode:', viewMode)
+        console.log('Selected month:', selectedMonth)
+        console.log('Analytics data keys:', Object.keys(analyticsData))
+      }
+    }
+  }, [viewMode, selectedMonth, analyticsData])
+
+  // データソースを決定（月別表示か日別表示かに応じて）
+  const getCurrentData = () => {
+    if (!analyticsData) {
+      console.log('No analytics data available')
+      return []
+    }
+    
+    if (viewMode === 'daily' && selectedMonth && analyticsData.dailyDataByMonth) {
+      const dailyData = analyticsData.dailyDataByMonth[selectedMonth]
+      console.log(`Daily data for ${selectedMonth}:`, dailyData)
+      return dailyData || []
+    } else if (viewMode === 'monthly' && analyticsData.monthlyData) {
+      console.log('Monthly data:', analyticsData.monthlyData)
+      return analyticsData.monthlyData
+    }
+    
+    // フォールバック: 従来の30日データ
+    console.log('Fallback to timeseries data:', analyticsData.timeseries)
+    return analyticsData.timeseries || []
+  }
+
+  const currentData = getCurrentData()
+
+  // コンバージョン率の計算
+  const conversionRate = analyticsData?.reserveClicks && currentData?.length
+    ? ((analyticsData.reserveClicks / currentData.reduce((a: number, b: any) => a + b.visitors, 0)) * 100).toFixed(2)
+    : '0.00'
+
+  // 期間の総訪問者数とページビュー数
+  const totalVisitors = currentData.reduce((a: number, b: any) => a + b.visitors, 0) || 0
+  const totalPageviews = currentData.reduce((a: number, b: any) => a + b.pageviews, 0) || 0
+
+  // 期間の表示用テキスト
+  const getPeriodText = () => {
+    if (viewMode === 'daily' && selectedMonth) {
+      const date = new Date(selectedMonth + '-01')
+      return date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' })
+    }
+    return '過去12か月'
+  }
+
+  // 条件付きレンダリング（すべてのHooksの後）
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#212121] flex items-center justify-center">
@@ -79,15 +196,6 @@ export default function HomePage() {
       </div>
     )
   }
-
-  // コンバージョン率の計算
-  const conversionRate = analyticsData?.reserveClicks && analyticsData?.timeseries?.length
-    ? ((analyticsData.reserveClicks / analyticsData.timeseries.reduce((a: number, b: any) => a + b.visitors, 0)) * 100).toFixed(2)
-    : '0.00'
-
-  // 30日間の合計訪問者数とページビュー数
-  const totalVisitors = analyticsData?.timeseries?.reduce((a: number, b: any) => a + b.visitors, 0) || 0
-  const totalPageviews = analyticsData?.timeseries?.reduce((a: number, b: any) => a + b.pageviews, 0) || 0
 
   return (
     <div className="min-h-screen bg-[#212121]">
@@ -169,21 +277,21 @@ export default function HomePage() {
               <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242]">
                 <div className="flex items-center gap-3 mb-2">
                   <Eye className="w-6 h-6 text-[#10a37f]" />
-                  <h3 className="text-[#a8a8a8]">総ページビュー (30日)</h3>
+                  <h3 className="text-[#a8a8a8]">総ページビュー ({getPeriodText()})</h3>
                 </div>
                 <p className="text-3xl font-bold text-[#ececec]">{totalPageviews.toLocaleString()}</p>
               </div>
               <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242]">
                 <div className="flex items-center gap-3 mb-2">
                   <Users className="w-6 h-6 text-[#0d8f6f]" />
-                  <h3 className="text-[#a8a8a8]">総訪問者数 (30日)</h3>
+                  <h3 className="text-[#a8a8a8]">総訪問者数 ({getPeriodText()})</h3>
                 </div>
                 <p className="text-3xl font-bold text-[#ececec]">{totalVisitors.toLocaleString()}</p>
               </div>
               <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242]">
                 <div className="flex items-center gap-3 mb-2">
                   <MousePointer className="w-6 h-6 text-[#0b7e60]" />
-                  <h3 className="text-[#a8a8a8]">予約ボタン CVR (30日)</h3>
+                  <h3 className="text-[#a8a8a8]">予約ボタン CVR ({getPeriodText()})</h3>
                 </div>
                 <p className="text-3xl font-bold text-[#ececec]">{conversionRate}%</p>
               </div>
@@ -191,18 +299,49 @@ export default function HomePage() {
 
             {/* ページビューと訪問者数の折線グラフ */}
             <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242]">
-              <h2 className="text-xl font-bold text-[#ececec] mb-6">過去30日間のトラフィック</h2>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-xl font-bold text-[#ececec]">
+                    {viewMode === 'monthly' ? '過去12か月のトラフィック' : `${getPeriodText()}の日別トラフィック`}
+                  </h2>
+                  {viewMode === 'daily' && (
+                    <button
+                      onClick={handleBackToMonthly}
+                      className="px-3 py-1 bg-[#10a37f]/20 hover:bg-[#10a37f]/30 text-[#10a37f] text-sm rounded-lg transition-colors"
+                    >
+                      ← 月別表示に戻る
+                    </button>
+                  )}
+                </div>
+                {viewMode === 'monthly' && (
+                  <div className="text-sm text-[#a8a8a8]">
+                    月をクリックして日別データを表示
+                  </div>
+                )}
+              </div>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={analyticsData.timeseries || []}>
+                  <LineChart 
+                    data={currentData}
+                    onClick={viewMode === 'monthly' ? handleMonthClick : undefined}
+                    onMouseDown={viewMode === 'monthly' ? (e) => console.log('Chart mouse down:', e) : undefined}
+                    style={{ cursor: viewMode === 'monthly' ? 'pointer' : 'default' }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" stroke="#424242" />
                     <XAxis 
-                      dataKey="date" 
+                      dataKey="date"
                       stroke="#a8a8a8"
                       tick={{ fontSize: 12 }}
                       tickFormatter={(value) => {
-                        const date = new Date(value)
-                        return `${date.getMonth() + 1}/${date.getDate()}`
+                        if (viewMode === 'monthly') {
+                          // 月別表示の場合、YYYY-MM形式を日本語表示に変換
+                          const [year, month] = value.split('-')
+                          return `${parseInt(month)}月`
+                        } else {
+                          // 日別表示の場合
+                          const date = new Date(value)
+                          return `${date.getMonth() + 1}/${date.getDate()}`
+                        }
                       }}
                     />
                     <YAxis stroke="#a8a8a8" />
@@ -210,6 +349,14 @@ export default function HomePage() {
                       contentStyle={{ backgroundColor: '#2a2a2a', border: '1px solid #424242', borderRadius: '8px' }}
                       labelStyle={{ color: '#ececec' }}
                       formatter={(value: any) => value.toLocaleString()}
+                      labelFormatter={(label) => {
+                        if (viewMode === 'monthly') {
+                          return label
+                        } else {
+                          const date = new Date(label)
+                          return date.toLocaleDateString('ja-JP')
+                        }
+                      }}
                     />
                     <Legend />
                     <Line 
@@ -218,7 +365,18 @@ export default function HomePage() {
                       name="ページビュー" 
                       stroke="#10a37f" 
                       strokeWidth={2} 
-                      dot={false} 
+                      dot={viewMode === 'monthly' ? { 
+                        fill: '#10a37f', 
+                        strokeWidth: 2, 
+                        r: 4,
+                        onClick: handleMonthClick
+                      } : false}
+                      activeDot={viewMode === 'monthly' ? { 
+                        r: 6, 
+                        stroke: '#10a37f', 
+                        strokeWidth: 2,
+                        onClick: handleMonthClick
+                      } : undefined}
                     />
                     <Line 
                       type="monotone" 
@@ -227,7 +385,18 @@ export default function HomePage() {
                       stroke="#0d8f6f" 
                       strokeDasharray="5 5" 
                       strokeWidth={2}
-                      dot={false} 
+                      dot={viewMode === 'monthly' ? { 
+                        fill: '#0d8f6f', 
+                        strokeWidth: 2, 
+                        r: 4,
+                        onClick: handleMonthClick
+                      } : false}
+                      activeDot={viewMode === 'monthly' ? { 
+                        r: 6, 
+                        stroke: '#0d8f6f', 
+                        strokeWidth: 2,
+                        onClick: handleMonthClick
+                      } : undefined}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -236,7 +405,7 @@ export default function HomePage() {
 
             {/* デバイス別アクセス円グラフ */}
             <div className="bg-[#2a2a2a] rounded-2xl p-6 border border-[#424242]">
-              <h2 className="text-xl font-bold text-[#ececec] mb-6">デバイス別アクセス (30日)</h2>
+              <h2 className="text-xl font-bold text-[#ececec] mb-6">デバイス別アクセス ({getPeriodText()})</h2>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>

@@ -53,7 +53,7 @@ async function seedUsers() {
 
       if (existingUsers.docs.length === 0) {
         // ユーザーを作成
-        const user = await payload.create({
+        const _user = await payload.create({
           collection: 'users',
           data: userData,
         })

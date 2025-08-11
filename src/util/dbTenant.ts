@@ -23,7 +23,7 @@ export const setTenantContext = async (req: PayloadRequest) => {
     }
     // 2. From HTTP header (for SSR/API calls)
     else if (req.headers && typeof req.headers === 'object' && 'x-tenant-id' in req.headers) {
-      tenantId = (req.headers as any)['x-tenant-id'] as string
+      tenantId = (req.headers as Record<string, string>)['x-tenant-id'] as string
     }
     // 3. From query parameter (for specific operations)
     else if (req.query?.tenant) {
@@ -35,7 +35,7 @@ export const setTenantContext = async (req: PayloadRequest) => {
     const isSuperAdmin = req.user?.isSuperAdmin || false
 
     // Set PostgreSQL session variables using raw query
-    const client = (req.payload.db as any).client || (req.payload.db as any).pool
+    const client = (req.payload.db as { client?: { query: (sql: string, params: unknown[]) => Promise<unknown> }; pool?: { query: (sql: string, params: unknown[]) => Promise<unknown> } }).client || (req.payload.db as { client?: { query: (sql: string, params: unknown[]) => Promise<unknown> }; pool?: { query: (sql: string, params: unknown[]) => Promise<unknown> } }).pool
 
     if (client) {
       // Set all context variables in a single query for efficiency
@@ -78,7 +78,7 @@ export const clearTenantContext = async (req: PayloadRequest) => {
   }
 
   try {
-    const client = (req.payload.db as any).client || (req.payload.db as any).pool
+    const client = (req.payload.db as { client?: { query: (sql: string, params: unknown[]) => Promise<unknown> }; pool?: { query: (sql: string, params: unknown[]) => Promise<unknown> } }).client || (req.payload.db as { client?: { query: (sql: string, params: unknown[]) => Promise<unknown> }; pool?: { query: (sql: string, params: unknown[]) => Promise<unknown> } }).pool
 
     if (client) {
       await client.query(`

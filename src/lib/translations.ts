@@ -35,7 +35,7 @@ export function getTranslation(key: string, lang: Language): string {
 
 // コンテンツの翻訳を取得
 export function getContentTranslation(
-  content: any,
+  content: Record<string, unknown>,
   path: string,
   lang: Language
 ): string {
@@ -57,7 +57,7 @@ export function getContentTranslation(
 
 // 翻訳ステータスを取得
 export function getTranslationStatus(
-  content: any,
+  content: Record<string, unknown>,
   path: string,
   lang: Language
 ): TranslationStatus {

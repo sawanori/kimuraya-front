@@ -9,6 +9,8 @@ export interface MenuItem {
 
 export interface MenuOption extends MenuItem {
   // Additional properties specific to options if needed
+  // Keeping interface for future extension
+  _placeholder?: never;
 }
 
 export interface MenuGroup {

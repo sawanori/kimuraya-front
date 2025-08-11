@@ -148,7 +148,7 @@ interface ContentData {
       description: string;
       image: string;
     }>;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   'intro-parallax'?: {
     textFields?: {
@@ -201,7 +201,7 @@ interface ContentData {
 }
 
 // Googleマップの共有リンクからembed用URLに変換する関数
-function getGoogleMapEmbedUrl(shareUrl: string, infoFields?: any): string {
+function getGoogleMapEmbedUrl(shareUrl: string, infoFields?: { googleMapUrl?: string }): string {
   if (!shareUrl) return '';
   
   try {
@@ -243,8 +243,8 @@ function getGoogleMapEmbedUrl(shareUrl: string, infoFields?: any): string {
 export default function HomePage({ content }: { content: ContentData }) {
   const { language, setLanguage } = useLanguage();
   const { t, getContent } = useMultilingual();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showAllGallery, setShowAllGallery] = useState(false);
+  const [_mobileMenuOpen, _setMobileMenuOpen] = useState(false);
+  const [_showAllGallery, _setShowAllGallery] = useState(false);
   const [currentSeat, setCurrentSeat] = useState(0);
   const [showCoursesModal, setShowCoursesModal] = useState(false);
   const [showDrinksModal, setShowDrinksModal] = useState(false);
@@ -421,7 +421,7 @@ export default function HomePage({ content }: { content: ContentData }) {
       const firstSlideMobile = heroSlidesMobile[0].querySelector('img');
       if (firstSlideMobile) {
         firstSlideMobile.style.animation = 'none';
-        firstSlideMobile.offsetHeight; // リフローを強制
+        void firstSlideMobile.offsetHeight; // リフローを強制
         firstSlideMobile.style.animation = 'zoomOut 10s linear forwards';
       }
       
@@ -434,7 +434,7 @@ export default function HomePage({ content }: { content: ContentData }) {
         const nextImg = heroSlidesMobile[currentSlideMobile].querySelector('img');
         if (nextImg) {
           nextImg.style.animation = 'none';
-          nextImg.offsetHeight;
+          void nextImg.offsetHeight;
           nextImg.style.animation = 'zoomOut 10s linear forwards';
         }
       }
@@ -450,7 +450,7 @@ export default function HomePage({ content }: { content: ContentData }) {
       const firstSlideDesktop = heroSlidesDesktop[0].querySelector('img');
       if (firstSlideDesktop) {
         firstSlideDesktop.style.animation = 'none';
-        firstSlideDesktop.offsetHeight; // リフローを強制
+        void firstSlideDesktop.offsetHeight; // リフローを強制
         firstSlideDesktop.style.animation = 'zoomOut 10s linear forwards';
       }
       
@@ -463,7 +463,7 @@ export default function HomePage({ content }: { content: ContentData }) {
         const nextImg = heroSlidesDesktop[currentSlideDesktop].querySelector('img');
         if (nextImg) {
           nextImg.style.animation = 'none';
-          nextImg.offsetHeight;
+          void nextImg.offsetHeight;
           nextImg.style.animation = 'zoomOut 10s linear forwards';
         }
       }
@@ -523,9 +523,9 @@ export default function HomePage({ content }: { content: ContentData }) {
   useEffect(() => {
     
     // 要素の存在確認
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const _menuToggle = document.getElementById('menuToggle');
+    const _mobileMenu = document.getElementById('mobileMenu');
+    const _mobileMenuBtn = document.getElementById('mobileMenuBtn');
     
     
     // イベント委譲を使用してより確実にイベントを処理
@@ -695,13 +695,13 @@ export default function HomePage({ content }: { content: ContentData }) {
         }
       };
 
-      optionsGrid.addEventListener('touchstart', handleTouchStart as any);
-      optionsGrid.addEventListener('touchmove', handleTouchMove as any);
+      optionsGrid.addEventListener('touchstart', handleTouchStart as EventListener);
+      optionsGrid.addEventListener('touchmove', handleTouchMove as EventListener);
       optionsGrid.addEventListener('touchend', handleTouchEnd);
 
       return () => {
-        optionsGrid.removeEventListener('touchstart', handleTouchStart as any);
-        optionsGrid.removeEventListener('touchmove', handleTouchMove as any);
+        optionsGrid.removeEventListener('touchstart', handleTouchStart as EventListener);
+        optionsGrid.removeEventListener('touchmove', handleTouchMove as EventListener);
         optionsGrid.removeEventListener('touchend', handleTouchEnd);
       };
     };
@@ -833,13 +833,13 @@ export default function HomePage({ content }: { content: ContentData }) {
       }
     };
     
-    gallerySlides.addEventListener('touchstart', handleTouchStart as any);
-    gallerySlides.addEventListener('touchmove', handleTouchMove as any, { passive: false });
+    gallerySlides.addEventListener('touchstart', handleTouchStart as EventListener);
+    gallerySlides.addEventListener('touchmove', handleTouchMove as EventListener, { passive: false });
     gallerySlides.addEventListener('touchend', handleTouchEnd);
     
     return () => {
-      gallerySlides.removeEventListener('touchstart', handleTouchStart as any);
-      gallerySlides.removeEventListener('touchmove', handleTouchMove as any);
+      gallerySlides.removeEventListener('touchstart', handleTouchStart as EventListener);
+      gallerySlides.removeEventListener('touchmove', handleTouchMove as EventListener);
       gallerySlides.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
@@ -929,8 +929,8 @@ export default function HomePage({ content }: { content: ContentData }) {
       }
     };
     
-    reviewsTrack.addEventListener('touchstart', handleTouchStart as any);
-    reviewsTrack.addEventListener('touchmove', handleTouchMove as any);
+    reviewsTrack.addEventListener('touchstart', handleTouchStart as EventListener);
+    reviewsTrack.addEventListener('touchmove', handleTouchMove as EventListener);
     reviewsTrack.addEventListener('touchend', handleTouchEnd);
     
     // 自動スライド
@@ -951,8 +951,8 @@ export default function HomePage({ content }: { content: ContentData }) {
     return () => {
       prevBtn?.removeEventListener('click', handlePrev);
       nextBtn?.removeEventListener('click', handleNext);
-      reviewsTrack.removeEventListener('touchstart', handleTouchStart as any);
-      reviewsTrack.removeEventListener('touchmove', handleTouchMove as any);
+      reviewsTrack.removeEventListener('touchstart', handleTouchStart as EventListener);
+      reviewsTrack.removeEventListener('touchmove', handleTouchMove as EventListener);
       reviewsTrack.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('resize', handleResize);
       clearInterval(autoSlideInterval);
@@ -985,8 +985,8 @@ export default function HomePage({ content }: { content: ContentData }) {
               className="nav-reservation-btn"
               onClick={(e) => {
                 e.preventDefault();
-                if (typeof window !== 'undefined' && (window as any).plausible) {
-                  (window as any).plausible('ReserveClick');
+                if (typeof window !== 'undefined' && (window as typeof window & { plausible?: (event: string) => void }).plausible) {
+                  (window as typeof window & { plausible: (event: string) => void }).plausible('ReserveClick');
                 }
               }}
             >
@@ -1009,8 +1009,8 @@ export default function HomePage({ content }: { content: ContentData }) {
         id="heroReservationBtn"
         onClick={(e) => {
           e.preventDefault();
-          if (typeof window !== 'undefined' && (window as any).plausible) {
-            (window as any).plausible('ReserveClick');
+          if (typeof window !== 'undefined' && (window as typeof window & { plausible?: (event: string) => void }).plausible) {
+            (window as typeof window & { plausible: (event: string) => void }).plausible('ReserveClick');
           }
         }}
       >
@@ -1418,7 +1418,7 @@ export default function HomePage({ content }: { content: ContentData }) {
               <div className="motsunabe-options fade-up">
                 <h3 className="options-title">{content?.motsunabe?.textFields?.optionsTitle || t('motsunabe.optionsTitle')}</h3>
                 <div className="options-grid">
-                  {(content?.motsunabe?.options || []).map((option: any) => (
+                  {(content?.motsunabe?.options || []).map((option: { id: string; title: string; description: string; image: string }) => (
                     <div key={option.id} className="option-card">
                       <img src={option.image} alt={option.title} />
                       <h4>{option.title}</h4>
@@ -1428,7 +1428,7 @@ export default function HomePage({ content }: { content: ContentData }) {
                 </div>
                 {/* モバイル用スライドインジケーター */}
                 <div className="options-slide-indicators">
-                  {(content?.motsunabe?.options || []).map((_: any, index: number) => (
+                  {(content?.motsunabe?.options || []).map((_: unknown, index: number) => (
                     <button
                       key={index}
                       className={`slide-indicator ${index === currentMotsunabeSlide ? 'active' : ''}`}
@@ -1451,7 +1451,7 @@ export default function HomePage({ content }: { content: ContentData }) {
           
           <div className="menu-grid">
             {/* 動的メニューカード */}
-            {content.menu?.menuCards?.map((card: any, index: number) => (
+            {content.menu?.menuCards?.map((card: { id: string; subTitle: string; title: string; items: Array<{ name: string; price: string }>; note?: string }, index: number) => (
               <div 
                 key={card.id} 
                 className={`menu-card fade-scale ${index >= 3 ? 'hidden-menu-mobile' : ''}`}
@@ -1460,7 +1460,7 @@ export default function HomePage({ content }: { content: ContentData }) {
                 <div className="menu-category">{card.subTitle}</div>
                 <h3 className="menu-title jp-title">{card.title}</h3>
                 <div className="menu-items">
-                  {card.items.map((item: any, itemIndex: number) => (
+                  {card.items.map((item: { name: string; price: string }, itemIndex: number) => (
                     <div key={itemIndex} className="menu-item">
                       <span className="menu-item-name">{item.name}</span>
                       <span className="menu-item-price">{item.price}</span>
@@ -1553,7 +1553,7 @@ export default function HomePage({ content }: { content: ContentData }) {
               <div className="seats-slides">
                 {content.seats.seatData ? (
                   // 新しいseatData形式の場合
-                  content.seats.seatData.map((seat: any, index: number) => {
+                  content.seats.seatData.map((seat: { id: string; name: string; capacity: string; description: string; tags: string[]; image: string }, index: number) => {
                     // 座席タイプを判定してキーを設定
                     const seatKey = seat.id === 'private-space' ? 'privateSpace' :
                                    seat.id === 'semi-private-box' ? 'semiPrivateBox' :
@@ -1775,7 +1775,7 @@ export default function HomePage({ content }: { content: ContentData }) {
             <div className="seats-thumbnails">
               {content.seats.seatData ? (
                 // 新しいseatData形式の場合
-                content.seats.seatData.map((seat: any, index: number) => {
+                content.seats.seatData.map((seat: { id: string; name: string; capacity: string; description: string; tags: string[]; image: string }, index: number) => {
                   // 座席タイプを判定してキーを設定
                   const seatKey = seat.id === 'private-space' ? 'privateSpace' :
                                  seat.id === 'semi-private-box' ? 'semiPrivateBox' :
@@ -1921,7 +1921,7 @@ export default function HomePage({ content }: { content: ContentData }) {
                     author: "斎藤恵子",
                     date: "2023年9月"
                   }
-                ].map((review, index) => (
+                ].map((review, _index) => (
                   <div key={review.id} className="review-card">
                     <div className="review-rating">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -2207,8 +2207,8 @@ export default function HomePage({ content }: { content: ContentData }) {
               className="footer-reservation-btn"
               onClick={(e) => {
                 e.preventDefault();
-                if (typeof window !== 'undefined' && (window as any).plausible) {
-                  (window as any).plausible('ReserveClick');
+                if (typeof window !== 'undefined' && (window as typeof window & { plausible?: (event: string) => void }).plausible) {
+                  (window as typeof window & { plausible: (event: string) => void }).plausible('ReserveClick');
                 }
               }}
             >
@@ -2321,8 +2321,8 @@ export default function HomePage({ content }: { content: ContentData }) {
             className="bottom-nav-item"
             onClick={(e) => {
               e.preventDefault();
-              if (typeof window !== 'undefined' && (window as any).plausible) {
-                (window as any).plausible('ReserveClick');
+              if (typeof window !== 'undefined' && (window as typeof window & { plausible?: (event: string) => void }).plausible) {
+                (window as typeof window & { plausible: (event: string) => void }).plausible('ReserveClick');
               }
             }}
           >
@@ -2356,7 +2356,7 @@ export default function HomePage({ content }: { content: ContentData }) {
             
             <div className="courses-slider">
               {/* コースカードを動的に表示 */}
-              {(content?.courses?.cards || []).map((course: any, index: number) => (
+              {(content?.courses?.cards || []).map((course: { id: string; image: string; title: string; subtitle: string; price: string; note?: string; itemCount: string; description: string; menuItems: string[]; features: Array<{ icon: string; title: string; description: string }>; ctaText: string }, index: number) => (
                 <div key={course.id} className={`course-slide ${currentCourseSlide === index ? 'active' : ''}`}>
                   <div className="course-header">
                     <div className="course-image">
@@ -2384,7 +2384,7 @@ export default function HomePage({ content }: { content: ContentData }) {
                         </ul>
                       </div>
                       <div className="course-features">
-                        {course.features.map((feature: any, featureIndex: number) => {
+                        {course.features.map((feature: { icon: string; title: string; description: string }, featureIndex: number) => {
                           // アイコンのSVGマップ
                           const iconMap: { [key: string]: React.JSX.Element } = {
                             users: (
@@ -2450,7 +2450,7 @@ export default function HomePage({ content }: { content: ContentData }) {
                   
                   {/* ドットインジケーター */}
                   <div className="slider-dots">
-                    {(content?.courses?.cards || []).map((_: any, index: number) => (
+                    {(content?.courses?.cards || []).map((_: unknown, index: number) => (
                       <button 
                         key={index}
                         className={`slider-dot ${currentCourseSlide === index ? 'active' : ''}`} 
@@ -2484,11 +2484,11 @@ export default function HomePage({ content }: { content: ContentData }) {
               
               <div className="drinks-categories">
                 {/* カテゴリーを動的に表示 */}
-                {(content?.drinks?.categories || []).map((category: any) => (
+                {(content?.drinks?.categories || []).map((category: { id: string; name: string; items: Array<{ name: string; price: string }> }) => (
                   <div key={category.id} className="drink-category">
                     <div className="category-header">{category.name}</div>
                     <div className="category-items">
-                      {category.items.map((item: any, index: number) => (
+                      {category.items.map((item: { name: string; price: string }, index: number) => (
                         <div key={index} className="drink-item">
                           {item.description ? (
                             <>

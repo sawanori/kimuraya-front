@@ -1,5 +1,5 @@
 import { getPayload } from 'payload'
-import type { Payload } from 'payload'
+import type { Payload as _Payload } from 'payload'
 import * as dotenv from 'dotenv'
 import path from 'path'
 

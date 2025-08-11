@@ -210,7 +210,7 @@ export async function GET() {
 }
 
 // 深いマージ関数
-function deepMerge(target: any, source: any): any {
+function deepMerge(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {
   const output = { ...target }
   
   for (const key in source) {
