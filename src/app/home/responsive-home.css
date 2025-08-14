@@ -2,6 +2,27 @@
 
 /* Mobile-first approach */
 
+/* Fix mobile scrolling issues */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    height: auto;
+    position: relative;
+  }
+  
+  main {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+}
+
 /* Small mobile (< 375px) */
 @media (max-width: 374px) {
   .min-h-screen {
@@ -208,6 +229,21 @@
 
 /* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
+  /* Fix viewport issues on touch devices */
+  body {
+    position: relative;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+  
+  /* Ensure scrollable content */
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   /* Increase button tap targets */
   button {
     min-height: 44px;

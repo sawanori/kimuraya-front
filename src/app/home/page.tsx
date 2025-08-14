@@ -203,7 +203,7 @@ function HomePageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#212121]">
+    <div className="min-h-screen bg-[#212121] overflow-x-hidden overflow-y-auto">
       {/* ヘッダー */}
       <header className="relative bg-[#171717] border-b border-[#424242]">
         <div className="px-6 py-4">
@@ -241,7 +241,7 @@ function HomePageContent() {
         </div>
       </header>
 
-      <main className="relative p-8">
+      <main className="relative p-8 overflow-y-auto">
         {!analyticsData ? (
           <div className="flex items-center justify-center h-64">
             <p className="text-[#a8a8a8] text-lg">アナリティクスデータを読み込み中...</p>
