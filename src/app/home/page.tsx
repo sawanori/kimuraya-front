@@ -36,6 +36,23 @@ function HomePageContent() {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   
+  // Add mobile scroll fix on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+      document.body.style.minHeight = '100vh';
+      
+      return () => {
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.minHeight = '';
+      };
+    }
+  }, [])
+  
   // Plausible Analytics データの取得
   const [domain, setDomain] = useState<string>('')
   const { data: analyticsData } = useSWR(
@@ -203,7 +220,7 @@ function HomePageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#212121] overflow-x-hidden overflow-y-auto">
+    <div className="min-h-screen bg-[#212121] home-dashboard-container">
       {/* ヘッダー */}
       <header className="relative bg-[#171717] border-b border-[#424242]">
         <div className="px-6 py-4">
@@ -241,7 +258,7 @@ function HomePageContent() {
         </div>
       </header>
 
-      <main className="relative p-8 overflow-y-auto">
+      <main className="relative p-8">
         {!analyticsData ? (
           <div className="flex items-center justify-center h-64">
             <p className="text-[#a8a8a8] text-lg">アナリティクスデータを読み込み中...</p>

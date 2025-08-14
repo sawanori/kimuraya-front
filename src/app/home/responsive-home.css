@@ -2,24 +2,24 @@
 
 /* Mobile-first approach */
 
-/* Fix mobile scrolling issues */
+/* Fix mobile scrolling issues - Only for home dashboard */
 @media (max-width: 768px) {
-  html, body {
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .min-h-screen {
+  .home-dashboard-container {
     min-height: 100vh;
     min-height: -webkit-fill-available;
-    height: auto;
-    position: relative;
+    height: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch;
+    position: relative !important;
   }
   
-  main {
+  .home-dashboard-container main {
     height: auto !important;
     min-height: auto !important;
     overflow: visible !important;
+    position: relative !important;
+    padding-bottom: 100px; /* Add padding for better scrolling */
   }
 }
 
@@ -249,18 +249,21 @@
 /* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
   /* Fix viewport issues on touch devices */
-  body {
-    position: relative;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
+  .home-dashboard-container {
+    position: relative !important;
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available !important;
+    height: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
   }
   
-  /* Ensure scrollable content */
-  .min-h-screen {
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+  /* Ensure scrollable content on home dashboard */
+  .home-dashboard-container main {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
   }
   
   /* Increase button tap targets */
