@@ -438,25 +438,25 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t border-[#424242]">
-          <div className="text-sm text-[#a8a8a8]">
+        <div className="flex flex-col md:flex-row items-center justify-between p-6 border-t border-[#424242] gap-4">
+          <div className="text-sm text-[#a8a8a8] w-full md:w-auto text-center md:text-left">
             {saveMessage && (
               <span className={saveMessage.includes('失敗') || saveMessage.includes('エラー') ? 'text-red-400' : 'text-[#10a37f]'}>
                 {saveMessage}
               </span>
             )}
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full md:w-auto justify-center md:justify-end">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-[#a8a8a8] hover:text-[#ececec] transition-colors"
+              className="flex-1 md:flex-none px-4 py-2 text-[#a8a8a8] hover:text-[#ececec] transition-colors border border-[#424242] rounded-lg md:border-none"
             >
               キャンセル
             </button>
             <button
               onClick={saveSettings}
               disabled={isSaving}
-              className="px-6 py-2 bg-[#10a37f] hover:bg-[#0d8f6f] text-white rounded-lg flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 md:flex-none px-6 py-2 bg-[#10a37f] hover:bg-[#0d8f6f] text-white rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="w-4 h-4" />
               {isSaving ? '保存中...' : '保存'}

@@ -73,28 +73,47 @@
 @media (max-width: 639px) {
   /* Header layout */
   header .flex.items-center.justify-between {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: stretch;
-  }
-  
-  header .flex.items-center.gap-4:last-child {
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: row;
     gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
   }
   
-  /* Header buttons */
-  header button[onclick*="articles"],
-  header button[onclick*="editor"] {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
+  /* Title section - prevent wrapping */
+  header h1 {
+    white-space: nowrap;
+    font-size: 1.125rem !important;
   }
   
-  header button[onclick*="articles"] .w-5,
-  header button[onclick*="editor"] .w-5 {
-    width: 1.25rem;
-    height: 1.25rem;
+  header h1 .w-8 {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  /* Button container with proper spacing */
+  header > div > div > div:last-child {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+  
+  /* Header buttons - Settings and Logout */
+  header button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    min-width: auto;
+  }
+  
+  header button .w-4 {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  /* Hide button text on very small screens */
+  @media (max-width: 400px) {
+    header button span.text-sm {
+      display: none;
+    }
   }
   
   /* Live indicator */
