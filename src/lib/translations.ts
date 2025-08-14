@@ -40,19 +40,24 @@ export function getContentTranslation(
   lang: Language
 ): string {
   const keys = path.split('.')
-  let current = content
+  let current: unknown = content
   
   for (const key of keys) {
-    current = current?.[key]
+    if (typeof current === 'object' && current !== null && key in current) {
+      current = (current as Record<string, unknown>)[key]
+    } else {
+      current = undefined
+    }
   }
   
   // 多言語対応の場合
-  if (current?.values) {
-    return current.values[lang] || current.values.ja
+  if (typeof current === 'object' && current !== null && 'values' in current) {
+    const values = (current as { values: Record<string, string> }).values
+    return values[lang] || values.ja || ''
   }
   
   // 従来の形式の場合（日本語のみ）
-  return current || ''
+  return typeof current === 'string' ? current : ''
 }
 
 // 翻訳ステータスを取得
@@ -64,11 +69,20 @@ export function getTranslationStatus(
   if (lang === 'ja') return 'translated'
   
   const keys = path.split('.')
-  let current = content
+  let current: unknown = content
   
   for (const key of keys) {
-    current = current?.[key]
+    if (typeof current === 'object' && current !== null && key in current) {
+      current = (current as Record<string, unknown>)[key]
+    } else {
+      current = undefined
+    }
   }
   
-  return current?.status?.[lang] || 'untranslated'
+  if (typeof current === 'object' && current !== null && 'status' in current) {
+    const status = (current as { status: Record<string, TranslationStatus> }).status
+    return status[lang] || 'untranslated'
+  }
+  
+  return 'untranslated'
 }

@@ -86,7 +86,7 @@ export const clearTenantContext = async (req: PayloadRequest) => {
           set_config('app.current_tenant', NULL, false),
           set_config('app.current_user_id', NULL, false),
           set_config('app.is_super_admin', NULL, false)
-      `)
+      `, [])
     }
   } catch (error) {
     console.error('Error clearing tenant context:', error)

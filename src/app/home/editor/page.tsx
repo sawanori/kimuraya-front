@@ -414,7 +414,7 @@ export default function EditorPage() {
         } else {
           router.push('/login')
         }
-      } catch {
+      } catch (_error) {
         router.push('/login')
       } finally {
         setIsLoading(false)
@@ -433,8 +433,8 @@ export default function EditorPage() {
           const content = await response.json()
           setSavedContent(content)
         }
-      } catch {
-        console.error('Failed to load content:', error)
+      } catch (_error) {
+        console.error('Failed to load content:', _error)
       }
     }
 
@@ -487,7 +487,7 @@ export default function EditorPage() {
       } else {
         alert('保存に失敗しました')
       }
-    } catch {
+    } catch (_error) {
       alert('保存中にエラーが発生しました')
     } finally {
       setIsSaving(false)
@@ -566,8 +566,8 @@ export default function EditorPage() {
         console.log('Using test images:', testImages)
         setR2Images(testImages)
       }
-    } catch {
-      console.error('Failed to load R2 images:', error)
+    } catch (_error) {
+      console.error('Failed to load R2 images:', _error)
       
       // エラーの場合も既知の画像を表示
       const testImages = [
@@ -635,8 +635,8 @@ export default function EditorPage() {
         const error = await response.json()
         alert(`削除に失敗しました: ${error.error}`)
       }
-    } catch {
-      console.error('Delete error:', error)
+    } catch (_error) {
+      console.error('Delete error:', _error)
       alert('削除中にエラーが発生しました')
     }
   }
@@ -695,7 +695,7 @@ export default function EditorPage() {
         console.error('Upload failed:', errorData)
         alert(`画像のアップロードに失敗しました: ${errorData.error || 'Unknown error'}`)
       }
-    } catch {
+    } catch (_error) {
       alert('画像のアップロード中にエラーが発生しました')
     } finally {
       // アップロード完了後、状態をクリア
@@ -730,7 +730,7 @@ export default function EditorPage() {
         console.error('Upload failed:', errorData)
         alert(`動画のアップロードに失敗しました: ${errorData.error || 'Unknown error'}`)
       }
-    } catch {
+    } catch (_error) {
       alert('動画のアップロード中にエラーが発生しました')
     } finally {
       // アップロード完了後、状態をクリア
@@ -781,7 +781,7 @@ export default function EditorPage() {
       } else {
         alert('画像のアップロードに失敗しました')
       }
-    } catch {
+    } catch (_error) {
       alert('画像のアップロード中にエラーが発生しました')
     } finally {
       setUploadingImages(prev => {
@@ -1133,7 +1133,7 @@ export default function EditorPage() {
       } else {
         alert('画像のアップロードに失敗しました')
       }
-    } catch {
+    } catch (_error) {
       alert('画像のアップロード中にエラーが発生しました')
     } finally {
       setUploadingImages(prev => {
@@ -1352,7 +1352,7 @@ export default function EditorPage() {
       } else {
         alert('画像のアップロードに失敗しました')
       }
-    } catch {
+    } catch (_error) {
       alert('画像のアップロード中にエラーが発生しました')
     } finally {
       setUploadingImages(prev => {
@@ -3044,8 +3044,8 @@ export default function EditorPage() {
                           } else {
                             alert('アップロードに失敗しました')
                           }
-                        } catch {
-                          console.error('Upload error:', error)
+                        } catch (_error) {
+                          console.error('Upload error:', _error)
                           alert('アップロードに失敗しました')
                         }
                       }

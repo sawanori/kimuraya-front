@@ -141,6 +141,17 @@ interface ContentData {
     };
   };
   motsunabe?: {
+    textFields?: {
+      sectionTitle?: string;
+      sectionSubtitle?: string;
+      description?: string;
+      [key: string]: string | undefined;
+    };
+    imageFields?: {
+      mainImage?: string;
+      [key: string]: string | undefined;
+    };
+    badges?: string[];
     showOptions?: boolean;
     options?: Array<{
       id: string;
@@ -201,7 +212,7 @@ interface ContentData {
 }
 
 // Googleマップの共有リンクからembed用URLに変換する関数
-function getGoogleMapEmbedUrl(shareUrl: string, infoFields?: { googleMapUrl?: string }): string {
+function getGoogleMapEmbedUrl(shareUrl: string, infoFields?: { googleMapUrl?: string; address?: string; shopName?: string }): string {
   if (!shareUrl) return '';
   
   try {
@@ -2488,7 +2499,7 @@ export default function HomePage({ content }: { content: ContentData }) {
                   <div key={category.id} className="drink-category">
                     <div className="category-header">{category.name}</div>
                     <div className="category-items">
-                      {category.items.map((item: { name: string; price: string }, index: number) => (
+                      {category.items.map((item: { name: string; price: string; description?: string }, index: number) => (
                         <div key={index} className="drink-item">
                           {item.description ? (
                             <>

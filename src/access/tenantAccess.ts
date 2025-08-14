@@ -48,11 +48,11 @@ export const filterByTenant = async ({ query, req }: { query: Record<string, unk
   
   if (req.user?.currentTenant) {
     query.where = {
-      ...query.where,
+      ...(query.where || {}),
       tenant: {
         equals: req.user.currentTenant
       }
-    }
+    } as Record<string, unknown>
   }
   
   return query

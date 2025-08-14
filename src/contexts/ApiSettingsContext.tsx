@@ -37,7 +37,7 @@ export function ApiSettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<ApiSettings | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isMounted, setIsMounted] = useState(false)
+  const [_isMounted, setIsMounted] = useState(false)
 
   // Load settings on mount
   useEffect(() => {
@@ -148,7 +148,7 @@ export function useApiSettings() {
 
 // Convenience hooks for specific APIs
 export function useGoogleAnalyticsSettings() {
-  const { settings, getSetting } = useApiSettings()
+  const { getSetting } = useApiSettings()
   return {
     measurementId: getSetting('googleAnalytics.measurementId'),
     apiSecret: getSetting('googleAnalytics.apiSecret'),
@@ -161,7 +161,7 @@ export function useGoogleAnalyticsSettings() {
 }
 
 export function useGoogleBusinessProfileSettings() {
-  const { settings, getSetting } = useApiSettings()
+  const { getSetting } = useApiSettings()
   return {
     accountId: getSetting('googleBusinessProfile.accountId'),
     locationId: getSetting('googleBusinessProfile.locationId'),
@@ -177,7 +177,7 @@ export function useGoogleBusinessProfileSettings() {
 }
 
 export function useSerpApiSettings() {
-  const { settings, getSetting } = useApiSettings()
+  const { getSetting } = useApiSettings()
   return {
     apiKey: getSetting('serpApi.apiKey'),
     engine: getSetting('serpApi.engine'),

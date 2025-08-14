@@ -16,14 +16,11 @@ import {
   Award,
   BarChart3,
   ArrowUpRight,
-  ArrowDownRight,
   Building2,
   Target,
   Sparkles
 } from 'lucide-react'
 import {
-  LineChart,
-  Line,
   AreaChart,
   Area,
   BarChart,
@@ -32,16 +29,12 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   RadarChart,
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
-  Radar,
-  PieChart,
-  Pie,
-  Cell
+  Radar
 } from 'recharts'
 
 // モックデータ - SERP APIから取得するデータの例
@@ -64,7 +57,7 @@ const mockMEOData = {
       '恵比寿 個室居酒屋': 6,
       '恵比寿 日本酒': 8,
       '恵比寿駅 居酒屋': 7
-    },
+    } as Record<string, number>,
     previous: {
       '九州料理 恵比寿': 3,
       '恵比寿 居酒屋': 7,
@@ -74,7 +67,7 @@ const mockMEOData = {
       '恵比寿 個室居酒屋': 9,
       '恵比寿 日本酒': 10,
       '恵比寿駅 居酒屋': 8
-    }
+    } as Record<string, number>
   },
   rankingHistory: [
     { date: '1月', average: 8.2 },
@@ -137,8 +130,6 @@ export default function MEODashboard() {
   const averageCurrentRank = getAverageRank(mockMEOData.rankings.current)
   const averagePreviousRank = getAverageRank(mockMEOData.rankings.previous)
   const averageChange = getRankChange(Number(averageCurrentRank), Number(averagePreviousRank))
-
-  const COLORS = ['#10a37f', '#0d8f6f', '#0b7e60', '#4ade80', '#22c55e']
 
   return (
     <div className="meo-dashboard">
