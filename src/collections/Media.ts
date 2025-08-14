@@ -31,7 +31,7 @@ export const Media: CollectionConfig = {
   },
   hooks: {
     beforeOperation: [
-      async ({ args, operation }) => {
+      async ({ args, operation: _operation }) => {
         // RLSのためのテナントコンテキスト設定
         if (args.req) {
           await setTenantContext(args.req)

@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { fetchArticles } from '@/lib/news/api'
 import { deleteArticle } from '@/lib/news/admin-api'
 import { Article } from '@/types/news'
-import { Calendar, Eye, Edit, Trash2, Plus, Search, Filter, ChevronDown } from 'lucide-react'
+import { Calendar, Eye, Edit, Trash2, Plus, Search } from 'lucide-react'
 
 export default function ArticlesList() {
   const [articles, setArticles] = useState<Article[]>([])
@@ -18,7 +18,7 @@ export default function ArticlesList() {
   const [selectedArticles, setSelectedArticles] = useState<Set<string | number>>(new Set())
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [articleToDelete, setArticleToDelete] = useState<Article | null>(null)
-  const [showBulkActions, setShowBulkActions] = useState(false)
+  const [_showBulkActions, _setShowBulkActions] = useState(false)
 
   useEffect(() => {
     loadArticles()
@@ -33,7 +33,7 @@ export default function ArticlesList() {
     try {
       setLoading(true)
       // 管理画面ではすべてのステータスの記事を取得
-      const response = await fetchArticles({ limit: 1000, sort: sortBy })
+      const _response = await fetchArticles({ limit: 1000, sort: sortBy })
       // localStorageから直接取得して、すべてのステータスを含む
       if (typeof window !== 'undefined') {
         const allArticles = JSON.parse(localStorage.getItem('kimuraya_news_articles') || '[]')

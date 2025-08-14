@@ -7,7 +7,7 @@ import { getTranslation } from '@/lib/translations'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 export default function NewsHeader() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [_isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage } = useLanguage();
   const t = (key: string) => getTranslation(key, language);
 
@@ -38,7 +38,7 @@ export default function NewsHeader() {
     const menuToggle = document.getElementById('menuToggle');
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
-    const navMenu = document.querySelector('.nav-menu');
+    const _navMenu = document.querySelector('.nav-menu');
 
     const openMenu = () => {
       mobileMenu?.classList.add('open');

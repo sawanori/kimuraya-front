@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Star, MessageCircle, Clock, ChevronLeft, Send, Search, Filter, AlertCircle, CheckCircle, Settings, X, Save } from 'lucide-react'
+import { Star, MessageCircle, Clock, ChevronLeft, Send, Search, AlertCircle, CheckCircle, Settings, X, Save } from 'lucide-react'
+import { useGoogleBusinessProfileSettings, ApiSettingsProvider } from '@/contexts/ApiSettingsContext'
 import './gbp.css'
 
 // モックデータ
@@ -64,8 +65,10 @@ const mockReviews = [
 
 type Review = typeof mockReviews[0]
 
-export default function GBPPage() {
+function GBPPageContent() {
   const router = useRouter()
+  const gbpSettings = useGoogleBusinessProfileSettings()
+  
   const [selectedReview, setSelectedReview] = useState<Review | null>(null)
   const [replyText, setReplyText] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
@@ -80,10 +83,7 @@ export default function GBPPage() {
   const [template2, setTemplate2] = useState('貴重なご意見をいただき、ありがとうございます。')
   const [tempTemplate1, setTempTemplate1] = useState('')
   const [tempTemplate2, setTempTemplate2] = useState('')
-  const [apiKey, setApiKey] = useState('')
-  const [apiEndpoint, setApiEndpoint] = useState('')
-  const [tempApiKey, setTempApiKey] = useState('')
-  const [tempApiEndpoint, setTempApiEndpoint] = useState('')
+
 
   // レスポンシブ検出
   useEffect(() => {
@@ -157,8 +157,6 @@ export default function GBPPage() {
   const openSettings = () => {
     setTempTemplate1(template1)
     setTempTemplate2(template2)
-    setTempApiKey(apiKey)
-    setTempApiEndpoint(apiEndpoint)
     setShowSettings(true)
   }
 
@@ -166,8 +164,6 @@ export default function GBPPage() {
   const saveSettings = () => {
     setTemplate1(tempTemplate1)
     setTemplate2(tempTemplate2)
-    setApiKey(tempApiKey)
-    setApiEndpoint(tempApiEndpoint)
     setShowSettings(false)
   }
 
@@ -186,10 +182,23 @@ export default function GBPPage() {
             戻る
           </button>
           <h1 className="gbp-title">口コミ管理</h1>
-          <button onClick={openSettings} className="settings-btn">
-            <Settings />
-            <span>各種設定</span>
-          </button>
+          <div className="flex items-center gap-3">
+            {gbpSettings.isConfigured ? (
+              <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
+                <CheckCircle className="w-4 h-4" />
+                <span>API設定済み</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm">
+                <AlertCircle className="w-4 h-4" />
+                <span>API未設定</span>
+              </div>
+            )}
+            <button onClick={openSettings} className="settings-btn">
+              <Settings />
+              <span>返信テンプレート設定</span>
+            </button>
+          </div>
           <div className="header-stats">
             <div className="stat-item">
               <span className="stat-label">総レビュー数</span>
@@ -402,12 +411,12 @@ export default function GBPPage() {
         )}
       </div>
 
-      {/* 各種設定モーダル */}
+      {/* 返信テンプレート設定モーダル */}
       {showSettings && (
         <div className="settings-modal">
           <div className="settings-content">
             <div className="settings-header">
-              <h2>各種設定</h2>
+              <h2>返信テンプレート設定</h2>
               <button onClick={cancelSettings} className="close-btn">
                 <X />
               </button>
@@ -442,33 +451,6 @@ export default function GBPPage() {
                 </div>
               </div>
 
-              {/* API設定セクション */}
-              <div className="settings-section">
-                <h3>API設定</h3>
-                <div className="settings-input-group">
-                  <label htmlFor="apiKey">APIキー</label>
-                  <input
-                    id="apiKey"
-                    type="password"
-                    value={tempApiKey}
-                    onChange={(e) => setTempApiKey(e.target.value)}
-                    className="settings-input"
-                    placeholder="Google Business Profile APIキーを入力..."
-                  />
-                </div>
-                
-                <div className="settings-input-group">
-                  <label htmlFor="apiEndpoint">APIエンドポイント</label>
-                  <input
-                    id="apiEndpoint"
-                    type="text"
-                    value={tempApiEndpoint}
-                    onChange={(e) => setTempApiEndpoint(e.target.value)}
-                    className="settings-input"
-                    placeholder="https://api.example.com/reviews"
-                  />
-                </div>
-              </div>
             </div>
             
             <div className="settings-footer">
@@ -484,5 +466,13 @@ export default function GBPPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function GBPPage() {
+  return (
+    <ApiSettingsProvider>
+      <GBPPageContent />
+    </ApiSettingsProvider>
   )
 }

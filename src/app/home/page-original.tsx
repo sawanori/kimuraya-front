@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  AreaChart, Area, BarChart, Bar, LineChart, Line,
+  AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
 } from 'recharts'
 import {
   TrendingUp, TrendingDown, Users, Eye, MousePointer,
-  Clock, Globe, Monitor, Smartphone, Tablet,
-  LogOut, Calendar, ArrowRight, Sparkles,
+  Monitor, Smartphone, Tablet,
+  LogOut, ArrowRight, Sparkles,
   Activity, Zap, Target, ChartBar
 } from 'lucide-react'
 
@@ -23,7 +23,7 @@ interface User {
 
 export default function HomePage() {
   const router = useRouter()
-  const [user, setUser] = useState<User | null>(null)
+  const [_user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [dateRange, setDateRange] = useState('7days')
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
@@ -93,7 +93,7 @@ export default function HomePage() {
         } else {
           router.push('/login')
         }
-      } catch (error) {
+      } catch {
         router.push('/login')
       } finally {
         setIsLoading(false)

@@ -22,7 +22,7 @@ export default function ArticleCard({
   showExcerpt = true,
   showAuthor = true,
   showCategories = true,
-  showTags = false,
+  showTags: _showTags = false,
   showReadingTime = true
 }: ArticleCardProps) {
   const publishedDate = new Date(article.publishedAt);

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Save, Eye, Edit3, Image, Type, Palette, Video, Menu, X, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Save, Eye, Image, Type, Palette, Video, Menu, X, ChevronRight } from 'lucide-react'
 import './editor.css'
 import './responsive-editor.css'
 
@@ -84,7 +84,7 @@ interface MotsunabeOption {
 
 export default function EditorPage() {
   const router = useRouter()
-  const [user, setUser] = useState<User | null>(null)
+  const [_user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   
@@ -414,7 +414,7 @@ export default function EditorPage() {
         } else {
           router.push('/login')
         }
-      } catch (error) {
+      } catch {
         router.push('/login')
       } finally {
         setIsLoading(false)
@@ -433,7 +433,7 @@ export default function EditorPage() {
           const content = await response.json()
           setSavedContent(content)
         }
-      } catch (error) {
+      } catch {
         console.error('Failed to load content:', error)
       }
     }
@@ -487,7 +487,7 @@ export default function EditorPage() {
       } else {
         alert('保存に失敗しました')
       }
-    } catch (error) {
+    } catch {
       alert('保存中にエラーが発生しました')
     } finally {
       setIsSaving(false)
@@ -566,7 +566,7 @@ export default function EditorPage() {
         console.log('Using test images:', testImages)
         setR2Images(testImages)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load R2 images:', error)
       
       // エラーの場合も既知の画像を表示
@@ -635,7 +635,7 @@ export default function EditorPage() {
         const error = await response.json()
         alert(`削除に失敗しました: ${error.error}`)
       }
-    } catch (error) {
+    } catch {
       console.error('Delete error:', error)
       alert('削除中にエラーが発生しました')
     }
@@ -672,7 +672,7 @@ export default function EditorPage() {
     setHasChanges(true)
   }
 
-  const handleImageUpload = async (sectionId: string, fieldKey: string, file: File) => {
+  const _handleImageUpload = async (sectionId: string, fieldKey: string, file: File) => {
     const uploadKey = `${sectionId}-${fieldKey}`
     
     try {
@@ -695,7 +695,7 @@ export default function EditorPage() {
         console.error('Upload failed:', errorData)
         alert(`画像のアップロードに失敗しました: ${errorData.error || 'Unknown error'}`)
       }
-    } catch (error) {
+    } catch {
       alert('画像のアップロード中にエラーが発生しました')
     } finally {
       // アップロード完了後、状態をクリア
@@ -707,7 +707,7 @@ export default function EditorPage() {
     }
   }
 
-  const handleVideoUpload = async (sectionId: string, fieldKey: string, file: File) => {
+  const _handleVideoUpload = async (sectionId: string, fieldKey: string, file: File) => {
     const uploadKey = `${sectionId}-${fieldKey}`
     
     try {
@@ -730,7 +730,7 @@ export default function EditorPage() {
         console.error('Upload failed:', errorData)
         alert(`動画のアップロードに失敗しました: ${errorData.error || 'Unknown error'}`)
       }
-    } catch (error) {
+    } catch {
       alert('動画のアップロード中にエラーが発生しました')
     } finally {
       // アップロード完了後、状態をクリア
@@ -761,7 +761,7 @@ export default function EditorPage() {
     })
   }
 
-  const handleSeatImageUpload = async (seatIndex: number, seatId: string, file: File) => {
+  const _handleSeatImageUpload = async (seatIndex: number, seatId: string, file: File) => {
     const uploadKey = `seats-${seatId}`
     
     try {
@@ -781,7 +781,7 @@ export default function EditorPage() {
       } else {
         alert('画像のアップロードに失敗しました')
       }
-    } catch (error) {
+    } catch {
       alert('画像のアップロード中にエラーが発生しました')
     } finally {
       setUploadingImages(prev => {
@@ -1114,7 +1114,7 @@ export default function EditorPage() {
     }
   }
 
-  const handleCourseImageUpload = async (cardIndex: number, file: File) => {
+  const _handleCourseImageUpload = async (cardIndex: number, file: File) => {
     const uploadKey = `course-image-${cardIndex}`
     setUploadingImages(prev => new Set(prev).add(uploadKey))
     
@@ -1133,7 +1133,7 @@ export default function EditorPage() {
       } else {
         alert('画像のアップロードに失敗しました')
       }
-    } catch (error) {
+    } catch {
       alert('画像のアップロード中にエラーが発生しました')
     } finally {
       setUploadingImages(prev => {
@@ -1333,7 +1333,7 @@ export default function EditorPage() {
     }
   }
 
-  const handleMotsunabeImageUpload = async (optionIndex: number, file: File) => {
+  const _handleMotsunabeImageUpload = async (optionIndex: number, file: File) => {
     const uploadKey = `motsunabe-image-${optionIndex}`
     setUploadingImages(prev => new Set(prev).add(uploadKey))
     
@@ -1352,7 +1352,7 @@ export default function EditorPage() {
       } else {
         alert('画像のアップロードに失敗しました')
       }
-    } catch (error) {
+    } catch {
       alert('画像のアップロード中にエラーが発生しました')
     } finally {
       setUploadingImages(prev => {
@@ -1948,7 +1948,7 @@ export default function EditorPage() {
                                 <div className="editor-image-preview">
                                   <img
                                     src={currentSeat.image}
-                                    alt={currentSeat.name}
+                                    alt={currentSeat.name || "座席画像"}
                                   />
                                   {isUploadingSeat && (
                                     <div className="editor-image-loading">
@@ -2991,7 +2991,7 @@ export default function EditorPage() {
                           ) : (
                             <img
                               src={file.url}
-                              alt={file.key}
+                              alt={file.key || "画像"}
                               style={{ 
                                 width: '100%', 
                                 height: '100%', 
@@ -3044,7 +3044,7 @@ export default function EditorPage() {
                           } else {
                             alert('アップロードに失敗しました')
                           }
-                        } catch (error) {
+                        } catch {
                           console.error('Upload error:', error)
                           alert('アップロードに失敗しました')
                         }

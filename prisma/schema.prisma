@@ -53,6 +53,24 @@ model Tenant {
   contactPhone                      String?                    @map("contact_phone") @db.VarChar
   contactEmail                      String?                    @map("contact_email") @db.VarChar
   contactBusinessHours              String?                    @map("contact_business_hours") @db.VarChar
+  
+  // API Settings - Google Analytics
+  gaApiMeasurementId                String?                    @map("ga_api_measurement_id") @db.VarChar
+  gaApiSecretEncrypted              Json?                      @map("ga_api_secret_encrypted") @db.Json
+  gaApiPropertyId                   String?                    @map("ga_api_property_id") @db.VarChar
+  
+  // API Settings - Google Business Profile  
+  gbpApiAccountId                   String?                    @map("gbp_api_account_id") @db.VarChar
+  gbpApiLocationId                  String?                    @map("gbp_api_location_id") @db.VarChar
+  gbpApiKeyEncrypted                Json?                      @map("gbp_api_key_encrypted") @db.Json
+  gbpApiClientId                    String?                    @map("gbp_api_client_id") @db.VarChar
+  gbpApiClientSecretEncrypted       Json?                      @map("gbp_api_client_secret_encrypted") @db.Json
+  
+  // API Settings - SERP API
+  serpApiKeyEncrypted               Json?                      @map("serp_api_key_encrypted") @db.Json
+  serpApiEngine                     String?                    @default("google") @map("serp_api_engine") @db.VarChar
+  serpApiDomain                     String?                    @default("google.co.jp") @map("serp_api_domain") @db.VarChar
+  
   updatedAt                         DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
   createdAt                         DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
   media                             Media[]                    @relation("MediaTenant")

@@ -1,7 +1,7 @@
 import { useLanguage } from '@/contexts/LanguageContext'
 import { getTranslation } from '@/lib/translations'
 import { contentTranslations } from '@/lib/translations/content-translations'
-import { Language } from '@/lib/i18n'
+import { } from '@/lib/i18n'
 
 export function useMultilingual() {
   const { language } = useLanguage()

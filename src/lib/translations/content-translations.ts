@@ -1,4 +1,4 @@
-import { Language } from '@/lib/i18n'
+// Language type is used in the structure below
 
 // 動的コンテンツのデフォルト翻訳
 export const contentTranslations = {

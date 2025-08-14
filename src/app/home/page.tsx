@@ -8,9 +8,13 @@ import {
   PieChart, Pie, Cell
 } from 'recharts'
 import {
-  Activity, FileText, Edit3, LogOut, TrendingUp, Users, Eye, MousePointer
+  Activity, FileText, Edit3, LogOut, Users, Eye, MousePointer, Settings, MessageSquare
 } from 'lucide-react'
 import './responsive-home.css'
+import SettingsModal from '@/components/SettingsModal'
+import ApiStatusIndicator from '@/components/ApiStatusIndicator'
+import MEODashboard from '@/components/MEODashboard'
+import { ApiSettingsProvider } from '@/contexts/ApiSettingsContext'
 
 interface User {
   id: string
@@ -23,13 +27,14 @@ const fetcher = (url: string) => fetch(url).then(r => r.json())
 
 const COLORS = ['#10a37f', '#0d8f6f', '#0b7e60', '#4ade80', '#22c55e']
 
-export default function HomePage() {
+function HomePageContent() {
   const router = useRouter()
-  const [user, setUser] = useState<User | null>(null)
+  const [_user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [dateRange, setDateRange] = useState('30d')
+  const [_dateRange, _setDateRange] = useState('30d')
   const [viewMode, setViewMode] = useState<'monthly' | 'daily'>('monthly')
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   
   // Plausible Analytics データの取得
   const [domain, setDomain] = useState<string>('')
@@ -56,7 +61,7 @@ export default function HomePage() {
         } else {
           router.push('/login')
         }
-      } catch (error) {
+      } catch {
         router.push('/login')
       } finally {
         setIsLoading(false)
@@ -214,14 +219,24 @@ export default function HomePage() {
                 <div className="w-2 h-2 bg-[#10a37f] rounded-full animate-pulse"></div>
                 <span className="text-[#10a37f] text-sm font-medium">ライブ</span>
               </div>
+              <ApiStatusIndicator />
             </div>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded-lg flex items-center gap-2 text-red-300 transition-all"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm">ログアウト</span>
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                className="px-4 py-2 bg-[#424242]/50 hover:bg-[#424242] border border-[#424242] rounded-lg flex items-center gap-2 text-[#ececec] transition-all"
+              >
+                <Settings className="w-4 h-4" />
+                <span className="text-sm">詳細設定</span>
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded-lg flex items-center gap-2 text-red-300 transition-all"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="text-sm">ログアウト</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -335,7 +350,7 @@ export default function HomePage() {
                       tickFormatter={(value) => {
                         if (viewMode === 'monthly') {
                           // 月別表示の場合、YYYY-MM形式を日本語表示に変換
-                          const [year, month] = value.split('-')
+                          const [_year, month] = value.split('-')
                           return `${parseInt(month)}月`
                         } else {
                           // 日別表示の場合
@@ -447,9 +462,48 @@ export default function HomePage() {
                 ))}
               </div>
             </div>
+
+            {/* MEO Dashboard - SERP API Data */}
+            <MEODashboard />
+
+            {/* 口コミ管理 */}
+            <div className="p-6 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-lg border border-purple-500/30">
+              <div className="mb-4">
+                <p className="text-[#ececec] font-medium text-lg">顧客エンゲージメント</p>
+                <p className="text-[#a8a8a8] text-sm mt-1">Googleビジネスプロフィールの口コミを管理し、顧客との関係を強化</p>
+              </div>
+              <button
+                onClick={() => router.push('/home/gbp')}
+                className="w-full p-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl flex items-center justify-center gap-4 transition-all transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+              >
+                <MessageSquare className="w-10 h-10" />
+                <div className="text-center">
+                  <span className="text-xl font-bold block">口コミ管理</span>
+                  <span className="text-sm opacity-90 mt-1 block">Googleビジネスプロフィールのレビュー管理・返信</span>
+                </div>
+                <div className="ml-auto flex flex-col items-end">
+                  <span className="text-2xl font-bold">234</span>
+                  <span className="text-xs opacity-75">件のレビュー</span>
+                </div>
+              </button>
+            </div>
           </div>
         )}
       </main>
+
+      {/* Settings Modal */}
+      <SettingsModal 
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <ApiSettingsProvider>
+      <HomePageContent />
+    </ApiSettingsProvider>
   )
 }

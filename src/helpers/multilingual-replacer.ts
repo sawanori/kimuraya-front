@@ -1,6 +1,6 @@
 // すべてのテキストを多言語対応に置換するヘルパー関数
 
-export function applyMultilingualToAllText(element: HTMLElement, t: (key: string) => string, getContent: (path: string, content?: any) => string, content: any) {
+export function applyMultilingualToAllText(element: HTMLElement, t: (key: string) => string, getContent: (path: string, content?: any) => string, _content: any) {
   // もつ鍋セクション
   const motsunabeDescription = element.querySelector('.motsunabe-description')
   if (motsunabeDescription) {

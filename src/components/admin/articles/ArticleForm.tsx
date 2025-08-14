@@ -11,8 +11,7 @@ import {
   Eye, 
   Upload, 
   X, 
-  Calendar,
-  User,
+
   Tag as TagIcon,
   Folder,
   FileText,

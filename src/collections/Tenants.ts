@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { setTenantContext } from '../util/dbTenant'
-import { encrypt, decrypt } from '../lib/crypto'
+import { encrypt } from '../lib/crypto'
 import { decryptApiKeys } from '../hooks/afterReadTenant'
 
 export const Tenants: CollectionConfig = {
@@ -273,7 +273,7 @@ export const Tenants: CollectionConfig = {
   ],
   hooks: {
     beforeOperation: [
-      async ({ args, operation }) => {
+      async ({ args, operation: _operation }) => {
         // RLSのためのテナントコンテキスト設定
         if (args.req) {
           await setTenantContext(args.req)
@@ -308,7 +308,7 @@ export const Tenants: CollectionConfig = {
       },
     ],
     afterChange: [
-      async ({ doc, operation, req }) => {
+      async ({ doc, operation, req: _req }) => {
         if (operation === 'create') {
           console.log(`新しいテナントが作成されました: ${doc.name} (${doc.slug})`)
         }

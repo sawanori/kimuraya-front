@@ -1,9 +1,9 @@
 // 新着情報APIのモック実装
-import { Article, ArticleListResponse, SearchParams, Category, Tag, Author } from '@/types/news';
+import { Article, ArticleListResponse, SearchParams, Category, Tag } from '@/types/news';
 import { mockArticles } from './mock-data';
 
 // APIのベースURL（将来的に環境変数から取得）
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+const _API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 // ローカルストレージのキー
 const ARTICLES_STORAGE_KEY = 'kimuraya_news_articles';
@@ -31,7 +31,7 @@ function getStoredArticles(): Article[] {
   try {
     const articles = JSON.parse(stored);
     return articles;
-  } catch (error) {
+  } catch {
     // エラー時はモックデータをセットし直す
     localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(mockArticles));
     return mockArticles;
