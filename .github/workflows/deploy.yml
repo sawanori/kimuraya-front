@@ -80,7 +80,7 @@ jobs:
     # Custom server deployment example (SSH)
     - name: Deploy to custom server
       if: ${{ vars.DEPLOY_TARGET == 'custom' }}
-      uses: appleboy/ssh-action@v1.0.0
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ secrets.DEPLOY_HOST }}
         username: ${{ secrets.DEPLOY_USER }}
